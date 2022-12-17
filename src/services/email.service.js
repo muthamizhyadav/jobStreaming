@@ -20,8 +20,14 @@ if (config.env !== 'test') {
  * @returns {Promise}
  */
 const sendEmail = async (to, subject, text, token, otp, userId) => {
-  const msg = { from: config.email.from, to, subject, text};
+  const msg = { from: "muthamizhyadav@gmail.com", to, subject, text};
   await OTPModel.findOneAndUpdate({token:token},{otp:otp, userId:userId},{ new: true })
+  await transport.sendMail(msg);
+};
+
+const forgetEmail = async (to, subject, text, otp, userId) => {
+  const msg = { from: "muthamizhyadav@gmail.com", to, subject, text};
+  await OTPModel.findOneAndUpdate({userId:userId},{otp:otp},{ new: true })
   await transport.sendMail(msg);
 };
 
@@ -59,9 +65,22 @@ const sendVerificationEmail = async (to, token, userId) => {
   await sendEmail(to, subject, text, token, otp, userId);
 };
 
+const sendforgotEmail = async (to,userId) => {
+  const subject = 'Forget Password';
+  // console.log(to, token)
+  // replace this url with the link to the email verification page of your front-end app
+  var otp = Math.random();
+   otp = otp * 1000000;
+   otp = parseInt(otp);
+  //  console.log(otp);
+   const text = `Dear user, To Forget Password, OTP:${otp}. Do not share your otp`
+  await forgetEmail(to, subject, text, otp, userId);
+};
 module.exports = {
   transport,
   sendEmail,
   sendResetPasswordEmail,
   sendVerificationEmail,
+  sendforgotEmail,
+  forgetEmail,
 };

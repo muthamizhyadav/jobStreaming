@@ -1,7 +1,9 @@
 const httpStatus = require('http-status');
 const { CandidateRegistration } = require('../models');
 const { OTPModel } = require('../models');
+const {emailService} = require('../services');
 const ApiError = require('../utils/ApiError');
+const bcrypt = require('bcryptjs');
 
 const createCandidate = async (userBody) => {
     const {password,confirmpassword} = userBody
@@ -46,6 +48,40 @@ const UsersLogin = async (userBody) => {
     return userName;
   };
 
+const forgot_verify_email = async (body) =>{
+    const {id, otp} = body
+    console.log(id,otp)
+    const data = await OTPModel.findOne({userId:id, otp:otp})
+    if(data == null){
+        throw new ApiError(httpStatus.BAD_REQUEST, 'incorrect otp');
+    }
+    const data1 = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isEmailVerified:true}, {new:true})
+    return data1
+}
+
+
+const forgot = async (body) =>{
+    const data = await CandidateRegistration.findOne({email:body.email})
+    if(!data){
+        throw new ApiError(httpStatus.UNAUTHORIZED, 'Email Not Registered');
+    }
+    await emailService.sendforgotEmail(data.email, data._id)
+    return data
+}
+
+
+const change_password = async (id, body) =>{
+
+    const { password, confirmpassword } = body;
+    if (password != confirmpassword) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'confirmpassword wrong');
+    }
+    const salt = await bcrypt.genSalt(10);
+    let password1 = await bcrypt.hash(password, salt);
+    const data = await CandidateRegistration.findByIdAndUpdate({ _id: id }, { password: password1 }, { new: true });
+    return data;
+}
+
 
 // const updateUserById = async (userId, updateBody) => {
 //   const user = await getUserById(userId);
@@ -73,6 +109,9 @@ module.exports = {
     createCandidate,
     verify_email,
     UsersLogin,
+    forgot,
+    forgot_verify_email,
+    change_password,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,

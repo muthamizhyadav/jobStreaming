@@ -16,7 +16,7 @@ const register = catchAsync(async (req, res) => {
    await OTPModel.create({token:tokens.access.token});
   res.status(httpStatus.CREATED).send({ user, tokens });
   await user.save();
-  console.log(user._id)
+//   console.log(user._id)
   await emailService.sendVerificationEmail(user.email, tokens.access.token, user._id)
 });
 
@@ -33,6 +33,21 @@ const login = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(user);
   res.send({ user, tokens });
 });
+
+const forgot = catchAsync(async (req, res) => {
+    const user = await candidateRegistrationService.forgot(req.body);
+    res.send({user});
+ });
+
+ const change_password = catchAsync(async (req, res) => {
+    const user = await candidateRegistrationService.change_password(req.params.id, req.body);
+    res.send({user});
+ });
+
+ const forgot_verify_email = catchAsync(async(req,res) => {
+    const user = await candidateRegistrationService.forgot_verify_email(req.body)
+    res.send({user})
+})
 
 // const logout = catchAsync(async (req, res) => {
 //   await authService.logout(req.body.refreshToken);
@@ -70,6 +85,9 @@ module.exports = {
   register,
   verify_email,
   login,
+  forgot,
+  change_password,
+  forgot_verify_email,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,
