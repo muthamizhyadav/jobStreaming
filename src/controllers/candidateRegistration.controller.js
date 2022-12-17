@@ -27,12 +27,12 @@ const verify_email = catchAsync(async(req,res) => {
     res.send({user})
 })
 
-// const login = catchAsync(async (req, res) => {
-//   const { email, password } = req.body;
-//   const user = await authService.loginUserWithEmailAndPassword(email, password);
-//   const tokens = await tokenService.generateAuthTokens(user);
-//   res.send({ user, tokens });
-// });
+
+const login = catchAsync(async (req, res) => {
+  const user = await candidateRegistrationService.UsersLogin(req.body);
+  const tokens = await tokenService.generateAuthTokens(user);
+  res.send({ user, tokens });
+});
 
 // const logout = catchAsync(async (req, res) => {
 //   await authService.logout(req.body.refreshToken);
@@ -69,7 +69,7 @@ const verify_email = catchAsync(async(req,res) => {
 module.exports = {
   register,
   verify_email,
-//   login,
+  login,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,

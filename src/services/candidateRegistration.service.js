@@ -31,6 +31,22 @@ const verify_email = async (token, otp) =>{
 }
 
 
+const UsersLogin = async (userBody) => {
+    const { email, password } = userBody;
+    let userName = await CandidateRegistration.findOne({ email: email });
+    if (!userName) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Email Not Registered');
+    } else {
+      if (await userName.isPasswordMatch(password)) {
+        console.log('Password Macthed');
+      } else {
+        throw new ApiError(httpStatus.UNAUTHORIZED, "Passwoed Doesn't Match");
+      }
+    }
+    return userName;
+  };
+
+
 // const updateUserById = async (userId, updateBody) => {
 //   const user = await getUserById(userId);
 //   if (!user) {
@@ -56,6 +72,7 @@ const verify_email = async (token, otp) =>{
 module.exports = {
     createCandidate,
     verify_email,
+    UsersLogin,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
