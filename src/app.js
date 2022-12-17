@@ -60,6 +60,9 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.sendStatus(200);
 });
+app.get('/v1', (req, res) => {
+  res.sendStatus(200);
+});
 // convert error to ApiError, if needed
 app.use(errorConverter);
 
