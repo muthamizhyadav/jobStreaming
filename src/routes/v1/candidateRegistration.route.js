@@ -9,6 +9,8 @@ const auth = require('../../middlewares/auth');
 const router = express.Router();
 
 router.route('/register').post(uploadImage.array('resume'),candidateRegistration.register);
+
+router.route('/verify_email').put(candidateRegistration.verify_email);
 // router.post('/login', validate(authValidation.login), authController.login);
 // router.post('/logout', validate(authValidation.logout), authController.logout);
 // router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);

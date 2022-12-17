@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { CandidateRegistration } = require('../models');
+const { OTPModel } = require('../models');
 const ApiError = require('../utils/ApiError');
 
 const createCandidate = async (userBody) => {
@@ -20,6 +21,14 @@ const createCandidate = async (userBody) => {
 //   return User.findOne({ email });
 // };
 
+const verify_email = async (token, otp) =>{
+    const data = await OTPModel.findOne({token:token, otp:otp})
+    if(data == null){
+        throw new ApiError(httpStatus.BAD_REQUEST, 'incorrect otp');
+    }
+    const data1 = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isEmailVerified:true}, {new:true})
+    return data1
+}
 
 
 // const updateUserById = async (userId, updateBody) => {
@@ -46,6 +55,7 @@ const createCandidate = async (userBody) => {
 
 module.exports = {
     createCandidate,
+    verify_email,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,

@@ -15,9 +15,17 @@ const register = catchAsync(async (req, res) => {
   const tokens = await tokenService.generateAuthTokens(user);
    await OTPModel.create({token:tokens.access.token});
   res.status(httpStatus.CREATED).send({ user, tokens });
-   await emailService.sendVerificationEmail(user.email, tokens.access.token)
   await user.save();
+  console.log(user._id)
+  await emailService.sendVerificationEmail(user.email, tokens.access.token, user._id)
 });
+
+
+const verify_email = catchAsync(async(req,res) => {
+    const {token,otp} = req.body
+    const user = await candidateRegistrationService.verify_email(token, otp)
+    res.send({user})
+})
 
 // const login = catchAsync(async (req, res) => {
 //   const { email, password } = req.body;
@@ -60,6 +68,7 @@ const register = catchAsync(async (req, res) => {
 
 module.exports = {
   register,
+  verify_email,
 //   login,
 //   logout,
 //   refreshTokens,

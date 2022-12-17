@@ -10,6 +10,9 @@ const otpSchema = new mongoose.Schema({
   otp: {
     type: Number,
   },
+  userId:{
+    type:String,
+  },
   token:{
     type:String,
   },
