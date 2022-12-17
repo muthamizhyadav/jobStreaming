@@ -52,7 +52,7 @@ const userSchema = mongoose.Schema(
         type:String,
     },
     mobileNumber:{
-        type:String
+        type:Number
     },
   },
   {
