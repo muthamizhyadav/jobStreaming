@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const { CandidateRegistration } = require('../models');
 const ApiError = require('../utils/ApiError');
 
-const createUser = async (userBody) => {
+const createCandidate = async (userBody) => {
     const {password,confirmpassword} = userBody
   if (await CandidateRegistration.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
@@ -10,13 +10,16 @@ const createUser = async (userBody) => {
   if(password != confirmpassword){
     throw new ApiError(httpStatus.BAD_REQUEST, 'Confirm Password Incorrect');
   }
-  return CandidateRegistration.create();
+
+ let data = await CandidateRegistration.create(userBody);
+ return data
 };
 
 
 // const getUserByEmail = async (email) => {
 //   return User.findOne({ email });
 // };
+
 
 
 // const updateUserById = async (userId, updateBody) => {
@@ -42,7 +45,7 @@ const createUser = async (userBody) => {
 // };
 
 module.exports = {
-  createUser,
+    createCandidate,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,

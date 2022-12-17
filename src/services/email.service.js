@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
+const  {OTPModel} = require('../models')
 
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -18,8 +19,9 @@ if (config.env !== 'test') {
  * @param {string} text
  * @returns {Promise}
  */
-const sendEmail = async (to, subject, text) => {
-  const msg = { from: config.email.from, to, subject, text };
+const sendEmail = async (to, subject, text, token, otp) => {
+  const msg = { from: config.email.from, to, subject, text};
+  await OTPModel.findOneAndUpdate({token:token},{otp:otp},{ new: true })
   await transport.sendMail(msg);
 };
 
@@ -47,12 +49,14 @@ If you did not request any password resets, then ignore this email.`;
  */
 const sendVerificationEmail = async (to, token) => {
   const subject = 'Email Verification';
+  // console.log(to, token)
   // replace this url with the link to the email verification page of your front-end app
-  const verificationEmailUrl = `http://link-to-app/verify-email?token=${token}`;
-  const text = `Dear user,
-To verify your email, click on this link: ${verificationEmailUrl}
-If you did not create an account, then ignore this email.`;
-  await sendEmail(to, subject, text);
+  var otp = Math.random();
+   otp = otp * 1000000;
+   otp = parseInt(otp);
+   console.log(otp);
+   const text = `Dear user, To email verification, OTP:${otp}. Do not share your otp`
+  await sendEmail(to, subject, text, token, otp);
 };
 
 module.exports = {

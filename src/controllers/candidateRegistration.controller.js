@@ -1,11 +1,22 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
-const { authService, userService, tokenService, emailService } = require('../services');
+const { authService, userService, tokenService, emailService, candidateRegistrationService} = require('../services');
+const  {OTPModel}  = require('../models');
 
 const register = catchAsync(async (req, res) => {
-  const user = await userService.createUser(req.body);
+  const user = await candidateRegistrationService.createCandidate(req.body);
+  if (req.files) {
+    let path = '';
+    req.files.forEach(function (files, index, arr) {
+       path  = "resumes/"+files.filename
+    });
+    user.resume = path
+  }
   const tokens = await tokenService.generateAuthTokens(user);
+   await OTPModel.create({token:tokens.access.token});
   res.status(httpStatus.CREATED).send({ user, tokens });
+   await emailService.sendVerificationEmail(user.email, tokens.access.token)
+  await user.save();
 });
 
 // const login = catchAsync(async (req, res) => {
