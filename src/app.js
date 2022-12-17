@@ -26,7 +26,9 @@ app.use(helmet());
 
 // parse json request body
 app.use(express.json());
-
+app.get('/', (req, res) => {
+  res.sendStatus(200);
+});
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
 
@@ -57,9 +59,6 @@ app.use('/v1', routes);
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
-app.get('/', (req, res) => {
-  res.sendStatus(200);
-});
 app.get('/v1', (req, res) => {
   res.sendStatus(200);
 });
@@ -70,6 +69,7 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.sendStatus(200);
 });
+
 // convert error to ApiError, if needed
 app.use(errorConverter);
 
