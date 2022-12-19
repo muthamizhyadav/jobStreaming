@@ -1,20 +1,21 @@
 const httpStatus = require('http-status');
-const { CandidateRegistration } = require('../models');
-const { OTPModel } = require('../models');
+const {EmployerRegistration} = require('../models');
+const { EmployeOtp } = require('../models');
 const {emailService} = require('../services');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 
-const createCandidate = async (userBody) => {
+const createEmployer = async (userBody) => {
     const {password,confirmpassword} = userBody
-  if (await CandidateRegistration.isEmailTaken(userBody.email)) {
+    
+  if (await EmployerRegistration.isEmailTaken(userBody.email)) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
   }
   if(password != confirmpassword){
     throw new ApiError(httpStatus.BAD_REQUEST, 'Confirm Password Incorrect');
   }
 
- let data = await CandidateRegistration.create(userBody);
+ let data = await EmployerRegistration.create(userBody);
  return data
 };
 
@@ -24,18 +25,18 @@ const createCandidate = async (userBody) => {
 // };
 
 const verify_email = async (token, otp) =>{
-    const data = await OTPModel.findOne({token:token, otp:otp})
+    const data = await EmployeOtp.findOne({token:token, otp:otp})
     if(data == null){
         throw new ApiError(httpStatus.BAD_REQUEST, 'incorrect otp');
     }
-    const data1 = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isEmailVerified:true}, {new:true})
+    const data1 = await EmployerRegistration.findByIdAndUpdate({_id:data.userId}, {isEmailVerified:true}, {new:true})
     return data1
 }
 
 
 const UsersLogin = async (userBody) => {
     const { email, password } = userBody;
-    let userName = await CandidateRegistration.findOne({ email: email });
+    let userName = await EmployerRegistration.findOne({ email: email });
     if (!userName) {
       throw new ApiError(httpStatus.UNAUTHORIZED, 'Email Not Registered');
     } else {
@@ -51,21 +52,21 @@ const UsersLogin = async (userBody) => {
 const forgot_verify_email = async (body) =>{
     const {id, otp} = body
     console.log(id,otp)
-    const data = await OTPModel.findOne({userId:id, otp:otp})
+    const data = await EmployeOtp.findOne({userId:id, otp:otp})
     if(data == null){
         throw new ApiError(httpStatus.BAD_REQUEST, 'incorrect otp');
     }
-    const data1 = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isEmailVerified:true}, {new:true})
+    const data1 = await EmployerRegistration.findByIdAndUpdate({_id:data.userId}, {isEmailVerified:true}, {new:true})
     return data1
 }
 
 
 const forgot = async (body) =>{
-    const data = await CandidateRegistration.findOne({email:body.email})
+    const data = await EmployerRegistration.findOne({email:body.email})
     if(!data){
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Email Not Registered');
     }
-    await emailService.sendforgotEmail(data.email, data._id)
+    await emailService.sendforgotEmailEmp(data.email, data._id)
     return data
 }
 
@@ -78,7 +79,7 @@ const change_password = async (id, body) =>{
     }
     const salt = await bcrypt.genSalt(10);
     let password1 = await bcrypt.hash(password, salt);
-    const data = await CandidateRegistration.findByIdAndUpdate({ _id: id }, { password: password1 }, { new: true });
+    const data = await EmployerRegistration.findByIdAndUpdate({ _id: id }, { password: password1 }, { new: true });
     return data;
 }
 
@@ -108,7 +109,7 @@ const change_password = async (id, body) =>{
 // };
 
 module.exports = {
-    createCandidate,
+    createEmployer,
     verify_email,
     UsersLogin,
     forgot,

@@ -6,7 +6,7 @@ const { roles } = require('../config/roles');
 const { StringDecoder } = require('string_decoder');
 const { v4 } = require('uuid');
 
-const userSchema = mongoose.Schema(
+const userEmpSchema = mongoose.Schema(
   {
     _id: {
       type: String,
@@ -50,12 +50,12 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    resume: {
+    companyType: {
       type: String,
     },
-    workStatus: {
-      type: String,
-    },
+    pincode: {
+        type: Number,
+      },
     mobileNumber: {
       type: Number,
     },
@@ -66,8 +66,6 @@ const userSchema = mongoose.Schema(
 );
 
 // add plugin that converts mongoose to json
-userSchema.plugin(toJSON);
-userSchema.plugin(paginate);
 
 /**
  * Check if email is taken
@@ -75,7 +73,7 @@ userSchema.plugin(paginate);
  * @param {ObjectId} [excludeUserId] - The id of the user to be excluded
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
+userEmpSchema.statics.isEmailTaken = async function (email, excludeUserId) {
   const user = await this.findOne({ email, _id: { $ne: excludeUserId } });
   return !!user;
 };
@@ -85,12 +83,12 @@ userSchema.statics.isEmailTaken = async function (email, excludeUserId) {
  * @param {string} password
  * @returns {Promise<boolean>}
  */
-userSchema.methods.isPasswordMatch = async function (password) {
+userEmpSchema.methods.isPasswordMatch = async function (password) {
   const user = this;
   return bcrypt.compare(password, user.password);
 };
 
-userSchema.pre('save', async function (next) {
+userEmpSchema.pre('save', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8);
@@ -101,5 +99,5 @@ userSchema.pre('save', async function (next) {
 /**
  * @typedef User
  */
-const CandidateRegistration = mongoose.model('candidateRegistration', userSchema);
-module.exports = CandidateRegistration ;
+const EmployerRegistration = mongoose.model('employerRegistration', userEmpSchema);
+module.exports = EmployerRegistration

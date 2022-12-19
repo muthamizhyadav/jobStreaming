@@ -2,6 +2,7 @@ const nodemailer = require('nodemailer');
 const config = require('../config/config');
 const logger = require('../config/logger');
 const  {OTPModel} = require('../models')
+const  {EmployeOtp} = require('../models')
 
 const transport = nodemailer.createTransport(config.email.smtp);
 /* istanbul ignore next */
@@ -25,9 +26,21 @@ const sendEmail = async (to, subject, text, token, otp, userId) => {
   await transport.sendMail(msg);
 };
 
+const sendEmailEmp = async (to, subject, text, token, otp, userId) => {
+  const msg = { from: "muthamizhyadav@gmail.com", to, subject, text};
+  await EmployeOtp.findOneAndUpdate({token:token},{otp:otp, userId:userId},{ new: true })
+  await transport.sendMail(msg);
+};
+
 const forgetEmail = async (to, subject, text, otp, userId) => {
   const msg = { from: "muthamizhyadav@gmail.com", to, subject, text};
   await OTPModel.findOneAndUpdate({userId:userId},{otp:otp},{ new: true })
+  await transport.sendMail(msg);
+};
+
+const forgetEmailEmp = async (to, subject, text, otp, userId) => {
+  const msg = { from: "muthamizhyadav@gmail.com", to, subject, text};
+  await EmployeOtp.findOneAndUpdate({userId:userId},{otp:otp},{ new: true })
   await transport.sendMail(msg);
 };
 
@@ -53,6 +66,19 @@ If you did not request any password resets, then ignore this email.`;
  * @param {string} token
  * @returns {Promise}
  */
+const sendVerificationEmailEmp = async (to, token, userId) => {
+  const subject = 'Email Verification';
+  // console.log(to, token)
+  // replace this url with the link to the email verification page of your front-end app
+  var otp = Math.random();
+   otp = otp * 1000000;
+   otp = parseInt(otp);
+   console.log(otp);
+   const text = `Dear user, To email verification, OTP:${otp}. Do not share your otp`
+  await sendEmailEmp(to, subject, text, token, otp, userId);
+};
+
+
 const sendVerificationEmail = async (to, token, userId) => {
   const subject = 'Email Verification';
   // console.log(to, token)
@@ -65,6 +91,7 @@ const sendVerificationEmail = async (to, token, userId) => {
   await sendEmail(to, subject, text, token, otp, userId);
 };
 
+
 const sendforgotEmail = async (to,userId) => {
   const subject = 'Forget Password';
   // console.log(to, token)
@@ -76,6 +103,18 @@ const sendforgotEmail = async (to,userId) => {
    const text = `Dear user, To Forget Password, OTP:${otp}. Do not share your otp`
   await forgetEmail(to, subject, text, otp, userId);
 };
+
+const sendforgotEmailEmp = async (to,userId) => {
+  const subject = 'Forget Password';
+  // console.log(to, token)
+  // replace this url with the link to the email verification page of your front-end app
+  var otp = Math.random();
+   otp = otp * 1000000;
+   otp = parseInt(otp);
+  //  console.log(otp);
+   const text = `Dear user, To Forget Password, OTP:${otp}. Do not share your otp`
+  await forgetEmailEmp(to, subject, text, otp, userId);
+};
 module.exports = {
   transport,
   sendEmail,
@@ -83,4 +122,7 @@ module.exports = {
   sendVerificationEmail,
   sendforgotEmail,
   forgetEmail,
+  forgetEmailEmp,
+  sendVerificationEmailEmp,
+  sendforgotEmailEmp,
 };
