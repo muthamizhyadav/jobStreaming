@@ -18,6 +18,66 @@ const keySkillSchema = mongoose.Schema(
     userId:{
         type:String,
     },
+    experienceMonth:{
+        type:Number
+    },
+    experienceYear:{
+        type:Number
+    },
+    salaryRangeFrom:{
+        type:Number,
+    },
+    salaryRangeTo:{
+        type:Number,
+    },
+    locationNative:{
+        type:String,
+    },
+    locationCurrent:{
+        type:String,
+    },
+    education:{
+        type:String,
+    },
+    course:{
+        type:String,
+    },
+    specification:{
+        type:String,
+    },
+    university:{
+        type:String,
+    },
+    courseType:{
+        type:String,
+    },
+    passingYear:{
+        type:Number,
+    },
+    gradingSystem:{
+        type:String,
+    },
+    availability:{
+        type:String,
+    },
+    currentSkill:{
+        type:Array,
+    },
+    preferredSkill:{
+        type:Array,
+    },
+    secondarySkill:{
+        type:Array,
+    },
+    pasrSkill:{
+        type:Array,
+    },
+    gender:{
+        type:String,
+    },
+    maritalStatus:{
+        type:String,
+    },
     active:{
         type:Boolean,
         default:true,
@@ -27,5 +87,5 @@ const keySkillSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-const KeySkill = mongoose.model('keySkill', keySkillSchema);
+const KeySkill = mongoose.model('candidateDetail', keySkillSchema);
 module.exports = {KeySkill} ;
