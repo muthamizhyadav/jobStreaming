@@ -12,6 +12,9 @@ const keySkillSchema = mongoose.Schema(
       type: String,
       default: v4,
     },
+    image:{
+        type:String,
+    },
     keyskill: {
         type:Array,
     },

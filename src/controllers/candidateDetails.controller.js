@@ -1,12 +1,22 @@
 const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const candidateDetailsService = require('../services/candidateDetails.service');
+const User = require('../models/user.model');
 
 
 const createkeySkill = catchAsync(async (req, res) => {
     const userId = req.userId
   const user = await candidateDetailsService.createkeySkill(userId, req.body);
+  console.log(req.files)
+  if (req.files) {
+    let path = '';
+    req.files.forEach(function (files, index, arr) {
+       path  = "resumes/images/"+files.filename
+    });
+    user.image = path
+  }
   res.status(httpStatus.CREATED).send({ user });
+  await user.save();
 });
 
 

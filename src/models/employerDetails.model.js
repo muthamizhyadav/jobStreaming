@@ -33,8 +33,14 @@ const employerDetailsSchema = mongoose.Schema(
     keySkill:{
         type:Array,
     },
-    salary:{
+    salaryRangeFrom:{
         type:Number,
+    },
+    salaryRangeTo:{
+        type:Number,
+    },
+    preferredindustry:{
+        type:String,
     },
     educationalQualification:{
         type:String,
@@ -74,6 +80,21 @@ const employerDetailsSchema = mongoose.Schema(
     },
     openings:{
         type:Number,
+    },
+    interviewDate:{
+        type:String,
+    },
+    interviewTime:{
+        type:String,
+    },
+    interviewerName:{
+        type:String,
+    },
+    interviewerContactNumber:{
+        type:Number,
+    },
+    location:{
+        type:String,
     },
     active:{
         type:Boolean,
