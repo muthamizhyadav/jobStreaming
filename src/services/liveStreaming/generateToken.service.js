@@ -60,7 +60,13 @@ const getHostTokens = async (req) => {
   ]);
   return value;
 };
+
+const gettokenById = async (req) => {
+  let value = await tempTokenModel.findById(req.id);
+  return value;
+};
 module.exports = {
   generateToken,
   getHostTokens,
+  gettokenById,
 };

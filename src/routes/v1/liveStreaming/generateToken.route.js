@@ -9,5 +9,6 @@ const generateToken = require('../../../controllers/liveStreaming/generateToken.
 
 router.get('/getToken', generateToken.generateToken);
 router.get('/getHostTokens', generateToken.getHostTokens);
+router.get('/gettoken/byId', generateToken.gettokenById);
 
 module.exports = router;

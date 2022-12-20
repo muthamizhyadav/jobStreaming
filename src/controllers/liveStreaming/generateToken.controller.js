@@ -10,7 +10,13 @@ const getHostTokens = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(tokens);
 });
 
+const gettokenById = catchAsync(async (req, res) => {
+  const tokens = await generateTokenService.gettokenById(req.query);
+  res.status(httpStatus.CREATED).send(tokens);
+});
+
 module.exports = {
   generateToken,
   getHostTokens,
+  gettokenById,
 };
