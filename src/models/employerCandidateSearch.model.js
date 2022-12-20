@@ -72,6 +72,9 @@ const candiadteSearchSchema = mongoose.Schema(
     employmentType:{
         type:String,
     },
+    EducationalType:{
+        type:String,
+    },
     active:{
         type:Boolean,
         default:true,

@@ -36,6 +36,10 @@ const defaultRoutes = [
     path: '/employerCandidateSearch',
     route: employerCandidateSearchRoute,
   },
+  {
+    path: '/employerdetails',
+    route: employerdetailsRoute,
+  },
 ];
 
 const devRoutes = [
