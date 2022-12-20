@@ -61,6 +61,7 @@ const userEmpSchema = mongoose.Schema(
     },
      active: {
         type: Boolean,
+        default:true,
       },
   },
   {
