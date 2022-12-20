@@ -7,6 +7,7 @@ const { tempTokenModel } = require('../../models/liveStreaming/generateToken.mod
 
 const appID = '08bef39e0eb545338b0be104785c2ae1';
 const appCertificate = 'bfb596743d2b4414a1895ac2edb1d1f0';
+
 const generateToken = async (req) => {
   const expirationTimeInSeconds = 3600;
   const uid = req.query.uid;
@@ -33,7 +34,7 @@ const generateToken = async (req) => {
     token: token,
     date: moment().format('YYYY-MM-DD'),
     time: moment().format('HHMMSS'),
-    created: moment_curr,
+    created: moment(),
     Uid: uid,
     chennel: channel,
     participents: uid,
@@ -42,6 +43,24 @@ const generateToken = async (req) => {
   });
   return { uid, token, value };
 };
+
+const getHostTokens = async (req) => {
+  let time = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime();
+  let value = await tempTokenModel.aggregate([
+    {
+      $sort: {
+        created: -1,
+      },
+    },
+    {
+      $match: {
+        $and: [{ expDate: { $gte: time } }],
+      },
+    },
+  ]);
+  return value;
+};
 module.exports = {
   generateToken,
+  getHostTokens,
 };

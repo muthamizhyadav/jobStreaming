@@ -8,5 +8,6 @@ const router = express.Router();
 const generateToken = require('../../../controllers/liveStreaming/generateToken.controller');
 
 router.get('/getToken', generateToken.generateToken);
+router.get('/getHostTokens', generateToken.getHostTokens);
 
 module.exports = router;
