@@ -11,7 +11,7 @@ const generateToken = async (req) => {
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
   const channel = req.query.channel;
   const currentTimestamp = Math.floor(Date.now() / 1000);
-  const expirationTimestamp = new Date(new Date('2022-12-20 11:47:59')).getTime() / 1000;
+  const expirationTimestamp = new Date(new Date('2022-12-20 11:51:59')).getTime() / 1000;
 
   const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
   return { uid, token };
