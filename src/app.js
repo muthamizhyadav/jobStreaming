@@ -11,6 +11,8 @@ const morgan = require('./config/morgan');
 const { jwtStrategy } = require('./config/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
+const routes_v2 = require('./routes/v1/liveStreaming');
+
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -54,6 +56,7 @@ if (config.env === 'production') {
 app.use(express.static('public'));
 // v1 api routes
 app.use('/v1', routes);
+app.use('/v2', routes_v2);
 
 // send back a 404 error for any unknown api request
 app.use((req, res, next) => {
