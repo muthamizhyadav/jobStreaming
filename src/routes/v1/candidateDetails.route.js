@@ -10,7 +10,7 @@ const router = express.Router();
 router.route('/createKeyskill').post(authorization,uploadImage.array('image'), candidateDetailsController.createkeySkill);
 
 router.route('/getKeyskill').get(authorization,candidateDetailsController.getByIdUser);
-router.route('/updateKeyskill/:id').put(candidateDetailsController.updateById);
+router.route('/updateKeyskill/:id').put(uploadImage.array('image'), candidateDetailsController.updateById);
 router.route('/deleteKeyskill/:id').delete(candidateDetailsController.deleteById);
 
 module.exports = router;

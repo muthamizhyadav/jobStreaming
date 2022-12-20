@@ -7,7 +7,7 @@ const User = require('../models/user.model');
 const createkeySkill = catchAsync(async (req, res) => {
     const userId = req.userId
   const user = await candidateDetailsService.createkeySkill(userId, req.body);
-  console.log(req.files)
+  // console.log(req.files)
   if (req.files) {
     let path = '';
     req.files.forEach(function (files, index, arr) {
@@ -27,8 +27,16 @@ const getByIdUser = catchAsync(async(req,res) => {
 })
 
 const updateById = catchAsync(async(req,res) => {
-    const user = await candidateDetailsService.updateById(req.params.id)
+    const user = await candidateDetailsService.updateById(req.params.id, req.body)
+    if (req.files) {
+      let path = '';
+      req.files.forEach(function (files, index, arr) {
+         path  = "resumes/images/"+files.filename
+      });
+      user.image = path
+    }
     res.send({user})
+    await user.save();
 })
 
 

@@ -13,29 +13,33 @@ const createEmpDetails = async (userId, userBody) => {
 };
 
 const getByIdUser = async (id) => {
-    const data = await EmployerDetails.findOne({userId:id})
-    if(!data){
-        throw new ApiError(httpStatus.NOT_FOUND, 'keySkill not found');
-    }
-    return data
+  const data = await EmployerDetails.aggregate([
+    {
+      $match: {
+        $and: [{ userId: { $eq: id } }],
+      },
+    }, 
+  ])
+  return data
 }
 
 const getById = async (id) =>{
     const data = await EmployerDetails.findById(id)
     if(!data){
-        throw new ApiError(httpStatus.NOT_FOUND, 'keySkill not found');
+        throw new ApiError(httpStatus.NOT_FOUND, 'employerDetails not found');
     }
     return data
 }
 
 const updateById = async (id, updateBody) => {
+
   const user = await getById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Keyskill not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'employerDetails not found');
   }
-  attachResume = await EmployerDetails.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
-  await user.save();
-  return user;
+  const data = await EmployerDetails.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+  await data.save();
+  return data;
 };
 
 

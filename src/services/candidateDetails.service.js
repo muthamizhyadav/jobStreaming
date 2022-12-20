@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { KeySkill } = require('../models/candidateDetails.model');
+const { CandidateRegistration } = require('../models');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 
@@ -13,10 +14,29 @@ const createkeySkill = async (userId, userBody) => {
 };
 
 const getByIdUser = async (id) => {
-    const data = await KeySkill.findOne({userId:id})
-    if(!data){
-        throw new ApiError(httpStatus.NOT_FOUND, 'keySkill not found');
-    }
+    const data = await CandidateRegistration.aggregate([
+      {
+        $match: {
+          $and: [{ _id: { $eq: id } }],
+        },
+      }, 
+      {
+        $lookup: {
+          from: 'candidatedetails',
+          localField: '_id',
+          foreignField: 'userId',
+          as: 'candidatedetails',
+        },
+      },
+      { $unwind: '$candidatedetails' },
+      {
+        $project:{
+          resume:1,
+          candidateDetails:"$candidatedetails",
+        }
+      }
+
+    ])
     return data
 }
 
@@ -33,9 +53,9 @@ const updateById = async (id, updateBody) => {
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Keyskill not found');
   }
-  attachResume = await KeySkill.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
-  await user.save();
-  return user;
+  const data = await KeySkill.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+  await data.save();
+  return data;
 };
 
 

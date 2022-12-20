@@ -17,7 +17,7 @@ const getByIdUser = catchAsync(async(req,res) => {
 })
 
 const updateById = catchAsync(async(req,res) => {
-    const user = await employerDetailsService.updateById(req.params.id)
+    const user = await employerDetailsService.updateById(req.params.id, req.body)
     res.send({user})
 })
 
