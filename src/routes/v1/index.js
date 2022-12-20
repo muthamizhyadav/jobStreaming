@@ -5,6 +5,8 @@ const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 const candidateRegistrationRoute = require('./candidateRegistration.route');
 const employerRegistrationRoute = require('./employerRegistration.route');
+const candidateDetailsRoute = require('./candidateDetails.route');
+const employerdetailsRoute = require('./employerdetails.route');
 
 const router = express.Router();
 
@@ -24,6 +26,14 @@ const defaultRoutes = [
   {
     path: '/employerRegistration',
     route: employerRegistrationRoute,
+  },
+  {
+    path: '/candidateDetail',
+    route: candidateDetailsRoute,
+  },
+  {
+    path: '/employerdetail',
+    route: employerdetailsRoute,
   },
 ];
 

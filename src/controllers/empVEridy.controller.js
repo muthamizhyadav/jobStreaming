@@ -6,7 +6,7 @@ const { tokenTypes } = require('../config/tokens');
 const jwt = require('jsonwebtoken');
 const tokenService = require('../services/token.service');
 const config = require('../config/config');
-const { CandidateRegistration } = require('../models');
+const { EmployerRegistration } = require('../models');
 
 const authorization = async (req, res, next) => {
   const token = req.headers.auth;
@@ -19,7 +19,7 @@ const authorization = async (req, res, next) => {
   try {
     const payload = jwt.verify(token, config.jwt.secret);
     console.log(payload);
-    const userss = await CandidateRegistration.findOne({ _id: payload.sub, active: true });
+    const userss = await EmployerRegistration.findOne({ _id: payload.sub, active: true });
     if (!userss) {
       return res.send(httpStatus.UNAUTHORIZED, 'User Not Available');
     }

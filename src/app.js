@@ -53,7 +53,7 @@ passport.use('jwt', jwtStrategy);
 if (config.env === 'production') {
   app.use('/v1/auth', authLimiter);
 }
-
+app.use(express.static('public'));
 // v1 api routes
 app.use('/v1', routes);
 app.use('/v2', routes_v2);

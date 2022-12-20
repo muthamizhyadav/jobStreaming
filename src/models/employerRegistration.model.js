@@ -59,6 +59,10 @@ const userEmpSchema = mongoose.Schema(
     mobileNumber: {
       type: Number,
     },
+     active: {
+        type: Boolean,
+        default:true,
+      },
   },
   {
     timestamps: true,
