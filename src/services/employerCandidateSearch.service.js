@@ -15,19 +15,51 @@ const createCandidateSearch = async (userId, userBody) => {
 const searchCandidate = async (key) => {
     let keyskill = key.keyskill
     let keywords = key.keywords
+    let locationCurrent = key.location
+    let courseType = key.courseType
+    let passingYearFrom = key.passingYearFrom
+    let passingYearTo = key.passingYearTo
+
+    //
+    // if (parseInt(passingYearFrom) <= parseInt(passingYearTo)) {
+    //     to = parseInt(passingYearFrom);
+    //     from = parseInt(passingYearTo);
+    //   } else {
+    //     to = parseInt(passingYearTo);
+    //     from = parseInt(passingYearFrom);
+    //   }
+
     let _keyskill = { active: true };
-    let _keywords = { active: true};
-    keywords = ["hjkhgjk"]
+    let _keywords = { active: true };
+    let _location = {active:true};
+    let _courseType = {active:true};
+    let _passingYearFrom = {active:true};
+    // let _passingYearTo = {active:true};
+
+    // keywords = ["hjkhgjk"]
+    // locationCurrent = "chennai"
     if(keyskill != null){
         _keyskill = { keyskill: {$elemMatch:{$in:keyskill}}}
-    }if(keywords != null){
+    }
+    if(keywords != null){
         _keywords = {$or:[{ currentSkill: {$elemMatch:{$in:keywords}}},{ preferredSkill: {$elemMatch:{$in:keywords}}},{ pasrSkill: {$elemMatch:{$in:keywords}}},{ secondarySkill: {$elemMatch:{$in:keywords}}}]}
     }
-    // console.log(_keywords)
+    if(locationCurrent != null){
+        _location = { locationCurrent:{$eq:locationCurrent}}
+    }
+    if(courseType != null){
+        _courseType = { courseType:{$eq:courseType}}
+    }
+    if(passingYearFrom != null && passingYearTo != null){
+        _passingYearFrom = { passingYear: { $gte: parseInt(passingYearFrom) } },{ passingYear: { $lte: parseInt(passingYearTo) } }
+    }
+
+
+     console.log(_passingYearFrom)
     const data = await KeySkill.aggregate([
           {
             $match: {
-              $or: [_keyskill],
+              $or: [_keyskill, _location, _courseType, _passingYearFrom],
             },
           },
           {
