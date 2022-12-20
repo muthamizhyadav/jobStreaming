@@ -37,7 +37,7 @@ const defaultRoutes = [
     route: employerCandidateSearchRoute,
   },
   {
-    path: '/employerdetails',
+    path: '/employerdetail',
     route: employerdetailsRoute,
   },
 ];
