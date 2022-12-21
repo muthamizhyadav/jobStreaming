@@ -6,6 +6,6 @@ const authorization = require('../../controllers/empVEridy.controller');
 const router = express.Router();
 
 router.route('/').post(authorization,employerCandidateSearch.createCandidateSearch);
-router.route('/searchQuery').get(employerCandidateSearch.searchQuery);
+router.route('/searchQuery').post(employerCandidateSearch.searchQuery);
 
 module.exports = router;
