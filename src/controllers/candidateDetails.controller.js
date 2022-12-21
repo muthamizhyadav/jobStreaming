@@ -45,9 +45,16 @@ const deleteById = catchAsync(async(req,res) => {
     res.send({user})
 })
 
+
+
+const candidateSearch = catchAsync(async(req,res) => {
+  const user = await candidateDetailsService.candidateSearch(req.body)
+  res.send({user})
+})
 module.exports = {
   createkeySkill,
   getByIdUser,
   updateById,
   deleteById,
+  candidateSearch,
 };

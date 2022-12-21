@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const { KeySkill } = require('../models/candidateDetails.model');
 const { CandidateRegistration } = require('../models');
+const  {EmployerDetails}  = require('../models/employerDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 
@@ -68,9 +69,48 @@ const deleteById = async (id) => {
   return user;
 };
 
+const candidateSearch = async (body) => {
+     const {search, experience, location} = body
+     console.log(search)
+     experienceSearch = {active:true}
+     locationSearch = {active:true}
+     if(experience != null){
+      experienceSearch = { experienceFrom: { $lte: parseInt(experience) },experienceTo: { $gte: parseInt(experience) } }
+     }
+     if(location != null){
+       locationSearch = { jobLocation: { $eq: location } }
+     }
+     console.log(experienceSearch)
+    const data = await EmployerDetails.aggregate([
+      { 
+        $match: { 
+          $or: [ { designation: { $in: search } },{ keySkill: {$elemMatch:{$in:search}}}] 
+      }
+    },  
+    { 
+      $match: { 
+        $and: [experienceSearch,locationSearch] 
+    }   
+   },    
+      {
+            $lookup: {
+              from: 'employerregistrations',
+              localField: 'userId',
+              foreignField: '_id',
+              as: 'employerregistrations',
+            },
+          },
+          {
+            $unwind:'$employerregistrations',
+          },
+    ]) 
+    return data 
+}
+
 module.exports = {
     createkeySkill,
     getByIdUser,
     deleteById,
     updateById,
+    candidateSearch,
 };
