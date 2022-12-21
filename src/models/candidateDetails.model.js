@@ -97,4 +97,48 @@ const keySkillSchema = mongoose.Schema(
   }
 );
 const KeySkill = mongoose.model('candidateDetail', keySkillSchema);
-module.exports = {KeySkill} ;
+const candidatePostjobSchema = mongoose.Schema(
+    {
+      _id: {
+        type: String,
+        default: v4,
+      },
+      userId:{
+        type:String
+      },
+      jobId:{
+        type:String,
+      },
+      active:{
+          type:Boolean,
+          default:true,
+      }
+    },
+    {
+      timestamps: true,
+    }
+  );
+  const CandidatePostjob = mongoose.model('candidatePostjob', candidatePostjobSchema);
+  const candidateSaveJobSchema = mongoose.Schema(
+    {
+      _id: {
+        type: String,
+        default: v4,
+      },
+      userId:{
+        type:String
+      },
+      savejobId:{
+        type:String,
+      },
+      active:{
+          type:Boolean,
+          default:true,
+      }
+    },
+    {
+      timestamps: true,
+    }
+  );
+  const CandidateSaveJob = mongoose.model('candidateSaveJob', candidateSaveJobSchema);
+module.exports = {KeySkill, CandidatePostjob, CandidateSaveJob} ;

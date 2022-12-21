@@ -106,4 +106,26 @@ const employerDetailsSchema = mongoose.Schema(
   }
 );
 const EmployerDetails = mongoose.model('employerDetail', employerDetailsSchema);
-module.exports = {EmployerDetails} ;
+const employerPostjobSchema = mongoose.Schema(
+    {
+      _id: {
+        type: String,
+        default: v4,
+      },
+      postajobId: {
+          type:String,
+      },
+      candidateId:{
+          type:String,
+      },
+      active:{
+          type:Boolean,
+          default:true,
+      }
+    },
+    {
+      timestamps: true,
+    }
+  );
+  const EmployerPostjob = mongoose.model('employerPostjob', employerPostjobSchema);
+module.exports = {EmployerDetails, EmployerPostjob} ;

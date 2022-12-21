@@ -54,9 +54,21 @@ const candidateSearch = catchAsync(async(req,res) => {
 
 
 const getByIdEmployerDetailsShownCandidate = catchAsync(async(req,res) => {
-  const user = await candidateDetailsService.getByIdEmployerDetailsShownCandidate(req.params.id)
+  const user = await candidateDetailsService.getByIdEmployerDetailsShownCandidate(req.params.id, req.params.userId)
   res.send(user)
 })
+
+const createCandidatePostjob = catchAsync(async (req, res) => {
+const user = await candidateDetailsService.createCandidatePostjob(req.body);
+res.status(httpStatus.CREATED).send({ user }
+  );
+});
+
+const createCandidateSavejob = catchAsync(async (req, res) => {
+  const user = await candidateDetailsService.createCandidateSavejob(req.body);
+  res.status(httpStatus.CREATED).send({ user }
+    );
+  });
 module.exports = {
   createkeySkill,
   getByIdUser,
@@ -64,4 +76,6 @@ module.exports = {
   deleteById,
   candidateSearch,
   getByIdEmployerDetailsShownCandidate,
+  createCandidatePostjob,
+  createCandidateSavejob,
 };

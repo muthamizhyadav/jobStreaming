@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
-const { KeySkill } = require('../models/candidateDetails.model');
+const { KeySkill, CandidatePostjob, CandidateSaveJob} = require('../models/candidateDetails.model');
 const { CandidateRegistration } = require('../models');
-const  {EmployerDetails}  = require('../models/employerDetails.model');
+const  {EmployerDetails, EmployerPostjob}  = require('../models/employerDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 
@@ -107,16 +107,124 @@ const candidateSearch = async (body) => {
     return data 
 }
 
-const getByIdEmployerDetailsShownCandidate = async (id) =>{
+const getByIdEmployerDetailsShownCandidate = async (id,userId) =>{
+  // const applyjob = await CandidatePostjob.find({userId:userId})
   const data = await EmployerDetails.aggregate([
     { 
       $match: { 
         $and: [ { _id: { $eq: id } }] 
     }
   }, 
+  {
+    $lookup: {
+      from: 'employerpostjobs',
+      localField: '_id',
+      foreignField: 'postajobId',
+      pipeline:[
+        {
+              $group: {
+                _id: null,
+                count: {
+                  $sum: 1,
+                },
+              },
+            },
+      ],
+      as: 'employerpostjobs',
+    },
+  },
+  {
+        $unwind: {
+          path: '$employerpostjobs',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+
+      {
+        $lookup: {
+          from: 'candidatepostjobs',
+          localField: '_id',
+          foreignField: 'jobId',
+          pipeline:[
+            { 
+              $match: { 
+                $and: [ { userId: { $eq: userId } }] 
+            }
+          }, 
+          ],
+          as: 'candidatepostjobs',
+        },
+      },
+      {
+        $unwind: {
+          path: '$candidatepostjobs',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'candidatesavejobs',
+          localField: '_id',
+          foreignField: 'savejobId',
+          pipeline:[
+            { 
+              $match: { 
+                $and: [ { userId: { $eq: userId } }] 
+            }
+          }, 
+          ],
+          as: 'candidatesavejobs',
+        },
+      },
+      {
+        $unwind: {
+          path: '$candidatesavejobs',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+  {
+    $project:{
+      keySkill:1,
+      jobTittle:1,
+      designation:1,
+      recruiterName:1,
+      contactNumber:1,
+      jobDescription:1,
+      salaryRangeFrom:1,
+      salaryRangeTo:1,
+      experienceFrom:1,
+      experienceTo:1,
+      interviewType:1,
+      candidateDescription:1,
+      workplaceType:1,
+      industry:1,
+      preferredindustry:1,
+      functionalArea:1,
+      role:1,
+      jobLocation:1,
+      employmentType:1,
+      openings:1,
+      createdAt:1,
+      appliedCount:"$employerpostjobs.count",
+      candidatesubmitButton:{ $ifNull: ['$candidatepostjobs', false] },
+      saveButton:{$ifNull:["$candidatesavejobs", false]},
+    }
+  }
   ])
   return data
 }
+
+const createCandidatePostjob = async (userBody) => {
+  const {userId, jobId} = userBody
+ const data = await CandidatePostjob.create(userBody);
+  await EmployerPostjob.create({candidateId:userId,postajobId:jobId})
+return data
+};
+
+const createCandidateSavejob = async (userBody) => {
+ const data = await CandidateSaveJob.create(userBody);
+return data
+};
 
 module.exports = {
     createkeySkill,
@@ -125,4 +233,6 @@ module.exports = {
     updateById,
     candidateSearch,
     getByIdEmployerDetailsShownCandidate,
+    createCandidatePostjob,
+    createCandidateSavejob,
 };

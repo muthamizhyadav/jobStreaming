@@ -13,6 +13,7 @@ router.route('/getKeyskill').get(authorization,candidateDetailsController.getByI
 router.route('/updateKeyskill/:id').put(uploadImage.array('image'), candidateDetailsController.updateById);
 router.route('/deleteKeyskill/:id').delete(candidateDetailsController.deleteById);
 router.route('/candidateSearch').post(candidateDetailsController.candidateSearch);
-router.route('/getByIdEmployerDetailsShownCandidate/:id').get(candidateDetailsController.getByIdEmployerDetailsShownCandidate);
-
+router.route('/getByIdEmployerDetailsShownCandidate/:id/:userId').get(candidateDetailsController.getByIdEmployerDetailsShownCandidate);
+router.route('/createCandidatePostjob').post(candidateDetailsController.createCandidatePostjob);
+router.route('/createCandidateSavejob').post(candidateDetailsController.createCandidateSavejob);
 module.exports = router;
