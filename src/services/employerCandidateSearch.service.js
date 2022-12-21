@@ -19,8 +19,7 @@ const searchCandidate = async (key) => {
     let courseType = key.courseType
     let passingYearFrom = key.passingYearFrom
     let passingYearTo = key.passingYearTo
-
-    //
+  
     // if (parseInt(passingYearFrom) <= parseInt(passingYearTo)) {
     //     to = parseInt(passingYearFrom);
     //     from = parseInt(passingYearTo);
@@ -28,20 +27,21 @@ const searchCandidate = async (key) => {
     //     to = parseInt(passingYearTo);
     //     from = parseInt(passingYearFrom);
     //   }
-
     let _keyskill = { active: true };
     let _keywords = { active: true };
     let _location = {active:true};
     let _courseType = {active:true};
     let _passingYearFrom = {active:true};
-    // let _passingYearTo = {active:true};
+    //  let _passingYearTo = {active:true};
 
     // keywords = ["hjkhgjk"]
     // locationCurrent = "chennai"
     if(keyskill != null){
+         keyskill = keyskill.split(',');
         _keyskill = { keyskill: {$elemMatch:{$in:keyskill}}}
     }
     if(keywords != null){
+         keywords = keywords.split(',');
         _keywords = {$or:[{ currentSkill: {$elemMatch:{$in:keywords}}},{ preferredSkill: {$elemMatch:{$in:keywords}}},{ pasrSkill: {$elemMatch:{$in:keywords}}},{ secondarySkill: {$elemMatch:{$in:keywords}}}]}
     }
     if(locationCurrent != null){
@@ -53,9 +53,6 @@ const searchCandidate = async (key) => {
     if(passingYearFrom != null && passingYearTo != null){
         _passingYearFrom = { passingYear: { $gte: parseInt(passingYearFrom) } },{ passingYear: { $lte: parseInt(passingYearTo) } }
     }
-
-
-     console.log(_keyskill)
     const data = await KeySkill.aggregate([
           {
             $match: {

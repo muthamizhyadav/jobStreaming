@@ -70,8 +70,12 @@ const deleteById = async (id) => {
 };
 
 const candidateSearch = async (body) => {
-     const {search, experience, location} = body
+     let {search, experience, location} = body
+     if(search != null){
+      search = search.split(',');
      console.log(search)
+     }
+    //  search = ["fbhfghfh","software engineer"]
      experienceSearch = {active:true}
      locationSearch = {active:true}
      if(experience != null){
