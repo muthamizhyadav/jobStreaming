@@ -59,7 +59,12 @@ const searchCandidate = async (key) => {
     const data = await KeySkill.aggregate([
           {
             $match: {
-              $or: [_keyskill, _location, _courseType, _passingYearFrom],
+              $or: [_location, _courseType, _passingYearFrom],
+            },
+          },
+          {
+            $match: {
+              $and: [_keyskill],
             },
           },
           {
