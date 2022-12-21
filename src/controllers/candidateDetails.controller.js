@@ -79,7 +79,13 @@ const getByIdAppliedJobs = catchAsync(async (req, res) => {
 const deleteByIdSavejOb = catchAsync(async (req, res) => {
     const user = await candidateDetailsService.deleteByIdSavejOb(req.params.id);
     res.send(user)
-      });
+  });
+
+  const getByIdSavedJobs = catchAsync(async (req, res) => {
+    let userId = req.userId
+    const user = await candidateDetailsService.getByIdSavedJobs(userId);
+    res.send(user)
+    });
 
 
 module.exports = {
@@ -93,4 +99,5 @@ module.exports = {
   createCandidateSavejob,
   getByIdAppliedJobs,
   deleteByIdSavejOb,
+  getByIdSavedJobs,
 };

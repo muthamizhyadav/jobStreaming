@@ -18,4 +18,5 @@ router.route('/createCandidatePostjob').post(candidateDetailsController.createCa
 router.route('/createCandidateSavejob').post(candidateDetailsController.createCandidateSavejob);
 router.route('/getByIdAppliedJobs').get(authorization, candidateDetailsController.getByIdAppliedJobs);
 router.route('/deleteByIdSavejOb/:id').delete(candidateDetailsController.deleteByIdSavejOb);
+router.route('/getByIdSavedJobs').get(authorization, candidateDetailsController.getByIdSavedJobs);
 module.exports = router;
