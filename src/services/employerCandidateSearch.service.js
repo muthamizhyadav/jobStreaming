@@ -55,7 +55,7 @@ const searchCandidate = async (key) => {
     }
 
 
-     console.log(_passingYearFrom)
+     console.log(_keyskill)
     const data = await KeySkill.aggregate([
           {
             $match: {

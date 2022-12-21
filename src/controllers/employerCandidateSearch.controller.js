@@ -12,7 +12,7 @@ const createCandidateSearch = catchAsync(async (req, res) => {
 
 const searchQuery = catchAsync(async(req,res) => {
     // console.log(req.query)
-    const user = await employerCandidateSearch.searchCandidate(req.query)
+    const user = await employerCandidateSearch.searchCandidate(req.body)
     res.send({user})
 })
 
