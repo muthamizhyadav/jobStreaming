@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { KeySkill, CandidatePostjob, CandidateSaveJob} = require('../models/candidateDetails.model');
+const { KeySkill, CandidatePostjob, CandidateSaveJob, CandidateSearchjobCandidate } = require('../models/candidateDetails.model');
 const { CandidateRegistration } = require('../models');
 const  {EmployerDetails, EmployerPostjob}  = require('../models/employerDetails.model');
 const ApiError = require('../utils/ApiError');
@@ -69,12 +69,24 @@ const deleteById = async (id) => {
   return user;
 };
 
-const candidateSearch = async (body) => {
+// const createSearchCandidate = async (userId, userBody) => {
+//   console.log(userId)
+//   let values = {...userBody, ...{userId:userId}}
+// let data = await CandidateSearchjobCandidate.create(values);
+// return data
+// };
+
+const candidateSearch = async (userId,body) => {
+  console.log(userId)
+  let values = {...body, ...{userId:userId}}
      let {search, experience, location} = body
+
+     await CandidateSearchjobCandidate.create(values);
      if(search != null){
       search = search.split(',');
      console.log(search)
      }
+
     //  search = ["fbhfghfh","software engineer"]
      experienceSearch = {active:true}
      locationSearch = {active:true}
@@ -232,7 +244,7 @@ return data
 
 
 const getByIdAppliedJobs = async (userId) => {
-  console.log(userId)
+  // console.log(userId)
    const data = await CandidatePostjob.aggregate([
     { 
       $match: { 
@@ -325,7 +337,7 @@ const deleteByIdSavejOb = async (id) => {
 };
 
 const getByIdSavedJobs = async (userId) => {
-  console.log(userId)
+  // console.log(userId)
    const data = await CandidateSaveJob.aggregate([
     { 
       $match: { 
@@ -420,4 +432,5 @@ module.exports = {
     getByIdAppliedJobs,
     deleteByIdSavejOb,
     getByIdSavedJobs,
+    // createSearchCandidate,
 };

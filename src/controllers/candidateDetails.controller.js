@@ -48,7 +48,8 @@ const deleteById = catchAsync(async(req,res) => {
 
 
 const candidateSearch = catchAsync(async(req,res) => {
-  const user = await candidateDetailsService.candidateSearch(req.body)
+  let userId = req.userId
+  const user = await candidateDetailsService.candidateSearch(userId,req.body)
   res.send({user})
 })
 
@@ -88,6 +89,12 @@ const deleteByIdSavejOb = catchAsync(async (req, res) => {
     });
 
 
+    // const createSearchCandidate = catchAsync(async (req, res) => {
+    //   const user = await candidateDetailsService.createSearchCandidate(req.body);
+    //   res.status(httpStatus.CREATED).send({ user }
+    //     );
+    //   });
+
 module.exports = {
   createkeySkill,
   getByIdUser,
@@ -100,4 +107,5 @@ module.exports = {
   getByIdAppliedJobs,
   deleteByIdSavejOb,
   getByIdSavedJobs,
+  // createSearchCandidate,
 };
