@@ -299,7 +299,92 @@ const getByIdAppliedJobs = async (userId) => {
  {
   $project:{
     userId:1,
-    companyName:"$employerdetails.employerregistrations.companyType",
+    companyType:"$employerdetails.employerregistrations.companyType",
+    companyName:"$employerdetails.employerregistrations.companyName",
+    designation:"$employerdetails.designation",
+    recruiterName:"$employerdetails.recruiterName",
+    contactNumber:"$employerdetails.contactNumber",
+    jobDescription:"$employerdetails.jobDescription",
+    salaryRangeFrom:"$employerdetails.salaryRangeFrom",
+    salaryRangeTo:"$employerdetails.salaryRangeTo",
+    experienceFrom:"$employerdetails.experienceFrom",
+    experienceTo:"$employerdetails.experienceTo",
+    interviewType:"$employerdetails.interviewType",
+    candidateDescription:"$employerdetails.candidateDescription",
+    workplaceType:"$employerdetails.workplaceType",
+    industry:"$employerdetails.industry",
+    preferredindustry:"$employerdetails.preferredindustry",
+    functionalArea:"$employerdetails.functionalArea",
+    role:"$employerdetails.role",
+    jobLocation:"$employerdetails.jobLocation",
+    employmentType:"$employerdetails.employmentType",
+    openings:"$employerdetails.openings",
+    createdAt:"$employerdetails.createdAt",
+    updatedAt:"$employerdetails.updatedAt",
+    candidatesavejobs:{ $ifNull: ['$employerdetails.candidatesavejobs', false] },
+  }
+ }
+   ])
+   return data 
+}
+
+const applyJobsView = async (userId) =>{
+  const data = await CandidatePostjob.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: userId } }] 
+    }
+   },
+   {
+    $lookup: {
+      from: 'employerdetails',
+      localField: 'jobId',
+      foreignField: '_id',
+      pipeline:[
+        {
+          $lookup: {
+            from: 'candidatesavejobs',
+            localField: '_id',
+            foreignField: 'savejobId',
+            pipeline:[
+              { 
+                $match: { 
+                  $and: [ { userId: { $eq: userId } }] 
+              }
+            },
+            ],
+            as: 'candidatesavejobs',
+          },
+        },
+        {
+          $unwind: {
+            path: '$candidatesavejobs',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: 'employerregistrations',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'employerregistrations',
+          },
+        },
+       {
+          $unwind:"$employerregistrations"
+       }
+      ],
+      as: 'employerdetails',
+    },
+  },
+ {
+    $unwind:"$employerdetails"
+ },
+ {
+  $project:{
+    userId:1,
+    companyType:"$employerdetails.employerregistrations.companyType",
+    companyName:"$employerdetails.employerregistrations.companyName",
     designation:"$employerdetails.designation",
     recruiterName:"$employerdetails.recruiterName",
     contactNumber:"$employerdetails.contactNumber",
@@ -392,7 +477,92 @@ const getByIdSavedJobs = async (userId) => {
  {
   $project:{
     userId:1,
-    companyName:"$employerdetails.employerregistrations.companyType",
+    companyType:"$employerdetails.employerregistrations.companyType",
+    companyName:"$employerdetails.employerregistrations.companyName",
+    designation:"$employerdetails.designation",
+    recruiterName:"$employerdetails.recruiterName",
+    contactNumber:"$employerdetails.contactNumber",
+    jobDescription:"$employerdetails.jobDescription",
+    salaryRangeFrom:"$employerdetails.salaryRangeFrom",
+    salaryRangeTo:"$employerdetails.salaryRangeTo",
+    experienceFrom:"$employerdetails.experienceFrom",
+    experienceTo:"$employerdetails.experienceTo",
+    interviewType:"$employerdetails.interviewType",
+    candidateDescription:"$employerdetails.candidateDescription",
+    workplaceType:"$employerdetails.workplaceType",
+    industry:"$employerdetails.industry",
+    preferredindustry:"$employerdetails.preferredindustry",
+    functionalArea:"$employerdetails.functionalArea",
+    role:"$employerdetails.role",
+    jobLocation:"$employerdetails.jobLocation",
+    employmentType:"$employerdetails.employmentType",
+    openings:"$employerdetails.openings",
+    createdAt:"$employerdetails.createdAt",
+    updatedAt:"$employerdetails.updatedAt",
+    candidatepostjobs:{ $ifNull: ['$employerdetails.candidatepostjobs', false] },
+  }
+ }
+   ])
+   return data 
+}
+const getByIdSavedJobsView = async (userId) => {
+  // console.log(userId)
+   const data = await CandidateSaveJob.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: userId } }] 
+    }
+  },
+  {
+    $lookup: {
+      from: 'employerdetails',
+      localField: 'savejobId',
+      foreignField: '_id',
+      pipeline:[
+        {
+          $lookup: {
+            from: 'candidatepostjobs',
+            localField: '_id',
+            foreignField: 'jobId',
+            pipeline:[
+              { 
+                $match: { 
+                  $and: [ { userId: { $eq: userId } }] 
+              }
+            },
+            ],
+            as: 'candidatepostjobs',
+          },
+        },
+        {
+          $unwind: {
+            path: '$candidatepostjobs',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: 'employerregistrations',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'employerregistrations',
+          },
+        },
+       {
+          $unwind:"$employerregistrations"
+       }
+      ],
+      as: 'employerdetails',
+    },
+  },
+ {
+    $unwind:"$employerdetails"
+ },
+ {
+  $project:{
+    userId:1,
+    companyType:"$employerdetails.employerregistrations.companyType",
+    companyName:"$employerdetails.employerregistrations.companyName",
     designation:"$employerdetails.designation",
     recruiterName:"$employerdetails.recruiterName",
     contactNumber:"$employerdetails.contactNumber",
@@ -420,6 +590,19 @@ const getByIdSavedJobs = async (userId) => {
    return data 
 }
 
+// automaticsearchjob
+
+// const autojobSearch = async (userId) =>{
+//   const data = await CandidateSearchjobCandidate.aggregate([
+//     { 
+//       $match: { 
+//         $and: [ { userId: { $eq: userId } }] 
+//     }
+//   },
+     
+//   ])
+// }
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -432,5 +615,7 @@ module.exports = {
     getByIdAppliedJobs,
     deleteByIdSavejOb,
     getByIdSavedJobs,
+    applyJobsView,
+    getByIdSavedJobsView,
     // createSearchCandidate,
 };

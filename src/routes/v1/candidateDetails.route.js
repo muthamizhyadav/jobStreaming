@@ -19,5 +19,7 @@ router.route('/createCandidateSavejob').post(candidateDetailsController.createCa
 router.route('/getByIdAppliedJobs').get(authorization, candidateDetailsController.getByIdAppliedJobs);
 router.route('/deleteByIdSavejOb/:id').delete(candidateDetailsController.deleteByIdSavejOb);
 router.route('/getByIdSavedJobs').get(authorization, candidateDetailsController.getByIdSavedJobs);
+router.route('/applyJobsView/:userId').get(candidateDetailsController.applyJobsView);
+router.route('/getByIdSavedJobsView/:userId').get(candidateDetailsController.getByIdSavedJobsView);
 // router.route('/createSearchCandidate').post(authorization, candidateDetailsController.createSearchCandidate);
 module.exports = router;

@@ -53,6 +53,9 @@ const userEmpSchema = mongoose.Schema(
     companyType: {
       type: String,
     },
+    companyName:{
+      type:String,
+    },
     pincode: {
         type: Number,
       },

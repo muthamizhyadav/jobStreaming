@@ -77,6 +77,11 @@ const getByIdAppliedJobs = catchAsync(async (req, res) => {
     res.send(user)
     });
 
+    const applyJobsView = catchAsync(async (req, res) => {
+      const user = await candidateDetailsService.applyJobsView(req.params.userId);
+      res.send(user)
+      });
+
 const deleteByIdSavejOb = catchAsync(async (req, res) => {
     const user = await candidateDetailsService.deleteByIdSavejOb(req.params.id);
     res.send(user)
@@ -88,6 +93,12 @@ const deleteByIdSavejOb = catchAsync(async (req, res) => {
     res.send(user)
     });
 
+
+    const getByIdSavedJobsView = catchAsync(async (req, res) => {
+      const user = await candidateDetailsService.getByIdSavedJobs(req.params.userId);
+      res.send(user)
+      });
+  
 
     // const createSearchCandidate = catchAsync(async (req, res) => {
     //   const user = await candidateDetailsService.createSearchCandidate(req.body);
@@ -107,5 +118,7 @@ module.exports = {
   getByIdAppliedJobs,
   deleteByIdSavejOb,
   getByIdSavedJobs,
+  applyJobsView,
+  getByIdSavedJobsView,
   // createSearchCandidate,
 };
