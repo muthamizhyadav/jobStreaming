@@ -38,6 +38,12 @@ const tempToken = mongoose.Schema({
   Uid: {
     type: Number,
   },
+  type: {
+    type: String,
+  },
+  hostId: {
+    type: String,
+  },
 });
 
 const tempTokenModel = mongoose.model('tempToken', tempToken);

@@ -10,36 +10,28 @@ const appCertificate = 'bfb596743d2b4414a1895ac2edb1d1f0';
 
 const generateToken = async (req) => {
   const expirationTimeInSeconds = 3600;
-  const uid = req.query.uid;
+  const uid = req.body.uid;
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
-  const channel = req.query.channel;
-  // const currentTimestamp = Math.floor(Date.now() / 1000);
-  // const expirationTimestamp = new Date(new Date('2022-12-20 11:51:59')).getTime() / 1000;
+  const channel = req.body.channel;
+
   const moment_curr = moment();
   const currentTimestamp = moment_curr.add(5, 'minutes');
   const expirationTimestamp =
     new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
   const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
-  // console.log(
-  //   moment(new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss')))).format(
-  //     'YYYY-MM-DD HH:mm:ss'
-  //   )
-  // );
-  // console.log(
-  //   moment(new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss')))).format(
-  //     'YYYY-MM-DD HH:mm:ss'
-  //   )
-  // );
   let value = await tempTokenModel.create({
-    token: token,
-    date: moment().format('YYYY-MM-DD'),
-    time: moment().format('HHMMSS'),
-    created: moment(),
-    Uid: uid,
-    chennel: channel,
-    participents: uid,
-    created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
-    expDate: expirationTimestamp * 1000,
+    ...req.body,
+    ...{
+      token: token,
+      date: moment().format('YYYY-MM-DD'),
+      time: moment().format('HHMMSS'),
+      created: moment(),
+      Uid: uid,
+      chennel: channel,
+      participents: uid,
+      created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
+      expDate: expirationTimestamp * 1000,
+    },
   });
   return { uid, token, value };
 };

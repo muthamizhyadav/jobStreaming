@@ -7,7 +7,7 @@ const auth = require('../../../middlewares/auth');
 const router = express.Router();
 const generateToken = require('../../../controllers/liveStreaming/generateToken.controller');
 
-router.get('/getToken', generateToken.generateToken);
+router.post('/getToken', generateToken.generateToken);
 router.get('/getHostTokens', generateToken.getHostTokens);
 router.get('/gettoken/byId', generateToken.gettokenById);
 
