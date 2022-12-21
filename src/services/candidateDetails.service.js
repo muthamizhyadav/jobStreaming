@@ -230,6 +230,100 @@ const createCandidateSavejob = async (userBody) => {
 return data
 };
 
+
+const getByIdAppliedJobs = async (userId) => {
+  console.log(userId)
+   const data = await CandidatePostjob.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: userId } }] 
+    }
+  },
+  {
+    $lookup: {
+      from: 'employerdetails',
+      localField: 'jobId',
+      foreignField: '_id',
+      pipeline:[
+        {
+          $lookup: {
+            from: 'candidatesavejobs',
+            localField: '_id',
+            foreignField: 'savejobId',
+            pipeline:[
+              { 
+                $match: { 
+                  $and: [ { userId: { $eq: userId } }] 
+              }
+            },
+            ],
+            as: 'candidatesavejobs',
+          },
+        },
+        {
+          $unwind: {
+            path: '$candidatesavejobs',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $lookup: {
+            from: 'employerregistrations',
+            localField: 'userId',
+            foreignField: '_id',
+            as: 'employerregistrations',
+          },
+        },
+       {
+          $unwind:"$employerregistrations"
+       }
+      ],
+      as: 'employerdetails',
+    },
+  },
+ {
+    $unwind:"$employerdetails"
+ },
+ {
+  $project:{
+    userId:1,
+    companyName:"$employerdetails.employerregistrations.companyType",
+    designation:"$employerdetails.designation",
+    recruiterName:"$employerdetails.recruiterName",
+    contactNumber:"$employerdetails.contactNumber",
+    jobDescription:"$employerdetails.jobDescription",
+    salaryRangeFrom:"$employerdetails.salaryRangeFrom",
+    salaryRangeTo:"$employerdetails.salaryRangeTo",
+    experienceFrom:"$employerdetails.experienceFrom",
+    experienceTo:"$employerdetails.experienceTo",
+    interviewType:"$employerdetails.interviewType",
+    candidateDescription:"$employerdetails.candidateDescription",
+    workplaceType:"$employerdetails.workplaceType",
+    industry:"$employerdetails.industry",
+    preferredindustry:"$employerdetails.preferredindustry",
+    functionalArea:"$employerdetails.functionalArea",
+    role:"$employerdetails.role",
+    jobLocation:"$employerdetails.jobLocation",
+    employmentType:"$employerdetails.employmentType",
+    openings:"$employerdetails.openings",
+    createdAt:"$employerdetails.createdAt",
+    updatedAt:"$employerdetails.updatedAt",
+    candidatesavejobs:{ $ifNull: ['$employerdetails.candidatesavejobs', false] },
+  }
+ }
+   ])
+   return data 
+}
+
+const deleteByIdSavejOb = async (id) => {
+  const data = await CandidateSaveJob.findById(id)
+  if (!data) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'savejob not found');
+  }
+  await data.remove();
+  return data;
+};
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -239,4 +333,6 @@ module.exports = {
     getByIdEmployerDetailsShownCandidate,
     createCandidatePostjob,
     createCandidateSavejob,
+    getByIdAppliedJobs,
+    deleteByIdSavejOb,
 };
