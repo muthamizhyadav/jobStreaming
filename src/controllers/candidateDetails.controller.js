@@ -51,10 +51,17 @@ const candidateSearch = catchAsync(async(req,res) => {
   const user = await candidateDetailsService.candidateSearch(req.body)
   res.send({user})
 })
+
+
+const getByIdEmployerDetailsShownCandidate = catchAsync(async(req,res) => {
+  const user = await candidateDetailsService.getByIdEmployerDetailsShownCandidate(req.params.id)
+  res.send(user)
+})
 module.exports = {
   createkeySkill,
   getByIdUser,
   updateById,
   deleteById,
   candidateSearch,
+  getByIdEmployerDetailsShownCandidate,
 };

@@ -107,10 +107,22 @@ const candidateSearch = async (body) => {
     return data 
 }
 
+const getByIdEmployerDetailsShownCandidate = async (id) =>{
+  const data = await EmployerDetails.aggregate([
+    { 
+      $match: { 
+        $and: [ { _id: { $eq: id } }] 
+    }
+  }, 
+  ])
+  return data
+}
+
 module.exports = {
     createkeySkill,
     getByIdUser,
     deleteById,
     updateById,
     candidateSearch,
+    getByIdEmployerDetailsShownCandidate,
 };

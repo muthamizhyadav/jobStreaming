@@ -13,5 +13,6 @@ router.route('/getKeyskill').get(authorization,candidateDetailsController.getByI
 router.route('/updateKeyskill/:id').put(uploadImage.array('image'), candidateDetailsController.updateById);
 router.route('/deleteKeyskill/:id').delete(candidateDetailsController.deleteById);
 router.route('/candidateSearch').post(candidateDetailsController.candidateSearch);
+router.route('/getByIdEmployerDetailsShownCandidate/:id').get(candidateDetailsController.getByIdEmployerDetailsShownCandidate);
 
 module.exports = router;
