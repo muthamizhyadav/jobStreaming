@@ -6,35 +6,35 @@ const { roles } = require('../config/roles');
 const { StringDecoder } = require('string_decoder');
 const { v4 } = require('uuid');
 
-const keySkillSchema = mongoose.Schema(
+const candiadteSearchSchema = mongoose.Schema(
   {
     _id: {
       type: String,
       default: v4,
     },
-    image:{
-        type:String,
+    anyKeywords:{
+        type:Array,
     },
     keyskill: {
         type:Array,
     },
-    userId:{
-        type:String,
-    },
-    experienceMonth:{
+    experienceMonthFrom:{
         type:Number
     },
-    experienceYear:{
+    experienceMonthTo:{
         type:Number
     },
-    salaryRangeFrom:{
+    experienceYearFrom:{
+        type:Number
+    },
+    experienceYearTo:{
+        type:Number
+    },
+    salaryFrom:{
         type:Number,
     },
-    salaryRangeTo:{
+    salaryTo:{
         type:Number,
-    },
-    locationNative:{
-        type:String,
     },
     locationCurrent:{
         type:String,
@@ -54,37 +54,25 @@ const keySkillSchema = mongoose.Schema(
     courseType:{
         type:String,
     },
-    passingYear:{
+    passingYearFrom:{
         type:Number,
     },
-    gradingSystem:{
+    passingYearTo:{
+        type:Number,
+    },
+    registration:{
         type:String,
     },
-    availability:{
+    onlyCandidates:{
         type:String,
     },
-    currentSkill:{
-        type:Array,
-    },
-    preferredSkill:{
-        type:Array,
-    },
-    secondarySkill:{
-        type:Array,
-    },
-    pasrSkill:{
-        type:Array,
-    },
-    gender:{
+    candiadeSeeking:{
         type:String,
     },
-    maritalStatus:{
+    employmentType:{
         type:String,
     },
-    mark:{
-        type:String,
-    },
-    Jobtype:{
+    EducationalType:{
         type:String,
     },
     active:{
@@ -96,5 +84,5 @@ const keySkillSchema = mongoose.Schema(
     timestamps: true,
   }
 );
-const KeySkill = mongoose.model('candidateDetail', keySkillSchema);
-module.exports = {KeySkill} ;
+const CandiadteSearch = mongoose.model('candiadteSearch', candiadteSearchSchema);
+module.exports = {CandiadteSearch} ;
