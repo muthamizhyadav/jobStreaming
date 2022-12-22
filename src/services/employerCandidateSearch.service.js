@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { CandiadteSearch, CreateSavetoFolder} = require('../models/employerCandidateSearch.model');
+const {EmployerDetails, EmployerPostjob} = require('../models/employerDetails.model');
 const {KeySkill} = require('../models/candidateDetails.model');
 // const { CandidateRegistration } = require('../models');
 const ApiError = require('../utils/ApiError');
@@ -159,10 +160,142 @@ let data = await CreateSavetoFolder.create(values);
 return data
 };
 
+const employerPost_Jobs  = async (userId) => {
+  let data = await EmployerDetails.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: userId } }] 
+    }
+  },
+  // {
+  //   $lookup: {
+  //     from: 'employerregistrations',
+  //     localField: 'userId',
+  //     foreignField: '_id',
+  //     as: 'employerregistrations',
+  //   },
+  // },
+  // {
+  //   $unwind:'$employerregistrations',
+  // },
+  ])
+  return data
+}
+
+const employer_job_post_edit = async (id, updateBody) =>{
+  const user = await EmployerDetails.findById(id);
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'post a Job not found');
+  }
+  const data = await EmployerDetails.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+  await data.save();
+  return data;
+}
+
+const candidate_applied_Details = async (id) => {
+    const data = await EmployerPostjob.aggregate([
+      { 
+        $match: { 
+          $and: [ { postajobId: { $eq: id } }] 
+      }
+    },
+     {
+    $lookup: {
+      from: 'candidateregistrations',
+      localField: 'candidateId',
+      foreignField: '_id',
+      as: 'candidateregistrations',
+    },
+  },
+  {
+    $unwind:'$candidateregistrations',
+  },
+     
+    ])
+    return data ;
+}
+
+
+const candidate_applied_Details_view = async (id) => {
+  const data = await KeySkill.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: id } }] 
+    }
+  },
+  {
+    $lookup: {
+      from: 'candidateregistrations',
+      localField: 'userId',
+      foreignField: '_id',
+      pipeline:[
+        {
+          $lookup: {
+            from: 'savetofolderemployersearches',
+            localField: '_id',
+            foreignField: 'candidateId',
+            as: 'savetofolderemployersearches',
+          },
+        },
+        {
+          $unwind: {
+            path: '$savetofolderemployersearches',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ],
+      as: 'candidateregistrations',
+    },
+  },
+  {
+    $unwind:'$candidateregistrations',
+  },
+  {
+    $project:{
+      keyskill:1,
+      currentSkill:1,
+      preferredSkill:1,
+      secondarySkill:1,
+      pasrSkill:1,
+      experienceMonth:1,
+      experienceYear:1,
+      salaryRangeFrom:1,
+      salaryRangeTo:1,
+      locationNative:1,
+      locationCurrent:1,
+      education:1,
+      specification:1,
+      university:1,
+      courseType:1,
+      passingYear:1,
+      gradingSystem:1,
+      availability:1,
+      gender:1,
+      maritalStatus:1,
+      image:1,
+      userId:1,
+      createdAt:1,
+      saveDataOrNot:{ $ifNull: ['$candidateregistrations.savetofolderemployersearches.status', false] },
+      candidateregistrations:"$candidateregistrations",
+    }
+  }
+   
+  ])
+  return data ;
+}
+
+// const saveSearchData_EmployerSide = async (id) => {
+//     const data = await CandiadteSearch.aggregate
+// }
+
 module.exports = {
     createCandidateSearch,
     searchCandidate,
     employerSearchCandidate,
     createSavetoFolder,
+    employerPost_Jobs,
+    employer_job_post_edit,
+    candidate_applied_Details,
+    candidate_applied_Details_view,
     
 };

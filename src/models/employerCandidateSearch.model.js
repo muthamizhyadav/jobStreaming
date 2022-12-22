@@ -101,6 +101,9 @@ const createSavetoFolderSchema = mongoose.Schema(
         type:String,
         default:true,
       },
+      folderName:{
+        type:String,
+      },
       active:{
           type:Boolean,
           default:true,

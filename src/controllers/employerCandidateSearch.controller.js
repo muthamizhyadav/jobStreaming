@@ -4,7 +4,7 @@ const employerCandidateSearch = require('../services/employerCandidateSearch.ser
 
 
 const createCandidateSearch = catchAsync(async (req, res) => {
-    const userId = req.userId
+    let userId = req.userId
   const user = await employerCandidateSearch.createCandidateSearch(userId, req.body);
   res.status(httpStatus.CREATED).send({ user }
     );
@@ -29,9 +29,35 @@ const createSavetoFolder = catchAsync(async (req, res) => {
     );
 });
 
+
+const employerPost_Jobs = catchAsync(async (req, res) => {
+    const userId = req.userId
+  const user = await employerCandidateSearch.employerPost_Jobs(userId);
+  res.send({user})
+});
+
+const employer_job_post_edit = catchAsync(async (req, res) => {
+  const user = await employerCandidateSearch.employer_job_post_edit(req.params.id, req.body);
+  res.send({user})
+});
+
+
+const candidate_applied_Details = catchAsync(async (req, res) => {
+    const user = await employerCandidateSearch.candidate_applied_Details(req.params.id);
+    res.send({user})
+});
+
+const candidate_applied_Details_view = catchAsync(async (req, res) => {
+    const user = await employerCandidateSearch.candidate_applied_Details_view(req.params.id);
+    res.send({user})
+});
 module.exports = {
     createCandidateSearch,
     searchQuery,
     employerSearchCandidate,
     createSavetoFolder,
+    employerPost_Jobs,
+    employer_job_post_edit,
+    candidate_applied_Details,
+    candidate_applied_Details_view,
 };
