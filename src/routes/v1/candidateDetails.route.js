@@ -12,7 +12,7 @@ router.route('/createKeyskill').post(authorization,uploadImage.array('image'), c
 router.route('/getKeyskill').get(authorization,candidateDetailsController.getByIdUser);
 router.route('/updateKeyskill/:id').put(uploadImage.array('image'), candidateDetailsController.updateById);
 router.route('/deleteKeyskill/:id').delete(candidateDetailsController.deleteById);
-router.route('/candidateSearch').post(authorization, candidateDetailsController.candidateSearch);
+router.route('/candidateSearch').post(candidateDetailsController.candidateSearch);
 router.route('/getByIdEmployerDetailsShownCandidate/:id/:userId').get(candidateDetailsController.getByIdEmployerDetailsShownCandidate);
 router.route('/createCandidatePostjob').post(candidateDetailsController.createCandidatePostjob);
 router.route('/createCandidateSavejob').post(candidateDetailsController.createCandidateSavejob);
@@ -21,5 +21,7 @@ router.route('/deleteByIdSavejOb/:id').delete(candidateDetailsController.deleteB
 router.route('/getByIdSavedJobs').get(authorization, candidateDetailsController.getByIdSavedJobs);
 router.route('/applyJobsView/:userId').get(candidateDetailsController.applyJobsView);
 router.route('/getByIdSavedJobsView/:userId').get(candidateDetailsController.getByIdSavedJobsView);
+router.route('/autojobSearch').get(authorization, candidateDetailsController.autojobSearch);
+router.route('/createdSearchhistory').post(authorization, candidateDetailsController.createdSearchhistory);
 // router.route('/createSearchCandidate').post(authorization, candidateDetailsController.createSearchCandidate);
 module.exports = router;

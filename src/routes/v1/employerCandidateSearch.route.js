@@ -7,5 +7,6 @@ const router = express.Router();
 
 router.route('/').post(authorization,employerCandidateSearch.createCandidateSearch);
 router.route('/searchQuery').post(employerCandidateSearch.searchQuery);
+router.route('/employerSearchCandidate/:id').get(employerCandidateSearch.employerSearchCandidate);
 
 module.exports = router;

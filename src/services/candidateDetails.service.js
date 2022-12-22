@@ -76,16 +76,16 @@ const deleteById = async (id) => {
 // return data
 // };
 
-const candidateSearch = async (userId,body) => {
-  console.log(userId)
-  let values = {...body, ...{userId:userId}}
+const candidateSearch = async (body) => {
+  // console.log(userId)
+  // let values = {...body, ...{userId:userId}}
      let {search, experience, location} = body
 
-     await CandidateSearchjobCandidate.create(values);
      if(search != null){
       search = search.split(',');
      console.log(search)
      }
+  //  await CandidateSearchjobCandidate.create(values);
 
     //  search = ["fbhfghfh","software engineer"]
      experienceSearch = {active:true}
@@ -590,18 +590,67 @@ const getByIdSavedJobsView = async (userId) => {
    return data 
 }
 
-// automaticsearchjob
+const  createdSearchhistory = async (userId,body) => {
+  console.log(userId)
+  let values = {...body, ...{userId:userId}}
+let data = await CandidateSearchjobCandidate.create(values);
+return data
+}
 
-// const autojobSearch = async (userId) =>{
-//   const data = await CandidateSearchjobCandidate.aggregate([
-//     { 
-//       $match: { 
-//         $and: [ { userId: { $eq: userId } }] 
-//     }
-//   },
+const autojobSearch = async (userId) =>{
+  console.log(userId)
+ 
+  const data = await CandidateSearchjobCandidate.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: userId } }] 
+    }
+  },
+ {
+    $lookup:{
+     from: 'employerdetails',
+     let:{keySkill: '$search'},
+     pipeline:[
+      { 
+        $match: { 
+          $expr: {
+            $or: [
+              { $in: ['$keySkill', '$$keySkill']},
+            ],
+          },
+      }
+    }
+     ],
+     as:"employerdetails"
+
+    }
+  },
+  // {
+  //   $lookup: {
+  //     from: 'shops',
+  //     let: { street: '$_id' },
+
+  //     pipeline: [
+  //       {
+  //         $match: {
+  //           $expr: {
+  //             $eq: ['$$street', '$Strid']
+  //           },
+  //         },
+  //       },
+  //     ],
+  //     as: 'shopData',
+  //   },
+  // },
+ {
+  $project:{
+    keySkill:"$employerdetails"
+  }
+ }
      
-//   ])
-// }
+  ])
+  return data
+}
 
 module.exports = {
     createkeySkill,
@@ -617,5 +666,7 @@ module.exports = {
     getByIdSavedJobs,
     applyJobsView,
     getByIdSavedJobsView,
+    autojobSearch,
+    createdSearchhistory
     // createSearchCandidate,
 };

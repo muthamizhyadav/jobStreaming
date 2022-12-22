@@ -16,9 +16,14 @@ const searchQuery = catchAsync(async(req,res) => {
     res.send({user})
 })
 
-
+const employerSearchCandidate = catchAsync(async(req,res) => {
+    // console.log(req.query)
+    const user = await employerCandidateSearch.employerSearchCandidate(req.params.id)
+    res.send({user})
+})
 
 module.exports = {
     createCandidateSearch,
     searchQuery,
+    employerSearchCandidate,
 };

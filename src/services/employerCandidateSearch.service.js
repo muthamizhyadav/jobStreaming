@@ -12,6 +12,30 @@ const createCandidateSearch = async (userId, userBody) => {
  return data
 };
 
+
+const employerSearchCandidate = async (id) =>{
+  let data = await KeySkill.aggregate([
+    { 
+      $match: { 
+        $and: [ { _id: { $eq: id } }] 
+    }
+  },
+  {
+    $lookup: {
+      from: 'candidateregistrations',
+      localField: 'userId',
+      foreignField: '_id',
+      as: 'candidateregistrations',
+    },
+  },
+  {
+    $unwind:'$candidateregistrations',
+  },
+  ])
+  return data ;
+}
+
+
 const searchCandidate = async (key) => {
     let keyskill = key.keyskill
     let keywords = key.keywords
@@ -87,4 +111,5 @@ const searchCandidate = async (key) => {
 module.exports = {
     createCandidateSearch,
     searchCandidate,
+    employerSearchCandidate,
 };

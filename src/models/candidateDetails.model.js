@@ -151,7 +151,7 @@ const candidatePostjobSchema = mongoose.Schema(
         type:String,
       },
       search:{
-        type:String,
+        type:Array,
       },
       experience:{
         type:Number,
