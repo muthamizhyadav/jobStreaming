@@ -306,6 +306,73 @@ const employerRemovePostJobs = async (id) => {
   return data;
 };
 
+const allFolderData = async (userId) => {
+  console.log(userId)
+  const data = await CreateSavetoFolder.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: userId } }] 
+    }
+  },
+  {
+    $lookup: {
+      from: 'candidateregistrations',
+      localField: 'candidateId',
+      foreignField: '_id',
+      pipeline:[
+        {
+          $lookup: {
+            from: 'candidatedetails',
+            localField: '_id',
+            foreignField: 'userId',
+            as: 'candidatedetails',
+          },
+        },
+        {
+          $unwind: {
+            path: '$candidatedetails',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ],
+      as: 'candidateregistrations',
+    },
+  },
+  {
+    $unwind:'$candidateregistrations',
+   },
+  {
+    $project:{
+      status:1,
+      candidateId:1,
+      folderName:1,
+      userId:1,
+      // createdAt:1,
+      // updatedAt:1,
+      name:"$candidateregistrations.name",
+      email:"$candidateregistrations.name",
+      workStatus:"$candidateregistrations.name",
+      mobileNumber:"$candidateregistrations.name",
+      resume:"$candidateregistrations.name",
+      keyskill:"$candidateregistrations.candidatedetails.keyskill",
+      currentSkill:"$candidateregistrations.candidatedetails.currentSkill",
+      preferredSkill:"$candidateregistrations.candidatedetails.preferredSkill",
+      secondarySkill:"$candidateregistrations.candidatedetails.secondarySkill",
+      pasrSkill:"$candidateregistrations.candidatedetails.pasrSkill",
+      locationCurrent:"$candidateregistrations.candidatedetails.locationCurrent",
+      // userId:"$candidateregistrations.candidatedetails.userId",
+   }
+  },
+  // {
+  //   $group: {
+  //     _id: { folderName: '$folderName' },
+  //     email : { $addToSet : "$email" }
+  //   },
+  // },
+  ])
+  return data;
+}
+
 module.exports = {
     createCandidateSearch,
     searchCandidate,
@@ -317,5 +384,6 @@ module.exports = {
     candidate_applied_Details_view,
     saveSearchData_EmployerSide,
     employerRemovePostJobs,
+    allFolderData,
     
 };
