@@ -51,6 +51,18 @@ const candidate_applied_Details_view = catchAsync(async (req, res) => {
     const user = await employerCandidateSearch.candidate_applied_Details_view(req.params.id);
     res.send({user})
 });
+
+const saveSearchData_EmployerSide = catchAsync(async (req, res) => {
+    const userId = req.userId
+    const user = await employerCandidateSearch.saveSearchData_EmployerSide(userId);
+    res.send({user})
+});
+
+const employerRemovePostJobs = catchAsync(async(req,res) => {
+    const user = await employerCandidateSearch.employerRemovePostJobs(req.params.id)
+    res.send()
+})
+
 module.exports = {
     createCandidateSearch,
     searchQuery,
@@ -60,4 +72,6 @@ module.exports = {
     employer_job_post_edit,
     candidate_applied_Details,
     candidate_applied_Details_view,
+    saveSearchData_EmployerSide,
+    employerRemovePostJobs,
 };

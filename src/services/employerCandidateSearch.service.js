@@ -284,9 +284,27 @@ const candidate_applied_Details_view = async (id) => {
   return data ;
 }
 
-// const saveSearchData_EmployerSide = async (id) => {
-//     const data = await CandiadteSearch.aggregate
-// }
+const saveSearchData_EmployerSide = async (userId) => {
+    const data = await CandiadteSearch.aggregate([
+      { 
+        $match: { 
+          $and: [ { userId: { $eq: userId } }] 
+      }
+    },
+
+    ])
+    return data;
+}
+
+
+const employerRemovePostJobs = async (id) => {
+  const data = await CandiadteSearch.findById(id)
+  if (!data) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'savejob not found');
+  }
+  await data.remove();
+  return data;
+};
 
 module.exports = {
     createCandidateSearch,
@@ -297,5 +315,7 @@ module.exports = {
     employer_job_post_edit,
     candidate_applied_Details,
     candidate_applied_Details_view,
+    saveSearchData_EmployerSide,
+    employerRemovePostJobs,
     
 };

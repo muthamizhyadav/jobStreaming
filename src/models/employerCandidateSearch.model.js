@@ -75,6 +75,9 @@ const candiadteSearchSchema = mongoose.Schema(
     EducationalType:{
         type:String,
     },
+    userId:{
+        type:String,
+    },
     active:{
         type:Boolean,
         default:true,
