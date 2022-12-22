@@ -85,4 +85,30 @@ const candiadteSearchSchema = mongoose.Schema(
   }
 );
 const CandiadteSearch = mongoose.model('candiadteSearch', candiadteSearchSchema);
-module.exports = {CandiadteSearch} ;
+const createSavetoFolderSchema = mongoose.Schema(
+    {
+      _id: {
+        type: String,
+        default: v4,
+      },
+      userId:{
+          type:String,
+      },
+      candidateId:{
+        type:String,
+      },
+      status:{
+        type:String,
+        default:true,
+      },
+      active:{
+          type:Boolean,
+          default:true,
+      }
+    },
+    {
+      timestamps: true,
+    }
+  );
+  const CreateSavetoFolder = mongoose.model('SavetoFolderEmployerSearches', createSavetoFolderSchema);
+module.exports = {CandiadteSearch, CreateSavetoFolder} ;

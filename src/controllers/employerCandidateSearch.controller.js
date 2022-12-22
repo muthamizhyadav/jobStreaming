@@ -22,8 +22,16 @@ const employerSearchCandidate = catchAsync(async(req,res) => {
     res.send({user})
 })
 
+const createSavetoFolder = catchAsync(async (req, res) => {
+    const userId = req.userId
+  const user = await employerCandidateSearch.createSavetoFolder(userId, req.body);
+  res.status(httpStatus.CREATED).send({ user }
+    );
+});
+
 module.exports = {
     createCandidateSearch,
     searchQuery,
     employerSearchCandidate,
+    createSavetoFolder,
 };

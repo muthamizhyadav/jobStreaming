@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { CandiadteSearch } = require('../models/employerCandidateSearch.model');
+const { CandiadteSearch, CreateSavetoFolder} = require('../models/employerCandidateSearch.model');
 const {KeySkill} = require('../models/candidateDetails.model');
 // const { CandidateRegistration } = require('../models');
 const ApiError = require('../utils/ApiError');
@@ -25,12 +25,57 @@ const employerSearchCandidate = async (id) =>{
       from: 'candidateregistrations',
       localField: 'userId',
       foreignField: '_id',
+      pipeline:[
+        {
+          $lookup: {
+            from: 'savetofolderemployersearches',
+            localField: '_id',
+            foreignField: 'candidateId',
+            as: 'savetofolderemployersearches',
+          },
+        },
+        {
+          $unwind: {
+            path: '$savetofolderemployersearches',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ],
       as: 'candidateregistrations',
     },
   },
   {
     $unwind:'$candidateregistrations',
   },
+  {
+    $project:{
+      keyskill:1,
+      currentSkill:1,
+      preferredSkill:1,
+      secondarySkill:1,
+      pasrSkill:1,
+      experienceMonth:1,
+      experienceYear:1,
+      salaryRangeFrom:1,
+      salaryRangeTo:1,
+      locationNative:1,
+      locationCurrent:1,
+      education:1,
+      specification:1,
+      university:1,
+      courseType:1,
+      passingYear:1,
+      gradingSystem:1,
+      availability:1,
+      gender:1,
+      maritalStatus:1,
+      image:1,
+      userId:1,
+      createdAt:1,
+      saveDataOrNot:{ $ifNull: ['$candidateregistrations.savetofolderemployersearches.status', false] },
+      candidateregistrations:"$candidateregistrations",
+    }
+  }
   ])
   return data ;
 }
@@ -108,8 +153,16 @@ const searchCandidate = async (key) => {
 }
 
 
+const createSavetoFolder = async (userId, userBody) => {
+  let values = {...userBody, ...{userId:userId}}
+let data = await CreateSavetoFolder.create(values);
+return data
+};
+
 module.exports = {
     createCandidateSearch,
     searchCandidate,
     employerSearchCandidate,
+    createSavetoFolder,
+    
 };
