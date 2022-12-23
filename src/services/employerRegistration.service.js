@@ -20,10 +20,12 @@ const createEmployer = async (userBody) => {
 };
 
 const getUserById = async (id) => {
+  // console.log(id)
   const data  = await EmployerRegistration.findById(id)
   if (!data){
    throw new ApiError(httpStatus.BAD_REQUEST, 'User Not Registration');
   }    
+  return data
 };
 // const getUserByEmail = async (email) => {
 //   return User.findOne({ email });

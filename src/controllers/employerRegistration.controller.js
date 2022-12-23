@@ -43,7 +43,8 @@ const forgot = catchAsync(async (req, res) => {
 })
 
 const getUserById = catchAsync(async (req, res) => {
-  const user = await EmployerRegistration.getUserById(req.params.id);
+  let userId = req.userId
+  const user = await EmployerRegistration.getUserById(userId);
   res.send({user});
 });
 

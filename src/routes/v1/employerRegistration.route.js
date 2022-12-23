@@ -5,7 +5,7 @@ const authController = require('../../controllers/auth.controller');
 const employerRegistration = require('../../controllers/employerRegistration.controller');
 // const uploadImage = require('../../middlewares/upload');
 const auth = require('../../middlewares/auth');
-const authorization = require('../../controllers/tokenVerify.controller');
+const authorization = require('../../controllers/empVEridy.controller');
 
 const router = express.Router();
 
