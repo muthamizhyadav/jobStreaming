@@ -29,10 +29,16 @@ const getByIdUser = async (id) => {
           as: 'candidatedetails',
         },
       },
-      { $unwind: '$candidatedetails' },
       {
         $project:{
           resume:1,
+          email:1,
+          workStatus:1,
+          mobileNumber:1,
+          name:1,
+          resume:1,
+          createdAt:1,
+          updatedAt:1,
           candidateDetails:"$candidatedetails",
         }
       }
@@ -108,7 +114,7 @@ const candidateSearch = async (body) => {
         $and: [experienceSearch,locationSearch] 
     }   
    },    
-      {
+         {
             $lookup: {
               from: 'employerregistrations',
               localField: 'userId',
