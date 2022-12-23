@@ -23,6 +23,7 @@ const getByIdUser = async (id) => {
   return data
 }
 
+
 const getById = async (id) =>{
     const data = await EmployerDetails.findById(id)
     if(!data){

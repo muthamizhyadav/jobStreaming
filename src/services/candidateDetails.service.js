@@ -139,6 +139,17 @@ const getByIdEmployerDetailsShownCandidate = async (id,userId) =>{
   }, 
   {
     $lookup: {
+      from: 'employerregistrations',
+      localField: 'userId',
+      foreignField: '_id',
+      as: 'employerregistrations',
+    },
+  },
+  {
+    $unwind:'$employerregistrations',
+   },
+  {
+    $lookup: {
       from: 'employerpostjobs',
       localField: '_id',
       foreignField: 'postajobId',
@@ -206,6 +217,8 @@ const getByIdEmployerDetailsShownCandidate = async (id,userId) =>{
       },
   {
     $project:{
+      companyType:"$employerregistrations.companyType",
+      companyName:"$employerregistrations.companyName",
       keySkill:1,
       jobTittle:1,
       designation:1,
@@ -411,6 +424,7 @@ const applyJobsView = async (userId) =>{
     openings:"$employerdetails.openings",
     createdAt:"$employerdetails.createdAt",
     updatedAt:"$employerdetails.updatedAt",
+    jobTittle:"$employerdetails.jobTittle",
     candidatesavejobs:{ $ifNull: ['$employerdetails.candidatesavejobs', false] },
   }
  }
@@ -505,6 +519,7 @@ const getByIdSavedJobs = async (userId) => {
     openings:"$employerdetails.openings",
     createdAt:"$employerdetails.createdAt",
     updatedAt:"$employerdetails.updatedAt",
+    jobTittle:"$employerdetails.jobTittle",
     candidatepostjobs:{ $ifNull: ['$employerdetails.candidatepostjobs', false] },
   }
  }
@@ -589,6 +604,7 @@ const getByIdSavedJobsView = async (userId) => {
     openings:"$employerdetails.openings",
     createdAt:"$employerdetails.createdAt",
     updatedAt:"$employerdetails.updatedAt",
+    jobTittle:"$employerdetails.jobTittle",
     candidatepostjobs:{ $ifNull: ['$employerdetails.candidatepostjobs', false] },
   }
  }

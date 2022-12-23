@@ -5,10 +5,12 @@ const authController = require('../../controllers/auth.controller');
 const employerRegistration = require('../../controllers/employerRegistration.controller');
 // const uploadImage = require('../../middlewares/upload');
 const auth = require('../../middlewares/auth');
+const authorization = require('../../controllers/tokenVerify.controller');
 
 const router = express.Router();
 
 router.route('/register').post(employerRegistration.register);
+router.route('/userDetails').get(authorization, employerRegistration.getUserById);
 
 router.route('/verify_email').put(employerRegistration.verify_email);
 router.route('/login').post(employerRegistration.login);

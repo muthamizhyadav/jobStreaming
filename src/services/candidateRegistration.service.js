@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { CandidateRegistration } = require('../models');
+const { CandidateRegistration, User } = require('../models');
 const { OTPModel } = require('../models');
 const {emailService} = require('../services');
 const ApiError = require('../utils/ApiError');
@@ -19,9 +19,12 @@ const createCandidate = async (userBody) => {
 };
 
 
-// const getUserByEmail = async (email) => {
-//   return User.findOne({ email });
-// };
+const getUserById = async (id) => {
+     const data  = await CandidateRegistration.findById(id)
+     if (!data){
+      throw new ApiError(httpStatus.BAD_REQUEST, 'User Not Registration');
+     }    
+};
 
 const verify_email = async (token, otp) =>{
     const data = await OTPModel.findOne({token:token, otp:otp})
@@ -114,6 +117,7 @@ module.exports = {
     forgot,
     forgot_verify_email,
     change_password,
+    getUserById,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,

@@ -49,6 +49,11 @@ const forgot = catchAsync(async (req, res) => {
     res.send({user})
 })
 
+const getUserById = catchAsync(async (req, res) => {
+  const user = await candidateRegistrationService.getUserById(req.params.id);
+  res.send({user});
+});
+
 // const logout = catchAsync(async (req, res) => {
 //   await authService.logout(req.body.refreshToken);
 //   res.status(httpStatus.NO_CONTENT).send();
@@ -88,6 +93,7 @@ module.exports = {
   forgot,
   change_password,
   forgot_verify_email,
+  getUserById,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,

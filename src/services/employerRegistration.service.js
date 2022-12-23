@@ -19,7 +19,12 @@ const createEmployer = async (userBody) => {
  return data
 };
 
-
+const getUserById = async (id) => {
+  const data  = await EmployerRegistration.findById(id)
+  if (!data){
+   throw new ApiError(httpStatus.BAD_REQUEST, 'User Not Registration');
+  }    
+};
 // const getUserByEmail = async (email) => {
 //   return User.findOne({ email });
 // };
@@ -115,6 +120,7 @@ module.exports = {
     forgot,
     forgot_verify_email,
     change_password,
+    getUserById,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
