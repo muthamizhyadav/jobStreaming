@@ -49,6 +49,66 @@ const getHostTokens = async (req) => {
         $and: [{ expDate: { $gte: time - 60 } }, { type: { $eq: 'host' } }],
       },
     },
+    {
+      $lookup: {
+        from: 'temptokens',
+        localField: '_id',
+        foreignField: 'hostId',
+        pipeline: [
+          {
+            $match: {
+              $and: [{ active: { $eq: true } }],
+            },
+          },
+          { $group: { _id: null, count: { $sum: 1 } } },
+        ],
+        as: 'active_users',
+      },
+    },
+    {
+      $unwind: {
+        path: '$active_users',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $lookup: {
+        from: 'temptokens',
+        localField: '_id',
+        foreignField: 'hostId',
+        pipeline: [
+          {
+            $match: {
+              $and: [{ active: { $eq: false } }],
+            },
+          },
+          { $group: { _id: null, count: { $sum: 1 } } },
+        ],
+        as: 'total_users',
+      },
+    },
+    {
+      $unwind: {
+        path: '$total_users',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project: {
+        _id: 1,
+        type: 1,
+        date: 1,
+        Uid: 1,
+        chennel: 1,
+        participents: 1,
+        created_num: 1,
+        expDate: 1,
+        created: 1,
+        active_users: { $ifNull: ['$active_users.count', 0] },
+        In_active_users: { $ifNull: ['$total_users.count', 0] },
+        total_user: { $sum: ['$total_users.count', '$active_users.count'] },
+      },
+    },
   ]);
   return value;
 };
@@ -57,14 +117,20 @@ const gettokenById = async (req) => {
   let value = await tempTokenModel.findById(req.id);
   return value;
 };
+const leave_participents = async (req) => {
+  let value = await tempTokenModel.findByIdAndUpdate({ _id: req.id }, { active: false }, { new: true });
+  return value;
+};
 
 const participents_limit = async (req) => {
+  let participents = await tempTokenModel.findById(req.id);
   let value = await tempTokenModel.find({ hostId: req.id, active: true }).count();
-  return { participents: value };
+  return { participents: value >= participents.participents ? false : true };
 };
 module.exports = {
   generateToken,
   getHostTokens,
   gettokenById,
   participents_limit,
+  leave_participents,
 };
