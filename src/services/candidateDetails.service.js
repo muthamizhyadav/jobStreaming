@@ -263,7 +263,6 @@ return data
 
 
 const getByIdAppliedJobs = async (userId) => {
-  // console.log(userId)
    const data = await CandidatePostjob.aggregate([
     { 
       $match: { 
@@ -673,6 +672,13 @@ const autojobSearch = async (userId) =>{
   ])
   return data
 }
+
+// const employerRegistration = async (page) => {
+//   const data = await EmployerRegistration.find().limit(10).skip(10 * page)
+//   let  count = await EmployerRegistration.find()
+
+//   return {data:data, count:count.length} ;
+// }
 
 module.exports = {
     createkeySkill,
