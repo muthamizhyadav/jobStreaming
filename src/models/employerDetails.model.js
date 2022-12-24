@@ -96,6 +96,10 @@ const employerDetailsSchema = mongoose.Schema(
     location:{
         type:String,
     },
+    adminStatus:{
+        type:String,
+        default:"Pending",
+      },
     active:{
         type:Boolean,
         default:true,

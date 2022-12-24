@@ -115,6 +115,35 @@ const change_password = async (id, body) =>{
 //   return user;
 // };
 
+
+const employerRegistration = async (page) => {
+  const data = await EmployerRegistration.find().limit(10).skip(10 * page)
+  let  count = await EmployerRegistration.find()
+
+  return {data:data, count:count.length} ;
+}
+
+
+const employerRegistration_Approved = async (page) => {
+  const data = await EmployerRegistration.aggregate([
+    { 
+      $match: { 
+        $and: [ { adminStatus: { $eq: "Approved" } }] 
+    }
+  },
+  { $skip: 10 * page },
+  { $limit: 10 },
+  ])
+  const count = await EmployerRegistration.aggregate([
+    { 
+      $match: { 
+        $and: [ { adminStatus: { $eq: "Approved" } }] 
+    }
+  },
+  ])
+  return {data:data, count:count.length}
+}
+ 
 module.exports = {
     createEmployer,
     verify_email,
@@ -123,6 +152,8 @@ module.exports = {
     forgot_verify_email,
     change_password,
     getUserById,
+    employerRegistration,
+    employerRegistration_Approved,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,

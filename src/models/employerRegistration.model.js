@@ -41,6 +41,10 @@ const userEmpSchema = mongoose.Schema(
       },
       private: true, // used by the toJSON plugin
     },
+    adminStatus:{
+      type:String,
+      default:"Pending",
+    },
     // role: {
     //   type: String,
     //   enum: roles,

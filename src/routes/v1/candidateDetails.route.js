@@ -4,6 +4,7 @@ const authController = require('../../controllers/auth.controller');
 const candidateDetailsController = require('../../controllers/candidateDetails.controller');
 const uploadImage = require('../../middlewares/uploadImage');
 const authorization = require('../../controllers/tokenVerify.controller');
+const authorization1= require('../../controllers/empVEridy.controller');
 
 const router = express.Router();
 

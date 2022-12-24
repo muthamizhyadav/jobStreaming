@@ -59,6 +59,10 @@ const userSchema = mongoose.Schema(
     mobileNumber: {
       type: Number,
     },
+    adminStatus:{
+      type:String,
+      default:"Pending",
+    },
     active:{
       type:Boolean,
       default:true,

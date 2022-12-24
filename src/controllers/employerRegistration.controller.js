@@ -80,6 +80,17 @@ const getUserById = catchAsync(async (req, res) => {
 //   res.status(httpStatus.NO_CONTENT).send();
 // });
 
+const employerRegistration = catchAsync(async (req, res) => {
+  const data = await EmployerRegistration.employerRegistration(req.params.page)
+  res.send({data});
+})
+
+
+const employerRegistration_Approved = catchAsync(async (req, res) => {
+  const data = await EmployerRegistration.employerRegistration_Approved(req.params.page)
+  res.send({data});
+})
+
 module.exports = {
   register,
   verify_email,
@@ -88,6 +99,8 @@ module.exports = {
   change_password,
   forgot_verify_email,
   getUserById,
+  employerRegistration,
+  employerRegistration_Approved,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,
