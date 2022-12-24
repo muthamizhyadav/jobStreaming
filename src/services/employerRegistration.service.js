@@ -131,6 +131,17 @@ const employerRegistration_Approved = async (page) => {
         $and: [ { adminStatus: { $eq: "Approved" } }] 
     }
   },
+  {
+    $lookup: {
+      from: 'employerdetails',
+      localField: '_id',
+      foreignField: 'userId',
+      as: 'employerdetails',
+    },
+  },
+  {
+    $unwind:'$employerdetails',
+  },
   { $skip: 10 * page },
   { $limit: 10 },
   ])
@@ -139,6 +150,17 @@ const employerRegistration_Approved = async (page) => {
       $match: { 
         $and: [ { adminStatus: { $eq: "Approved" } }] 
     }
+  },
+  {
+    $lookup: {
+      from: 'employerdetails',
+      localField: '_id',
+      foreignField: 'userId',
+      as: 'employerdetails',
+    },
+  },
+  {
+    $unwind:'$employerdetails',
   },
   ])
   return {data:data, count:count.length}

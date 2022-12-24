@@ -673,12 +673,12 @@ const autojobSearch = async (userId) =>{
   return data
 }
 
-// const employerRegistration = async (page) => {
-//   const data = await EmployerRegistration.find().limit(10).skip(10 * page)
-//   let  count = await EmployerRegistration.find()
+const CandidateRegistrations = async (page) => {
+  const data = await CandidateRegistration.find().limit(10).skip(10 * page)
+  let  count = await CandidateRegistration.find()
 
-//   return {data:data, count:count.length} ;
-// }
+  return {data:data, count:count.length} ;
+}
 
 module.exports = {
     createkeySkill,
@@ -695,6 +695,7 @@ module.exports = {
     applyJobsView,
     getByIdSavedJobsView,
     autojobSearch,
-    createdSearchhistory
+    createdSearchhistory,
+    CandidateRegistrations,
     // createSearchCandidate,
 };

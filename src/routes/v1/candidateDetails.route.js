@@ -24,5 +24,6 @@ router.route('/applyJobsView/:userId').get(candidateDetailsController.applyJobsV
 router.route('/getByIdSavedJobsView/:userId').get(candidateDetailsController.getByIdSavedJobsView);
 router.route('/autojobSearch').get(authorization, candidateDetailsController.autojobSearch);
 router.route('/createdSearchhistory').post(authorization, candidateDetailsController.createdSearchhistory);
+router.route('/CandidateRegistrations/:page').get(candidateDetailsController.CandidateRegistrations);
 // router.route('/createSearchCandidate').post(authorization, candidateDetailsController.createSearchCandidate);
 module.exports = router;

@@ -117,6 +117,11 @@ const autojobSearch = catchAsync(async (req, res) => {
    const user = await candidateDetailsService.createdSearchhistory(userId, req.body);
     res.send(user)
 });
+
+const CandidateRegistrations = catchAsync(async (req, res) => {
+   const user = await candidateDetailsService.CandidateRegistrations(req.params.page);
+    res.send(user)
+});
 module.exports = {
   createkeySkill,
   getByIdUser,
@@ -133,5 +138,6 @@ module.exports = {
   getByIdSavedJobsView,
   autojobSearch,
   createdSearchhistory,
+  CandidateRegistrations,
   // createSearchCandidate,
 };
