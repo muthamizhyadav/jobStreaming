@@ -120,7 +120,7 @@ const gettokenById = async (req) => {
 const participents_limit = async (req) => {
   let participents = await tempTokenModel.findById(req.id);
   let value = await tempTokenModel.find({ hostId: req.id, active: true }).count();
-  return { participents: value >= participents.participents ? true : false };
+  return { participents: value >= participents.participents ? false : true };
 };
 module.exports = {
   generateToken,
