@@ -182,7 +182,10 @@ const candidatePostjobSchema = mongoose.Schema(
       keyskill:{
         type:Array,
       },
-      experience:{
+      experienceMonth:{
+        type:Number,
+      },
+      experienceYear:{
         type:Number,
       },
       location:{
