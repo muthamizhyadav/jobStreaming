@@ -697,6 +697,17 @@ let data = await candidataSearchEmployerSet.create(values);
 return data
 };
 
+
+const updateByIdcandidataSearchEmployerSet = async (id, updateBody) => {
+  const user = await candidataSearchEmployerSet.findById(id)
+ if (!user) {
+   throw new ApiError(httpStatus.NOT_FOUND, 'candidataSearchEmployerSet not found');
+ }
+ const data = await candidataSearchEmployerSet.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+ await data.save();
+ return data;
+};
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -716,5 +727,6 @@ module.exports = {
     CandidateRegistrations,
     updateByIdCandidateRegistration,
     createSetSearchEmployerData,
+    updateByIdcandidataSearchEmployerSet,
     // createSearchCandidate,
 };

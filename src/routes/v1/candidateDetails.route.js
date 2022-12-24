@@ -27,5 +27,6 @@ router.route('/createdSearchhistory').post(authorization, candidateDetailsContro
 router.route('/CandidateRegistrations/:page').get(candidateDetailsController.CandidateRegistrations);
 router.route('/updateByIdCandidateRegistration/:id').put(candidateDetailsController.updateByIdCandidateRegistration);
 router.route('/createSetSearchEmployerData').post(authorization, candidateDetailsController.createSetSearchEmployerData);
+router.route('/updateByIdcandidataSearchEmployerSet/:id').put(candidateDetailsController.updateByIdcandidataSearchEmployerSet);
 // router.route('/createSearchCandidate').post(authorization, candidateDetailsController.createSearchCandidate);
 module.exports = router;
