@@ -169,5 +169,34 @@ const candidatePostjobSchema = mongoose.Schema(
     }
   );
   const CandidateSearchjobCandidate = mongoose.model('candidateSearchjob', candidateSearchjobCandidateSchema);
+
+  const candidataSearchEmployerSetSchema = mongoose.Schema(
+    {
+      _id: {
+        type: String,
+        default: v4,
+      },
+      userId:{
+        type:String,
+      },
+      keyskill:{
+        type:Array,
+      },
+      experience:{
+        type:Number,
+      },
+      location:{
+        type:String,
+      },
+      active:{
+          type:Boolean,
+          default:true,
+      }
+    },
+    {
+      timestamps: true,
+    }
+  );
+  const candidataSearchEmployerSet = mongoose.model('candidatesetSearch', candidataSearchEmployerSetSchema);
   
-module.exports = {KeySkill, CandidatePostjob, CandidateSaveJob, CandidateSearchjobCandidate} ;
+module.exports = {KeySkill, CandidatePostjob, CandidateSaveJob, CandidateSearchjobCandidate, candidataSearchEmployerSet} ;

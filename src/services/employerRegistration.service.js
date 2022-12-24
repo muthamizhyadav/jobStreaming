@@ -142,6 +142,23 @@ const employerRegistration_Approved = async (page) => {
   {
     $unwind:'$employerdetails',
   },
+  {
+     $project:{
+      name:1,
+      email:1,
+      workStatus:1,
+      mobileNumber:1,
+      createdAt:1,
+      resume:1,
+      adminStatus:1,
+      jobTittle:"$employerdetails.jobTittle",
+      experienceFrom:"$employerdetails.experienceFrom",
+      experienceTo:"$employerdetails.experienceTo",
+      interviewType:"$employerdetails.interviewType",
+      salaryRangeFrom:"$employerdetails.salaryRangeFrom",
+      salaryRangeTo:"$employerdetails.salaryRangeTo",
+     }
+  },
   { $skip: 10 * page },
   { $limit: 10 },
   ])

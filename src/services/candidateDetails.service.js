@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { KeySkill, CandidatePostjob, CandidateSaveJob, CandidateSearchjobCandidate } = require('../models/candidateDetails.model');
+const { KeySkill, CandidatePostjob, CandidateSaveJob, CandidateSearchjobCandidate, candidataSearchEmployerSet } = require('../models/candidateDetails.model');
 const { CandidateRegistration } = require('../models');
 const  {EmployerDetails, EmployerPostjob}  = require('../models/employerDetails.model');
 const ApiError = require('../utils/ApiError');
@@ -690,6 +690,13 @@ const updateByIdCandidateRegistration = async (id, updateBody) => {
   return data;
 };
 
+const createSetSearchEmployerData = async (userId, userBody) => {
+  console.log(userId)
+  let values = {...userBody, ...{userId:userId}}
+let data = await candidataSearchEmployerSet.create(values);
+return data
+};
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -708,5 +715,6 @@ module.exports = {
     createdSearchhistory,
     CandidateRegistrations,
     updateByIdCandidateRegistration,
+    createSetSearchEmployerData,
     // createSearchCandidate,
 };
