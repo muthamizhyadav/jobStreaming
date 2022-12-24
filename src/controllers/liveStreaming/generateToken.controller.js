@@ -2,18 +2,13 @@ const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
 const generateTokenService = require('../../services/liveStreaming/generateToken.service');
 
-let express = require('express');
-let app = express();
-let http = require('http');
-let server = http.Server(app);
-let socketIO = require('socket.io');
-let io = socketIO(server);
 
 
 const generateToken = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.generateToken(req);
   if(req.body.type !='host'){
-    io.emit('subscriber-joined', {user: 'sd'});
+    console.log("Asdasd")
+    req.io.emit('subscriberjoined', {user: 'sd'});
   }
   res.status(httpStatus.CREATED).send(tokens);
   
