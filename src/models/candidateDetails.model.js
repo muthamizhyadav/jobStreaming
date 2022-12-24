@@ -169,4 +169,5 @@ const candidatePostjobSchema = mongoose.Schema(
     }
   );
   const CandidateSearchjobCandidate = mongoose.model('candidateSearchjob', candidateSearchjobCandidateSchema);
+  
 module.exports = {KeySkill, CandidatePostjob, CandidateSaveJob, CandidateSearchjobCandidate} ;

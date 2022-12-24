@@ -619,8 +619,8 @@ return data
 }
 
 const autojobSearch = async (userId) =>{
-  console.log(userId)
- 
+  // console.log(userId)
+//  { keySkill: {$elemMatch:{$in:search}}}
   const data = await CandidateSearchjobCandidate.aggregate([
     { 
       $match: { 
@@ -630,7 +630,7 @@ const autojobSearch = async (userId) =>{
  {
     $lookup:{
      from: 'employerdetails',
-     let:{keySkill: '$search'},
+     let:{keySkill: '$keyskill'},
      pipeline:[
       { 
         $match: { 
