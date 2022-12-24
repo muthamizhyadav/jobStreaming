@@ -46,8 +46,7 @@ const getHostTokens = async (req) => {
     },
     {
       $match: {
-        $and: [{ expDate: { $gte: time-60 } },
-        {type:{$eq:"host"}}],
+        $and: [{ expDate: { $gte: time - 60 } }, { type: { $eq: 'host' } }],
       },
     },
   ]);
@@ -58,8 +57,14 @@ const gettokenById = async (req) => {
   let value = await tempTokenModel.findById(req.id);
   return value;
 };
+
+const participents_limit = async (req) => {
+  let value = await tempTokenModel.find({ hostId: req.id, active: true }).count();
+  return { participents: value };
+};
 module.exports = {
   generateToken,
   getHostTokens,
   gettokenById,
+  participents_limit,
 };
