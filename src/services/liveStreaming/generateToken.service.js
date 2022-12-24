@@ -28,7 +28,7 @@ const generateToken = async (req) => {
       created: moment(),
       Uid: uid,
       chennel: channel,
-      participents: uid,
+      participents: 3,
       created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
       expDate: expirationTimestamp * 1000,
     },
