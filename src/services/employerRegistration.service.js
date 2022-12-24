@@ -165,6 +165,16 @@ const employerRegistration_Approved = async (page) => {
   ])
   return {data:data, count:count.length}
 }
+
+const updateByIdEmployerRegistration = async (id, updateBody) => {
+  const user = await EmployerRegistration.findById(id)
+ if (!user) {
+   throw new ApiError(httpStatus.NOT_FOUND, 'employerRegistration not found');
+ }
+ const data = await EmployerRegistration.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+ await data.save();
+ return data;
+};
  
 module.exports = {
     createEmployer,
@@ -176,6 +186,7 @@ module.exports = {
     getUserById,
     employerRegistration,
     employerRegistration_Approved,
+    updateByIdEmployerRegistration,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,

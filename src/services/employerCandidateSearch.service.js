@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const { CandiadteSearch, CreateSavetoFolder} = require('../models/employerCandidateSearch.model');
 const {EmployerDetails, EmployerPostjob} = require('../models/employerDetails.model');
 const {KeySkill} = require('../models/candidateDetails.model');
-// const { CandidateRegistration } = require('../models');
+const {EmployerRegistration} = require('../models')
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 

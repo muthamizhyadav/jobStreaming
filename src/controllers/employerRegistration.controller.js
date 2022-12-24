@@ -91,6 +91,11 @@ const employerRegistration_Approved = catchAsync(async (req, res) => {
   res.send({data});
 })
 
+const updateByIdEmployerRegistration = catchAsync(async (req, res) => {
+  const data = await EmployerRegistration.updateByIdEmployerRegistration(req.params.id, req.body)
+  res.send({data});
+})
+
 module.exports = {
   register,
   verify_email,
@@ -101,6 +106,7 @@ module.exports = {
   getUserById,
   employerRegistration,
   employerRegistration_Approved,
+  updateByIdEmployerRegistration,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,

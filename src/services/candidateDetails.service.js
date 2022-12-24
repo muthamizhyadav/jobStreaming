@@ -680,6 +680,16 @@ const CandidateRegistrations = async (page) => {
   return {data:data, count:count.length} ;
 }
 
+const updateByIdCandidateRegistration = async (id, updateBody) => {
+   const user = await CandidateRegistration.findById(id)
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'candidateRegistration not found');
+  }
+  const data = await CandidateRegistration.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+  await data.save();
+  return data;
+};
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -697,5 +707,6 @@ module.exports = {
     autojobSearch,
     createdSearchhistory,
     CandidateRegistrations,
+    updateByIdCandidateRegistration,
     // createSearchCandidate,
 };

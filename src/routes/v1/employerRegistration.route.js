@@ -19,6 +19,7 @@ router.route('/forgot_verify_email').post(employerRegistration.forgot_verify_ema
 router.route('/change_password/:id').put(employerRegistration.change_password);
 router.route('/employerRegistration/:page').get(employerRegistration.employerRegistration);
 router.route('/employerRegistration_Approved/:page').get(employerRegistration.employerRegistration_Approved);
+router.route('/updateByIdEmployerRegistration/:id').put(employerRegistration.updateByIdEmployerRegistration);
 // router.post('/logout', validate(authValidation.logout), authController.logout);
 // router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 // router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
