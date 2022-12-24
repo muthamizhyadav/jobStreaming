@@ -153,6 +153,8 @@ const employerRegistration_Approved = async (page) => {
       adminStatus:1,
       companyType:1,
       companyName:1,
+      adminStatus:1,
+      status:"$employerdetails.adminStatus",
       jobTittle:"$employerdetails.jobTittle",
       experienceFrom:"$employerdetails.experienceFrom",
       experienceTo:"$employerdetails.experienceTo",
