@@ -44,6 +44,14 @@ const tempToken = mongoose.Schema({
   hostId: {
     type: String,
   },
+  active: {
+    type: Boolean,
+    default: true,
+  },
+  archived: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const tempTokenModel = mongoose.model('tempToken', tempToken);

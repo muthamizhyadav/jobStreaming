@@ -15,8 +15,14 @@ const gettokenById = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(tokens);
 });
 
+const participents_limit = catchAsync(async (req, res) => {
+  const tokens = await generateTokenService.participents_limit(req.query);
+  res.status(httpStatus.CREATED).send(tokens);
+});
+
 module.exports = {
   generateToken,
   getHostTokens,
   gettokenById,
+  participents_limit,
 };

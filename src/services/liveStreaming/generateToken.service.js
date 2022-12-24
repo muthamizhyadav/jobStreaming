@@ -28,7 +28,7 @@ const generateToken = async (req) => {
       created: moment(),
       Uid: uid,
       chennel: channel,
-      participents: uid,
+      participents: 3,
       created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
       expDate: expirationTimestamp * 1000,
     },
@@ -46,8 +46,7 @@ const getHostTokens = async (req) => {
     },
     {
       $match: {
-        $and: [{ expDate: { $gte: time } },
-        {type:{$eq:"host"}}],
+        $and: [{ expDate: { $gte: time - 60 } }, { type: { $eq: 'host' } }],
       },
     },
   ]);
@@ -58,8 +57,14 @@ const gettokenById = async (req) => {
   let value = await tempTokenModel.findById(req.id);
   return value;
 };
+
+const participents_limit = async (req) => {
+  let value = await tempTokenModel.find({ hostId: req.id, active: true }).count();
+  return { participents: value };
+};
 module.exports = {
   generateToken,
   getHostTokens,
   gettokenById,
+  participents_limit,
 };
