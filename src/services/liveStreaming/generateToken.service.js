@@ -46,7 +46,7 @@ const getHostTokens = async (req) => {
     },
     {
       $match: {
-        $and: [{ expDate: { $gte: time-2 } },
+        $and: [{ expDate: { $gte: time-60 } },
         {type:{$eq:"host"}}],
       },
     },
