@@ -15,7 +15,7 @@ const generateToken = async (req) => {
   const channel = req.body.channel;
 
   const moment_curr = moment();
-  const currentTimestamp = moment_curr.add(5, 'minutes');
+  const currentTimestamp = moment_curr.add(1, 'minutes');
   const expirationTimestamp =
     new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
   const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
@@ -46,7 +46,7 @@ const getHostTokens = async (req) => {
     },
     {
       $match: {
-        $and: [{ expDate: { $gte: time } },
+        $and: [{ expDate: { $gte: time-2 } },
         {type:{$eq:"host"}}],
       },
     },
