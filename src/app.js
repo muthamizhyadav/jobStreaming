@@ -33,13 +33,6 @@ app.use(function(req, res, next) {
   req.io = io;
   next();
 });
-
-app.get('/hello', function(req, res) {
-  req.io.emit('subscriberjoined', {user: 'sd'});
-  res.send("skjkj")
-})
-
-
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);
