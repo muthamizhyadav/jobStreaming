@@ -6,10 +6,7 @@ const generateTokenService = require('../../services/liveStreaming/generateToken
 
 const generateToken = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.generateToken(req);
-  if(req.body.type !='host'){
-    console.log("Asdasd")
     req.io.emit('subscriberjoined', {user: 'sd'});
-  }
   res.status(httpStatus.CREATED).send(tokens);
   
 });
@@ -25,11 +22,13 @@ const gettokenById = catchAsync(async (req, res) => {
 
 const participents_limit = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.participents_limit(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
   res.status(httpStatus.CREATED).send(tokens);
 });
 
 const leave_participents = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.leave_participents(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
   res.status(httpStatus.CREATED).send(tokens);
 });
 
