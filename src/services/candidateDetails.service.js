@@ -716,7 +716,10 @@ const SearchByIdcandidataSearchEmployerSet = async (userId) => {
  const user = await KeySkill.findOne({userId:userId}) 
    let search = user.keyskillSet
     let locetion = user.locationSet
-
+    let expYear = user.experienceYeaSet
+  if(!user){
+    throw new ApiError(httpStatus.NOT_FOUND, 'candidateDetails not found');
+  }
     // console.log(search,locetion)
 //  user.forEach(async (e) => {
 //   // const product = await Product.findById(e)
@@ -727,11 +730,12 @@ const SearchByIdcandidataSearchEmployerSet = async (userId) => {
 //   // const product = await Product.findById(e)
 //   products1.push(e);
 // });
-  
+ experienceSearch = { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }
+ console.log(experienceSearch)
  const data = await EmployerDetails.aggregate([
   { 
     $match: { 
-      $and: [ { location: { $eq: locetion } },{ keySkill: {$elemMatch:{$in:search}}}] 
+      $and: [ { location: { $eq: locetion } },{ keySkill: {$elemMatch:{$in:search}}}, { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }] 
   }
 },
 {
