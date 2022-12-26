@@ -102,7 +102,7 @@ const employerDetailsSchema = mongoose.Schema(
     },
     date:{
         type:String,
-        default:moment().utcOffset(530).format('DD-MM-yyy')
+        default:moment()
     },
     expiredDate:{
         type:String,

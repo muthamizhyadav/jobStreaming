@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const { EmployerDetails } = require('../models/employerDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
+const moment = require('moment');
 
 //keySkill
 
