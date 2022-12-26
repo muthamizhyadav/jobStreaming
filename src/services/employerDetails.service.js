@@ -16,6 +16,23 @@ const createEmpDetails = async (userId, userBody) => {
  return data
 };
 
+
+const createEmpDetailsRepost = async (id, userBody) => {
+  const {validity} = userBody
+
+    let expiredDate = moment().add(validity,'days').format('YYYY-MM-DD');
+    let date = moment().format('YYYY-MM-DD')
+
+    const user = await getById(id);
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, 'employerDetails not found');
+    }
+    let values = {...userBody, ...{expiredDate:expiredDate, date:date, adminStatus:"Pending"}}
+    const data = await EmployerDetails.findByIdAndUpdate({ _id:id}, values, { new: true });
+    await data.save();
+    return data;
+};
+
 const getByIdUser = async (id) => {
 
   const data = await EmployerDetails.aggregate([
@@ -116,4 +133,5 @@ module.exports = {
     getByIdUser,
     deleteById,
     updateById,
+    createEmpDetailsRepost,
 };

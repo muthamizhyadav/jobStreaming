@@ -27,9 +27,15 @@ const deleteById = catchAsync(async(req,res) => {
     res.send()
 })
 
+const createEmpDetailsRepost = catchAsync(async(req,res) => {
+  const user = await employerDetailsService.createEmpDetailsRepost(req.params.id, req.body)
+  res.send({user})
+})
+
 module.exports = {
   createEmpDetails,
   getByIdUser,
   updateById,
   deleteById,
+  createEmpDetailsRepost,
 };
