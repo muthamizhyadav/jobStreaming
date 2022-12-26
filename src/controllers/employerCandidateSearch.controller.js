@@ -70,6 +70,12 @@ const allFolderData = catchAsync(async(req,res) => {
     res.send({user})
 })
 
+
+
+const candidatdeSaveJobRemove = catchAsync(async (req, res) => {
+    const user = await employerCandidateSearch.candidatdeSaveJobRemove(req.params.id);
+     res.send()
+  });
 module.exports = {
     createCandidateSearch,
     searchQuery,
@@ -82,4 +88,5 @@ module.exports = {
     saveSearchData_EmployerSide,
     employerRemovePostJobs,
     allFolderData,
+    candidatdeSaveJobRemove,
 };

@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const { CandiadteSearch, CreateSavetoFolder} = require('../models/employerCandidateSearch.model');
 const {EmployerDetails, EmployerPostjob} = require('../models/employerDetails.model');
-const {KeySkill} = require('../models/candidateDetails.model');
+const {KeySkill, CandidateSaveJob} = require('../models/candidateDetails.model');
 const {EmployerRegistration} = require('../models')
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
@@ -190,6 +190,16 @@ const employer_job_post_edit = async (id, updateBody) =>{
   }
   const data = await EmployerDetails.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
   await data.save();
+  return data;
+}
+
+
+const candidatdeSaveJobRemove = async (id) =>{
+  const data = await CandidateSaveJob.findById(id);
+  if (!data) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'savejob not found');
+  }
+  await data.remove();
   return data;
 }
 
@@ -386,5 +396,6 @@ module.exports = {
     saveSearchData_EmployerSide,
     employerRemovePostJobs,
     allFolderData,
+    candidatdeSaveJobRemove,
     
 };

@@ -708,14 +708,16 @@ const updateByIdcandidataSearchEmployerSet = async (id, updateBody) => {
  return data;
 };
 
-// const SearchByIdcandidataSearchEmployerSet = async (id) => {
+const SearchByIdcandidataSearchEmployerSet = async (userId) => {
 //   const user = await KeySkill.aggregate([
 
 //   ])
-//  const data = await EmployerDetails.find()
+ const user = await KeySkill.find({userId:userId}) 
+
+ const data = await EmployerDetails.find()
    
-//  return data;
-// };
+ return user;
+};
 
 module.exports = {
     createkeySkill,
@@ -737,5 +739,6 @@ module.exports = {
     updateByIdCandidateRegistration,
     createSetSearchEmployerData,
     updateByIdcandidataSearchEmployerSet,
+    SearchByIdcandidataSearchEmployerSet,
     // createSearchCandidate,
 };

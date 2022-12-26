@@ -16,4 +16,5 @@ router.route('/candidate_applied_Details_view/:id').get(employerCandidateSearch.
 router.route('/saveSearchData_EmployerSide').get(authorization, employerCandidateSearch.saveSearchData_EmployerSide);
 router.route('/employerRemovePostJobs/:id').delete(employerCandidateSearch.employerRemovePostJobs);
 router.route('/allFolderData').get(authorization, employerCandidateSearch.allFolderData);
+router.route('/candidatdeSaveJobRemove/:id').delete(employerCandidateSearch.candidatdeSaveJobRemove);
 module.exports = router;
