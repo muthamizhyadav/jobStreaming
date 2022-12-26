@@ -730,8 +730,8 @@ const SearchByIdcandidataSearchEmployerSet = async (userId) => {
 //   // const product = await Product.findById(e)
 //   products1.push(e);
 // });
- experienceSearch = { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }
- console.log(experienceSearch)
+//  experienceSearch = { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }
+
  const data = await EmployerDetails.aggregate([
   { 
     $match: { 
