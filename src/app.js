@@ -12,12 +12,27 @@ const { jwtStrategy } = require('./config/passport');
 const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const routes_v2 = require('./routes/v1/liveStreaming');
+const logger = require('./config/logger');
 
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
 const app = express();
 
+let http = require('http');
+let server = http.Server(app);
+let socketIO = require('socket.io');
+let io = socketIO(server);
+
+server.listen(config.port, () => {
+    logger.info(`Listening to port ${config.port}`);
+});
+
+
+app.use(function(req, res, next) {
+  req.io = io;
+  next();
+});
 if (config.env !== 'test') {
   app.use(morgan.successHandler);
   app.use(morgan.errorHandler);

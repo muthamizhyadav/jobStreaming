@@ -12,5 +12,7 @@ router.get('/getHostTokens', generateToken.getHostTokens);
 router.get('/gettoken/byId', generateToken.gettokenById);
 router.get('/getparticipents/limit', generateToken.participents_limit);
 router.put('/leave/participents/limit', generateToken.leave_participents);
+router.get('/leave/host', generateToken.leave_host);
+router.get('/join/host/admin', generateToken.join_host);
 
 module.exports = router;

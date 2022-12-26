@@ -2,19 +2,11 @@ const httpStatus = require('http-status');
 const catchAsync = require('../../utils/catchAsync');
 const generateTokenService = require('../../services/liveStreaming/generateToken.service');
 
-let express = require('express');
-let app = express();
-let http = require('http');
-let server = http.Server(app);
-let socketIO = require('socket.io');
-let io = socketIO(server);
 
 
 const generateToken = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.generateToken(req);
-  if(req.body.type !='host'){
-    io.emit('subscriber-joined', {user: 'sd'});
-  }
+    req.io.emit('subscriberjoined', {user: 'sd'});
   res.status(httpStatus.CREATED).send(tokens);
   
 });
@@ -30,11 +22,26 @@ const gettokenById = catchAsync(async (req, res) => {
 
 const participents_limit = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.participents_limit(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
   res.status(httpStatus.CREATED).send(tokens);
 });
 
 const leave_participents = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.leave_participents(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
+  res.status(httpStatus.CREATED).send(tokens);
+});
+
+const leave_host = catchAsync(async (req, res) => {
+  const tokens = await generateTokenService.leave_host(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
+  res.status(httpStatus.CREATED).send(tokens);
+});
+
+
+const join_host = catchAsync(async (req, res) => {
+  const tokens = await generateTokenService.join_host(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
   res.status(httpStatus.CREATED).send(tokens);
 });
 
@@ -44,4 +51,6 @@ module.exports = {
   gettokenById,
   participents_limit,
   leave_participents,
+  leave_host,
+  join_host
 };
