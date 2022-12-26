@@ -3,12 +3,14 @@ const { EmployerDetails } = require('../models/employerDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
+const { format } = require('morgan');
 
 //keySkill
 
 const createEmpDetails = async (userId, userBody) => {
   const {validity} = userBody
-    let expiredDate = moment().add(validity, 'days');
+  console.log(validity)
+    let expiredDate = moment().add(validity,'days').format('YYYY-MM-DD');
     let values = {...userBody, ...{userId:userId, expiredDate:expiredDate}}
  let data = await EmployerDetails.create(values);
  return data
@@ -21,6 +23,13 @@ const getByIdUser = async (id) => {
         $and: [{ userId: { $eq: id } }],
       },
     }, 
+    // {
+    //   $project:{
+    //     keySkill:1,
+
+    //   }
+    // }
+
   ])
   return data
 }
