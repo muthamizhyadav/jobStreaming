@@ -45,9 +45,9 @@ const updateById = async (id, updateBody) => {
 
 
 const deleteById = async (id) => {
-  const user = await getUserById(id);
+  const user = await EmployerDetails.findById(id);
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+    throw new ApiError(httpStatus.NOT_FOUND, 'employerDetails not found');
   }
   await user.remove();
   return user;

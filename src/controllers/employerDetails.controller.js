@@ -24,7 +24,7 @@ const updateById = catchAsync(async(req,res) => {
 
 const deleteById = catchAsync(async(req,res) => {
     const user = await employerDetailsService.deleteById(req.params.id)
-    res.send({user})
+    res.send()
 })
 
 module.exports = {
