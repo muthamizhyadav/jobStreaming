@@ -6,8 +6,9 @@ const bcrypt = require('bcryptjs');
 //keySkill
 
 const createEmpDetails = async (userId, userBody) => {
-    console.log(userId)
-    let values = {...userBody, ...{userId:userId}}
+  const {validity} = userBody
+    let expiredDate = moment().add(validity, 'days');
+    let values = {...userBody, ...{userId:userId, expiredDate:expiredDate}}
  let data = await EmployerDetails.create(values);
  return data
 };
