@@ -32,10 +32,17 @@ const createEmpDetailsRepost = catchAsync(async(req,res) => {
   res.send({user})
 })
 
+
+const getById_Get = catchAsync(async(req,res) => {
+  const user = await employerDetailsService.getById_Get(req.params.id)
+  res.send({user})
+})
+
 module.exports = {
   createEmpDetails,
   getByIdUser,
   updateById,
   deleteById,
   createEmpDetailsRepost,
+  getById_Get,
 };
