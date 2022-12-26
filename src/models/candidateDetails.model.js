@@ -87,6 +87,18 @@ const keySkillSchema = mongoose.Schema(
     Jobtype:{
         type:String,
     },
+    keyskillSet:{
+      type:Array,
+    },
+    experienceMonthSet:{
+      type:Number,
+    },
+    experienceYeaSet:{
+      type:Number,
+    },
+    locationSet:{
+      type:String,
+    },
     active:{
         type:Boolean,
         default:true,

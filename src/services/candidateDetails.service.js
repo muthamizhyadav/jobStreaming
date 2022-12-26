@@ -708,6 +708,15 @@ const updateByIdcandidataSearchEmployerSet = async (id, updateBody) => {
  return data;
 };
 
+// const SearchByIdcandidataSearchEmployerSet = async (id) => {
+//   const user = await KeySkill.aggregate([
+
+//   ])
+//  const data = await EmployerDetails.find()
+   
+//  return data;
+// };
+
 module.exports = {
     createkeySkill,
     getByIdUser,
