@@ -32,10 +32,25 @@ const leave_participents = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(tokens);
 });
 
+const leave_host = catchAsync(async (req, res) => {
+  const tokens = await generateTokenService.leave_host(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
+  res.status(httpStatus.CREATED).send(tokens);
+});
+
+
+const join_host = catchAsync(async (req, res) => {
+  const tokens = await generateTokenService.join_host(req.query);
+  req.io.emit('subscriberjoined', {user: 'sd'});
+  res.status(httpStatus.CREATED).send(tokens);
+});
+
 module.exports = {
   generateToken,
   getHostTokens,
   gettokenById,
   participents_limit,
   leave_participents,
+  leave_host,
+  join_host
 };

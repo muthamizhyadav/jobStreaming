@@ -107,6 +107,7 @@ const getHostTokens = async (req) => {
         active_users: { $ifNull: ['$active_users.count', 0] },
         In_active_users: { $ifNull: ['$total_users.count', 0] },
         total_user: { $sum: ['$total_users.count', '$active_users.count'] },
+        active:1
       },
     },
   ]);
@@ -122,6 +123,15 @@ const leave_participents = async (req) => {
   return value;
 };
 
+const leave_host = async (req) => {
+  let value = await tempTokenModel.findByIdAndUpdate({ _id: req.id }, { active: false }, { new: true });
+  return value;
+};
+const join_host = async (req) => {
+  let value = await tempTokenModel.findByIdAndUpdate({ _id: req.id }, { active: true }, { new: true });
+  return value;
+};
+
 const participents_limit = async (req) => {
   let participents = await tempTokenModel.findById(req.id);
   let value = await tempTokenModel.find({ hostId: req.id, active: true }).count();
@@ -133,4 +143,6 @@ module.exports = {
   gettokenById,
   participents_limit,
   leave_participents,
+  leave_host,
+  join_host
 };
