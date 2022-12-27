@@ -163,6 +163,7 @@ return data
 
 const employerPost_Jobs  = async (userId) => {
   let data = await EmployerDetails.aggregate([
+    { $sort: { date: -1 } },
     { 
       $match: { 
         $and: [ { userId: { $eq: userId } }] 
