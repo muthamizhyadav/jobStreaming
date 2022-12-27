@@ -37,6 +37,9 @@ const  createPlanSchema = mongoose.Schema(
     validityOfPlanExpiry:{
         type:String,
     },
+    numberOfMassMailer:{
+        type:Number,
+    },
     jobPostVAlidity:{
         type:Number,
     },
