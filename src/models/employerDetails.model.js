@@ -104,6 +104,10 @@ const employerDetailsSchema = mongoose.Schema(
         type:String,
         default:moment().format('YYYY-MM-DD')
     },
+    time: {
+        type: String,
+        default:moment().format('HHmmss')
+      },
     expiredDate:{
         type:String,
     },

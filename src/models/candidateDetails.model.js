@@ -5,6 +5,7 @@ const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 const { StringDecoder } = require('string_decoder');
 const { v4 } = require('uuid');
+const moment = require('moment');
 
 const keySkillSchema = mongoose.Schema(
   {
@@ -98,6 +99,14 @@ const keySkillSchema = mongoose.Schema(
     },
     locationSet:{
       type:String,
+    },
+    date:{
+      type:String,
+      default:moment().format('YYYY-MM-DD')
+    },
+    time: {
+      type: String,
+      default:moment().format('HHmmss')
     },
     active:{
         type:Boolean,
