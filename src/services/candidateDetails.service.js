@@ -697,6 +697,107 @@ let data = await candidataSearchEmployerSet.create(values);
 return data
 };
 
+
+const updateByIdcandidataSearchEmployerSet = async (id, updateBody) => {
+  const user = await candidataSearchEmployerSet.findById(id)
+ if (!user) {
+   throw new ApiError(httpStatus.NOT_FOUND, 'candidataSearchEmployerSet not found');
+ }
+ const data = await candidataSearchEmployerSet.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+ await data.save();
+ return data;
+};
+
+const SearchByIdcandidataSearchEmployerSet = async (userId) => {
+  // const user = await KeySkill.aggregate([
+
+  // ])
+// let products1 = []
+ const user = await KeySkill.findOne({userId:userId}) 
+   let search = user.keyskillSet
+    let locetion = user.locationSet
+    let expYear = user.experienceYeaSet
+  if(!user){
+    throw new ApiError(httpStatus.NOT_FOUND, 'candidateDetails not found');
+  }
+    // console.log(search,locetion)
+//  user.forEach(async (e) => {
+//   // const product = await Product.findById(e)
+//   products1.push(e);
+// });
+// const data = await EmployerDetails.find({ keySkill: {$elemMatch:{$in:user.keyskillSet}}, location:user.locationSet})
+//    user.forEach(async (e) => {
+//   // const product = await Product.findById(e)
+//   products1.push(e);
+// });
+//  experienceSearch = { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }
+
+ const data = await EmployerDetails.aggregate([
+  { 
+    $match: { 
+      $and: [ { location: { $eq: locetion } },{ keySkill: {$elemMatch:{$in:search}}}, { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }] 
+  }
+},
+{
+  $lookup: {
+    from: 'employerregistrations',
+    localField: 'userId',
+    foreignField: '_id',
+    as: 'employerregistrations',
+  },
+},
+{
+  $unwind:"$employerregistrations"
+},
+{
+  $project:{
+    keySkill:1,
+    date:1,
+    adminStatus:1,
+    active:1,
+    jobTittle:1,
+    designation:1,
+    recruiterName:1,
+    contactNumber:1,
+    jobDescription:1,
+    salaryRangeFrom:1,
+    salaryRangeTo:1,
+    experienceFrom:1,
+    experienceTo:1,
+    interviewType:1,
+    candidateDescription:1,
+    workplaceType:1,
+    industry:1,
+    interviewerName:1,
+    preferredindustry:1,
+    functionalArea:1,
+    role:1,
+    jobLocation:1,
+    employmentType:1,
+    openings:1,
+    interviewDate:1,
+    interviewTime:1,
+    location:1,
+    interviewerName:1,
+    interviewerContactNumber:1,
+    validity:1,
+    educationalQualification:1,
+    userId:1,
+   expiredDate:1,
+   createdAt:1,
+   companyName:"$employerregistrations.companyName",
+   email:"$employerregistrations.email",
+   mobileNumber:"$employerregistrations.mobileNumber",
+   companyType:"$employerregistrations.companyType",
+   name:"$employerregistrations.name",
+   regitserStatus:"$employerregistrations.adminStatus",
+  }
+}
+ ])
+   return data;
+
+};
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -716,5 +817,7 @@ module.exports = {
     CandidateRegistrations,
     updateByIdCandidateRegistration,
     createSetSearchEmployerData,
+    updateByIdcandidataSearchEmployerSet,
+    SearchByIdcandidataSearchEmployerSet,
     // createSearchCandidate,
 };

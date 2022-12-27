@@ -5,6 +5,7 @@ const { toJSON, paginate } = require('./plugins');
 const { roles } = require('../config/roles');
 const { StringDecoder } = require('string_decoder');
 const { v4 } = require('uuid');
+const moment = require('moment');
 
 const employerDetailsSchema = mongoose.Schema(
   {
@@ -94,6 +95,16 @@ const employerDetailsSchema = mongoose.Schema(
         type:Number,
     },
     location:{
+        type:String,
+    },
+    validity:{
+        type:Number,
+    },
+    date:{
+        type:String,
+        default:moment().format('YYYY-MM-DD')
+    },
+    expiredDate:{
         type:String,
     },
     adminStatus:{
