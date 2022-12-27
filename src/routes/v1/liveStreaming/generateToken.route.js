@@ -14,5 +14,10 @@ router.get('/getparticipents/limit', generateToken.participents_limit);
 router.put('/leave/participents/limit', generateToken.leave_participents);
 router.get('/leave/host', generateToken.leave_host);
 router.get('/join/host/admin', generateToken.join_host);
+router.post('/recording/acquire', generateToken.agora_acquire);
+router.post('/recording/start', generateToken.recording_start);
+router.post('/recording/query', generateToken.recording_query);
+router.post('/recording/stop', generateToken.recording_stop);
+router.post('/recording/updateLayout', generateToken.recording_updateLayout);
 
 module.exports = router;

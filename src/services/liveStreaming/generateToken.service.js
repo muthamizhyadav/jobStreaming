@@ -4,9 +4,12 @@ const { RtcTokenBuilder, RtcRole } = require('agora-access-token');
 const Agora = require('agora-access-token');
 const moment = require('moment');
 const { tempTokenModel } = require('../../models/liveStreaming/generateToken.model');
-
+const axios = require('axios'); //
 const appID = '08bef39e0eb545338b0be104785c2ae1';
 const appCertificate = 'bfb596743d2b4414a1895ac2edb1d1f0';
+const Authorization = `Basic ${Buffer.from(`8f68dcbfe5494cf8acf83d5836a1effc:b222bdfa2a5a4a04afccacb60b1fa2a1`).toString(
+  'base64'
+)}`;
 
 const generateToken = async (req) => {
   const expirationTimeInSeconds = 3600;
@@ -15,7 +18,7 @@ const generateToken = async (req) => {
   const channel = req.body.channel;
 
   const moment_curr = moment();
-  const currentTimestamp = moment_curr.add(5, 'minutes');
+  const currentTimestamp = moment_curr.add(30, 'minutes');
   const expirationTimestamp =
     new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
   const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
@@ -107,7 +110,7 @@ const getHostTokens = async (req) => {
         active_users: { $ifNull: ['$active_users.count', 0] },
         In_active_users: { $ifNull: ['$total_users.count', 0] },
         total_user: { $sum: ['$total_users.count', '$active_users.count'] },
-        active:1
+        active: 1,
       },
     },
   ]);
@@ -137,6 +140,114 @@ const participents_limit = async (req) => {
   let value = await tempTokenModel.find({ hostId: req.id, active: true }).count();
   return { participents: value >= participents.participents ? false : true };
 };
+
+const agora_acquire = async (req) => {
+  const acquire = await axios.post(
+    `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
+    {
+      cname: 'test',
+      uid: '54369',
+      clientRequest: {
+        resourceExpiredHour: 24,
+      },
+    },
+    { headers: { Authorization } }
+  );
+
+  return acquire.data;
+};
+
+const recording_start = async (req) => {
+  console.log(req.body);
+  const resource = req.body.resource;
+  const mode = req.body.mode;
+  const start = await axios.post(
+    `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`,
+    {
+      cname: 'test',
+      uid: '54369',
+      clientRequest: {
+        token:
+          '00608bef39e0eb545338b0be104785c2ae1IAAllYVqg5jKp8ZDb44DK1m2MdF7mRfYO52sY5Qw3op8mwx+f9ip7Z4gIgD5p8MGG7mqYwQAAQDHaKljAgDHaKljAwDHaKljBADHaKlj',
+        recordingConfig: {
+          maxIdleTime: 30,
+          streamTypes: 2,
+          channelType: 0,
+          videoStreamType: 0,
+          transcodingConfig: {
+            height: 640,
+            width: 360,
+            bitrate: 500,
+            fps: 15,
+            mixedVideoLayout: 1,
+            backgroundColor: '#FFFFFF',
+          },
+        },
+        recordingFileConfig: {
+          avFileType: ['hls'],
+        },
+        storageConfig: {
+          vendor: 1,
+          region: 2,
+          bucket: 'arn:aws:s3:::streamingupload',
+          accessKey: 'AKIA3323XNN7Y2RU77UG',
+          secretKey: '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',
+          fileNamePrefix: ['directory1', 'directory2'],
+        },
+      },
+    },
+    { headers: { Authorization } }
+  );
+
+  return start.data;
+};
+const recording_query = async (req) => {
+  const acquire = await axios.post(
+    `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
+    {
+      cname: 'test',
+      uid: '54369',
+      clientRequest: {
+        resourceExpiredHour: 24,
+      },
+    },
+    { headers: { Authorization } }
+  );
+
+  return acquire.data;
+};
+const recording_stop = async (req) => {
+  const resource = req.body.resource;
+  const sid = req.body.sid;
+  const mode = req.body.mode;
+  console.log(`https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/stop`);
+  const stop = await axios.post(
+    `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/stop`,
+    {
+      cname: 'test',
+      uid: '29872',
+      clientRequest: {},
+    },
+    { headers: { Authorization } }
+  );
+
+  return stop.data;
+};
+const recording_updateLayout = async (req) => {
+  const acquire = await axios.post(
+    `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
+    {
+      cname: 'test',
+      uid: '16261',
+      clientRequest: {
+        resourceExpiredHour: 24,
+      },
+    },
+    { headers: { Authorization } }
+  );
+
+  return acquire.data;
+};
 module.exports = {
   generateToken,
   getHostTokens,
@@ -144,5 +255,10 @@ module.exports = {
   participents_limit,
   leave_participents,
   leave_host,
-  join_host
+  join_host,
+  agora_acquire,
+  recording_start,
+  recording_query,
+  recording_stop,
+  recording_updateLayout,
 };
