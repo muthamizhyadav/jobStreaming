@@ -9,9 +9,11 @@ const { format } = require('morgan');
 
 const createEmpDetails = async (userId, userBody) => {
   const { validity } = userBody;
-  console.log(validity);
+  let date = moment().format('YYYY-MM-DD');
+  let creat1 = moment().format('HHmmss');
+  // console.log(validity);
   let expiredDate = moment().add(validity, 'days').format('YYYY-MM-DD');
-  let values = { ...userBody, ...{ userId: userId, expiredDate: expiredDate } };
+  let values = { ...userBody, ...{ userId: userId, expiredDate: expiredDate, date: date, time:creat1} };
   let data = await EmployerDetails.create(values);
   return data;
 };

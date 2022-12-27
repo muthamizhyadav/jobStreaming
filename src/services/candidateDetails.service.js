@@ -4,13 +4,15 @@ const { CandidateRegistration } = require('../models');
 const  {EmployerDetails, EmployerPostjob}  = require('../models/employerDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
-
+const moment = require('moment');
 //keySkill
 
 const createkeySkill = async (userId, userBody) => {
     console.log(userId)
-    let values = {...userBody, ...{userId:userId}}
- let data = await KeySkill.create(values);
+    let date = moment().format('YYYY-MM-DD');
+    let creat1 = moment().format('HHmmss');
+    let values = {...userBody, ...{userId:userId, date: date, time:creat1}}
+    let data = await KeySkill.create(values);
  return data
 };
 

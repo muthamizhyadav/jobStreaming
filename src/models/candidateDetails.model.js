@@ -102,11 +102,11 @@ const keySkillSchema = mongoose.Schema(
     },
     date:{
       type:String,
-      default:moment().format('YYYY-MM-DD')
+      // default:moment().format('YYYY-MM-DD')
     },
     time: {
       type: String,
-      default:moment().format('HHmmss')
+      // default:moment().format('HHmmss')
     },
     active:{
         type:Boolean,
