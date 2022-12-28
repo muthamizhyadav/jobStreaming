@@ -33,7 +33,7 @@ const generateToken = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, value._id, uid, role, expirationTimestamp);
+  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, 'test', uid, role, expirationTimestamp);
   value.token = token;
   value.chennel = value._id;
   value.save();
@@ -255,7 +255,10 @@ const recording_stop = async (req) => {
   const sid = req.body.sid;
   const mode = 'mix';
   let token = await tempTokenModel.findById(req.body.id);
-
+  console.log(resource);
+  console.log(sid);
+  console.log(token.Uid.toString());
+  console.log(token._id);
   const stop = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/stop`,
     {
