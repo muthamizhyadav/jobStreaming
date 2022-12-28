@@ -73,9 +73,17 @@ const updateById = async (id, updateBody) => {
   return data;
 };
 
+const get_All_plans = async () => {
+  const data = await CreatePlan.find()
+  if(!data){
+    throw new ApiError(httpStatus.NOT_FOUND, 'createPlan not found');
+  }
+  return data
+}
 
 module.exports = {
     createPlan,
     plan_view,
     updateById,
+    get_All_plans,
 };

@@ -21,8 +21,14 @@ const updateById = catchAsync(async(req,res) => {
   res.send({user})
 })
 
+const get_All_plans = catchAsync(async(req,res) => {
+  const data = await createPlanService.get_All_plans()
+  res.send(data)
+})
+
 module.exports = {
     createPlan,
     plan_view,
     updateById,
+    get_All_plans,
 };
