@@ -46,7 +46,7 @@ const join_host = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(tokens);
 });
 const agora_acquire = catchAsync(async (req, res) => {
-  const tokens = await generateTokenService.agora_acquire(req.query);
+  const tokens = await generateTokenService.agora_acquire(req);
   res.status(httpStatus.CREATED).send(tokens);
 });
 const recording_start = catchAsync(async (req, res) => {
