@@ -63,7 +63,7 @@ const forgot_verify_email = async (body) =>{
 }
 
 
-const forgot = async (body) =>{
+const forgot = async (body) => {
     const data = await CandidateRegistration.findOne({email:body.email})
     if(!data){
         throw new ApiError(httpStatus.UNAUTHORIZED, 'Email Not Registered');

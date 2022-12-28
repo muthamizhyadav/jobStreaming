@@ -60,14 +60,12 @@ const getByIdEmployerDetailsShownCandidate = catchAsync(async(req,res) => {
 
 const createCandidatePostjob = catchAsync(async (req, res) => {
 const user = await candidateDetailsService.createCandidatePostjob(req.body);
-res.status(httpStatus.CREATED).send({ user }
-  );
+res.status(httpStatus.CREATED).send({ user });
 });
 
 const createCandidateSavejob = catchAsync(async (req, res) => {
   const user = await candidateDetailsService.createCandidateSavejob(req.body);
-  res.status(httpStatus.CREATED).send({ user }
-    );
+  res.status(httpStatus.CREATED).send({ user });
   });
 
 const getByIdAppliedJobs = catchAsync(async (req, res) => {
@@ -107,19 +105,19 @@ const deleteByIdSavejOb = catchAsync(async (req, res) => {
 
 
 const autojobSearch = catchAsync(async (req, res) => {
-   let userId = req.userId
-    const user = await candidateDetailsService.autojobSearch(userId);
+     let userId = req.userId
+     const user = await candidateDetailsService.autojobSearch(userId);
      res.send(user)
  });
 
  const createdSearchhistory = catchAsync(async (req, res) => {
-  let userId = req.userId
-   const user = await candidateDetailsService.createdSearchhistory(userId, req.body);
+    let userId = req.userId
+    const user = await candidateDetailsService.createdSearchhistory(userId, req.body);
     res.send(user)
 });
 
 const CandidateRegistrations = catchAsync(async (req, res) => {
-   const user = await candidateDetailsService.CandidateRegistrations(req.params.page);
+    const user = await candidateDetailsService.CandidateRegistrations(req.params.page);
     res.send(user)
 });
 
@@ -136,13 +134,13 @@ res.status(httpStatus.CREATED).send({ user });
 
 const updateByIdcandidataSearchEmployerSet = catchAsync(async (req, res) => {
   const user = await candidateDetailsService.updateByIdcandidataSearchEmployerSet(req.params.id, req.body);
-   res.send(user)
+  res.send(user)
 });
 
 const SearchByIdcandidataSearchEmployerSet = catchAsync(async (req, res) => {
   const userId = req.userId
   const user = await candidateDetailsService.SearchByIdcandidataSearchEmployerSet(userId);
-   res.send(user)
+  res.send(user)
 });
 module.exports = {
   createkeySkill,
