@@ -173,11 +173,13 @@ const participents_limit = async (req) => {
 
 const agora_acquire = async (req) => {
   let token = await tempTokenModel.findById(req.body.id);
+  console.log(token._id);
+  console.log(token.Uid);
   const acquire = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
     {
       cname: token._id,
-      uid: token.Uid,
+      uid: token.Uid.toString(),
       clientRequest: {
         resourceExpiredHour: 24,
       },
@@ -185,21 +187,27 @@ const agora_acquire = async (req) => {
     { headers: { Authorization } }
   );
 
-  return acquire.data;
+  return await recording_start(acquire.data, token);
 };
 
-const recording_start = async () => {
-  let token = await tempTokenModel.findById(req.body.id);
-  const resource = res.body.resourceId;
+const recording_start = async (res, token) => {
+  // let token = await tempTokenModel.findById(req.body.id);
+
+  const resource = res.resourceId;
   const mode = 'mix';
-  let dir = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss')));
+  let dir = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime();
+  console.log(dir);
+  // console.log(
+  //   // res.resourceId,
+  //   `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`
+  // );
   const start = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`,
     {
       cname: token._id,
-      uid: token.Uid,
+      uid: token.Uid.toString(),
       clientRequest: {
-        token: token.token,
+        // token: token.token,
         recordingConfig: {
           maxIdleTime: 1300,
           streamTypes: 2,
@@ -223,45 +231,46 @@ const recording_start = async () => {
           bucket: 'streamingupload',
           accessKey: 'AKIA3323XNN7Y2RU77UG',
           secretKey: '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',
-          fileNamePrefix: [dir, token.Uid],
+          fileNamePrefix: [dir.toString(), token.Uid.toString()],
         },
       },
     },
     { headers: { Authorization } }
   );
 
-  return { start: start.data };
+  return { start: start.data, acquire: res };
 };
 const recording_query = async (req) => {
-  const acquire = await axios.post(
-    `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
-    {
-      cname: 'test',
-      uid: '54369',
-      clientRequest: {
-        resourceExpiredHour: 24,
-      },
-    },
+  const resource = req.body.resource;
+  const sid = req.body.sid;
+  const mode = 'mix';
+  const query = await axios.get(
+    `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/query`,
     { headers: { Authorization } }
   );
-
-  return acquire.data;
+  return query.data;
 };
 const recording_stop = async (req) => {
   const resource = req.body.resource;
   const sid = req.body.sid;
-  const mode = req.body.mode;
-  console.log(`https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/stop`);
+  const mode = 'mix';
+  let token = await tempTokenModel.findById(req.body.id);
+
   const stop = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/stop`,
     {
-      cname: 'test',
-      uid: '29872',
-      clientRequest: {},
+      cname: token._id,
+      uid: token.Uid.toString(),
+      clientRequest: {
+        // async_stop: false,
+      },
     },
-    { headers: { Authorization } }
+    {
+      headers: {
+        Authorization,
+      },
+    }
   );
-
   return stop.data;
 };
 const recording_updateLayout = async (req) => {
