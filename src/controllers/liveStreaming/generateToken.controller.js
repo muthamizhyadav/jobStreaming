@@ -29,7 +29,7 @@ const participents_limit = catchAsync(async (req, res) => {
 });
 
 const leave_participents = catchAsync(async (req, res) => {
-  const tokens = await generateTokenService.leave_participents(req.query);
+  const tokens = await generateTokenService.leave_participents(req);
   req.io.emit('subscriberjoined', { user: 'sd' });
   res.status(httpStatus.CREATED).send(tokens);
 });

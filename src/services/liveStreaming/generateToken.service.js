@@ -185,11 +185,12 @@ const agora_acquire = async (req) => {
     { headers: { Authorization } }
   );
 
-  return await recording_start(acquire.data, token);
+  return acquire.data;
 };
 
-const recording_start = async (res, token) => {
-  const resource = res.resourceId;
+const recording_start = async () => {
+  let token = await tempTokenModel.findById(req.body.id);
+  const resource = res.body.resourceId;
   const mode = 'mix';
   let dir = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss')));
   const start = await axios.post(
@@ -229,7 +230,7 @@ const recording_start = async (res, token) => {
     { headers: { Authorization } }
   );
 
-  return { start: start.data, acquire: res };
+  return { start: start.data };
 };
 const recording_query = async (req) => {
   const acquire = await axios.post(
