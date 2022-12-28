@@ -52,6 +52,7 @@ const plan_view = async (id) => {
         date:'$createplans.date',
         time:'$createplans.time',
         createdAt:'$createplans.createdAt',
+        active:'$createplans.active',
         planId:'$createplans._id',
       }
     },
