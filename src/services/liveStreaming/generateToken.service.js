@@ -28,7 +28,6 @@ const generateToken = async (req) => {
       time: moment().format('HHMMSS'),
       created: moment(),
       Uid: uid,
-      chennel: channel,
       participents: 3,
       created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
       expDate: expirationTimestamp * 1000,
@@ -36,6 +35,7 @@ const generateToken = async (req) => {
   });
   const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, value._id, uid, role, expirationTimestamp);
   value.token = token;
+  value.chennel = value._id;
   value.save();
   return { uid, token, value };
 };
