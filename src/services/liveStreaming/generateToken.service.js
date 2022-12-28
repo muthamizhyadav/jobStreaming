@@ -39,6 +39,7 @@ const generateToken = async (req) => {
   value.save();
   return { uid, token, value };
 };
+
 const generateToken_sub = async (req) => {
   const expirationTimeInSeconds = 3600;
   const uid = req.body.uid;
@@ -171,11 +172,12 @@ const participents_limit = async (req) => {
 };
 
 const agora_acquire = async (req) => {
+  let token = await tempTokenModel.findById(req.body.id);
   const acquire = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
     {
-      cname: 'test',
-      uid: '54369',
+      cname: token._id,
+      uid: token.Uid,
       clientRequest: {
         resourceExpiredHour: 24,
       },
@@ -183,25 +185,24 @@ const agora_acquire = async (req) => {
     { headers: { Authorization } }
   );
 
-  return acquire.data;
+  return await recording_start(acquire.data, token);
 };
 
-const recording_start = async (req) => {
-  console.log(req.body);
-  const resource = req.body.resource;
-  const mode = req.body.mode;
+const recording_start = async (res, token) => {
+  const resource = res.resourceId;
+  const mode = 'mix';
+  let dir = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss')));
   const start = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`,
     {
-      cname: 'test',
-      uid: '54369',
+      cname: token._id,
+      uid: token.Uid,
       clientRequest: {
-        token:
-          '00608bef39e0eb545338b0be104785c2ae1IAAllYVqg5jKp8ZDb44DK1m2MdF7mRfYO52sY5Qw3op8mwx+f9ip7Z4gIgD5p8MGG7mqYwQAAQDHaKljAgDHaKljAwDHaKljBADHaKlj',
+        token: token.token,
         recordingConfig: {
-          maxIdleTime: 30,
+          maxIdleTime: 1300,
           streamTypes: 2,
-          channelType: 0,
+          channelType: 1,
           videoStreamType: 0,
           transcodingConfig: {
             height: 640,
@@ -217,18 +218,18 @@ const recording_start = async (req) => {
         },
         storageConfig: {
           vendor: 1,
-          region: 2,
-          bucket: 'arn:aws:s3:::streamingupload',
+          region: 14,
+          bucket: 'streamingupload',
           accessKey: 'AKIA3323XNN7Y2RU77UG',
           secretKey: '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',
-          fileNamePrefix: ['directory1', 'directory2'],
+          fileNamePrefix: [dir, token.Uid],
         },
       },
     },
     { headers: { Authorization } }
   );
 
-  return start.data;
+  return { start: start.data, acquire: res };
 };
 const recording_query = async (req) => {
   const acquire = await axios.post(
