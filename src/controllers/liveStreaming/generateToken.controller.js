@@ -3,7 +3,12 @@ const catchAsync = require('../../utils/catchAsync');
 const generateTokenService = require('../../services/liveStreaming/generateToken.service');
 
 const generateToken = catchAsync(async (req, res) => {
-  const tokens = await generateTokenService.generateToken(req);
+  let tokens;
+  if (req.body.type == 'host') {
+    tokens = await generateTokenService.generateToken(req);
+  } else {
+    tokens = await generateTokenService.generateToken_sub(req);
+  }
   req.io.emit('subscriberjoined', { user: 'sd' });
   res.status(httpStatus.CREATED).send(tokens);
 });

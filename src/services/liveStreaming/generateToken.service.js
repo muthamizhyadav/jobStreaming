@@ -39,6 +39,34 @@ const generateToken = async (req) => {
   value.save();
   return { uid, token, value };
 };
+const generateToken_sub = async (req) => {
+  const expirationTimeInSeconds = 3600;
+  const uid = req.body.uid;
+  const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
+  const channel = req.body.channel;
+
+  const moment_curr = moment();
+  const currentTimestamp = moment_curr.add(30, 'minutes');
+  const expirationTimestamp =
+    new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
+  let value = await tempTokenModel.create({
+    ...req.body,
+    ...{
+      date: moment().format('YYYY-MM-DD'),
+      time: moment().format('HHMMSS'),
+      created: moment(),
+      Uid: uid,
+      chennel: channel,
+      participents: 3,
+      created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
+      expDate: expirationTimestamp * 1000,
+    },
+  });
+  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
+  value.token = token;
+  value.save();
+  return { uid, token, value };
+};
 
 const getHostTokens = async (req) => {
   let time = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime();
@@ -262,4 +290,5 @@ module.exports = {
   recording_query,
   recording_stop,
   recording_updateLayout,
+  generateToken_sub,
 };
