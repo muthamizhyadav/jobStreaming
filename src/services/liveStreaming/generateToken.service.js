@@ -21,11 +21,38 @@ const generateToken = async (req) => {
   const currentTimestamp = moment_curr.add(30, 'minutes');
   const expirationTimestamp =
     new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
-  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
   let value = await tempTokenModel.create({
     ...req.body,
     ...{
-      token: token,
+      date: moment().format('YYYY-MM-DD'),
+      time: moment().format('HHMMSS'),
+      created: moment(),
+      Uid: uid,
+      participents: 3,
+      created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
+      expDate: expirationTimestamp * 1000,
+    },
+  });
+  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, value._id, uid, role, expirationTimestamp);
+  value.token = token;
+  value.chennel = value._id;
+  value.save();
+  return { uid, token, value };
+};
+
+const generateToken_sub = async (req) => {
+  const expirationTimeInSeconds = 3600;
+  const uid = req.body.uid;
+  const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
+  const channel = req.body.channel;
+
+  const moment_curr = moment();
+  const currentTimestamp = moment_curr.add(30, 'minutes');
+  const expirationTimestamp =
+    new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
+  let value = await tempTokenModel.create({
+    ...req.body,
+    ...{
       date: moment().format('YYYY-MM-DD'),
       time: moment().format('HHMMSS'),
       created: moment(),
@@ -36,6 +63,9 @@ const generateToken = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
+  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
+  value.token = token;
+  value.save();
   return { uid, token, value };
 };
 
@@ -142,11 +172,14 @@ const participents_limit = async (req) => {
 };
 
 const agora_acquire = async (req) => {
+  let token = await tempTokenModel.findById(req.body.id);
+  console.log(token._id);
+  console.log(token.Uid);
   const acquire = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
     {
-      cname: 'test',
-      uid: '54369',
+      cname: token._id,
+      uid: token.Uid.toString(),
       clientRequest: {
         resourceExpiredHour: 24,
       },
@@ -154,25 +187,31 @@ const agora_acquire = async (req) => {
     { headers: { Authorization } }
   );
 
-  return acquire.data;
+  return await recording_start(acquire.data, token);
 };
 
-const recording_start = async (req) => {
-  console.log(req.body);
-  const resource = req.body.resource;
-  const mode = req.body.mode;
+const recording_start = async (res, token) => {
+  // let token = await tempTokenModel.findById(req.body.id);
+
+  const resource = res.resourceId;
+  const mode = 'mix';
+  let dir = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime();
+  console.log(dir);
+  // console.log(
+  //   // res.resourceId,
+  //   `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`
+  // );
   const start = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`,
     {
-      cname: 'test',
-      uid: '54369',
+      cname: token._id,
+      uid: token.Uid.toString(),
       clientRequest: {
-        token:
-          '00608bef39e0eb545338b0be104785c2ae1IAAllYVqg5jKp8ZDb44DK1m2MdF7mRfYO52sY5Qw3op8mwx+f9ip7Z4gIgD5p8MGG7mqYwQAAQDHaKljAgDHaKljAwDHaKljBADHaKlj',
+        // token: token.token,
         recordingConfig: {
-          maxIdleTime: 30,
+          maxIdleTime: 1300,
           streamTypes: 2,
-          channelType: 0,
+          channelType: 1,
           videoStreamType: 0,
           transcodingConfig: {
             height: 640,
@@ -188,49 +227,50 @@ const recording_start = async (req) => {
         },
         storageConfig: {
           vendor: 1,
-          region: 2,
-          bucket: 'arn:aws:s3:::streamingupload',
+          region: 14,
+          bucket: 'streamingupload',
           accessKey: 'AKIA3323XNN7Y2RU77UG',
           secretKey: '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',
-          fileNamePrefix: ['directory1', 'directory2'],
+          fileNamePrefix: [dir.toString(), token.Uid.toString()],
         },
       },
     },
     { headers: { Authorization } }
   );
 
-  return start.data;
+  return { start: start.data, acquire: res };
 };
 const recording_query = async (req) => {
-  const acquire = await axios.post(
-    `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
-    {
-      cname: 'test',
-      uid: '54369',
-      clientRequest: {
-        resourceExpiredHour: 24,
-      },
-    },
+  const resource = req.body.resource;
+  const sid = req.body.sid;
+  const mode = 'mix';
+  const query = await axios.get(
+    `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/query`,
     { headers: { Authorization } }
   );
-
-  return acquire.data;
+  return query.data;
 };
 const recording_stop = async (req) => {
   const resource = req.body.resource;
   const sid = req.body.sid;
-  const mode = req.body.mode;
-  console.log(`https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/stop`);
+  const mode = 'mix';
+  let token = await tempTokenModel.findById(req.body.id);
+
   const stop = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/stop`,
     {
-      cname: 'test',
-      uid: '29872',
-      clientRequest: {},
+      cname: token._id,
+      uid: token.Uid.toString(),
+      clientRequest: {
+        // async_stop: false,
+      },
     },
-    { headers: { Authorization } }
+    {
+      headers: {
+        Authorization,
+      },
+    }
   );
-
   return stop.data;
 };
 const recording_updateLayout = async (req) => {
@@ -261,4 +301,5 @@ module.exports = {
   recording_query,
   recording_stop,
   recording_updateLayout,
+  generateToken_sub,
 };

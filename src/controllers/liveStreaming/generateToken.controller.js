@@ -3,7 +3,12 @@ const catchAsync = require('../../utils/catchAsync');
 const generateTokenService = require('../../services/liveStreaming/generateToken.service');
 
 const generateToken = catchAsync(async (req, res) => {
-  const tokens = await generateTokenService.generateToken(req);
+  let tokens;
+  if (req.body.type == 'host') {
+    tokens = await generateTokenService.generateToken(req);
+  } else {
+    tokens = await generateTokenService.generateToken_sub(req);
+  }
   req.io.emit('subscriberjoined', { user: 'sd' });
   res.status(httpStatus.CREATED).send(tokens);
 });
@@ -24,7 +29,7 @@ const participents_limit = catchAsync(async (req, res) => {
 });
 
 const leave_participents = catchAsync(async (req, res) => {
-  const tokens = await generateTokenService.leave_participents(req.query);
+  const tokens = await generateTokenService.leave_participents(req);
   req.io.emit('subscriberjoined', { user: 'sd' });
   res.status(httpStatus.CREATED).send(tokens);
 });
@@ -41,7 +46,7 @@ const join_host = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(tokens);
 });
 const agora_acquire = catchAsync(async (req, res) => {
-  const tokens = await generateTokenService.agora_acquire(req.query);
+  const tokens = await generateTokenService.agora_acquire(req);
   res.status(httpStatus.CREATED).send(tokens);
 });
 const recording_start = catchAsync(async (req, res) => {
@@ -49,7 +54,7 @@ const recording_start = catchAsync(async (req, res) => {
   res.status(httpStatus.CREATED).send(tokens);
 });
 const recording_query = catchAsync(async (req, res) => {
-  const tokens = await generateTokenService.recording_query(req.query);
+  const tokens = await generateTokenService.recording_query(req);
   res.status(httpStatus.CREATED).send(tokens);
 });
 const recording_stop = catchAsync(async (req, res) => {
