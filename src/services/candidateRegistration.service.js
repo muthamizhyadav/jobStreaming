@@ -74,7 +74,7 @@ const forgot = async (body) => {
 }
 
 
-const change_password = async (id, body) =>{
+const change_password = async (id, body) => {
 
     const { password, confirmpassword } = body;
     if (password != confirmpassword) {
