@@ -72,7 +72,8 @@ const employerPlanHistory = async (id) => {
         offer:'$createplans.offer',
         validityOfPlan:'$createplans.validityOfPlan',
         jobPostVAlidity:'$createplans.jobPostVAlidity',
-        postJobUsed:'$employerdetails.count'
+        postJobUsed:'$employerdetails.count',
+        // jobPostBalance:{ $subtract: ['$jobPost', '$postJobUsed'] },
       }
     }
   ])
