@@ -4,6 +4,7 @@ const { OTPModel } = require('../models');
 const {emailService} = require('../services');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
+const Axios = require('axios');
 
 const createCandidate = async (userBody) => {
     const {password,confirmpassword} = userBody
@@ -86,7 +87,12 @@ const change_password = async (id, body) =>{
 }
 
 
-
+const getMapLocation = async (query) => {
+  let response = await Axios.get(
+    `https://maps.googleapis.com/maps/api/geocode/json?latlng=${query.lat},${query.long}&key=AIzaSyDoYhbYhtl9HpilAZSy8F_JHmzvwVDoeHI`
+  );
+  return response.data;
+};
 
 // const updateUserById = async (userId, updateBody) => {
 //   const user = await getUserById(userId);
@@ -118,6 +124,7 @@ module.exports = {
     forgot_verify_email,
     change_password,
     getUserById,
+    getMapLocation,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
