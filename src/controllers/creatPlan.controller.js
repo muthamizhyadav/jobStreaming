@@ -22,7 +22,8 @@ const updateById = catchAsync(async(req,res) => {
 })
 
 const get_All_plans = catchAsync(async(req,res) => {
-  const data = await createPlanService.get_All_plans()
+  const userId = req.userId
+  const data = await createPlanService.get_All_plans(userId)
   res.send(data)
 })
 

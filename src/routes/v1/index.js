@@ -9,6 +9,7 @@ const candidateDetailsRoute = require('./candidateDetails.route');
 const employerdetailsRoute = require('./employerdetails.route');
 const employerCandidateSearchRoute = require('./employerCandidateSearch.route');
 const createPlanRoute = require('./createPlan.route');
+const planPaymentDetailsRoute = require('./planPaymentDetails.route');
 
 const router = express.Router();
 
@@ -44,6 +45,10 @@ const defaultRoutes = [
   {
     path: '/createPlan',
     route: createPlanRoute,
+  },
+  {
+    path: '/planPayment',
+    route: planPaymentDetailsRoute,
   },
 ];
 

@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { CreatePlan } = require('../models/createPlan.model');
+const { PlanPayment } = require('../models/planPaymentDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
@@ -73,11 +74,46 @@ const updateById = async (id, updateBody) => {
   return data;
 };
 
-const get_All_plans = async () => {
-  const data = await CreatePlan.find()
-  if(!data){
-    throw new ApiError(httpStatus.NOT_FOUND, 'createPlan not found');
-  }
+const get_All_plans = async (id) => {
+  const data = await CreatePlan.aggregate([
+    {
+      $lookup: {
+        from: 'planpayments',
+        localField: '_id',
+         pipeline:[    { 
+          $match: { 
+            $and: [ { userId: { $eq: id } }] 
+        }
+        },],
+        foreignField: 'planId',
+        as: 'planpayments',
+      },
+    },
+    {
+      $unwind: {
+        path: '$planpayments',
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $project:{
+        active:1,
+        planName:1,
+        jobPost:1,
+        cvAccess:1,
+        numberOfMassMailer:1,
+        cost:1,
+        offer:1,
+        validityOfPlan:1,
+        jobPostVAlidity:1,
+        userId:1,
+        date:1,
+        time:1,
+        planPaymentDate:"$planpayments.date",
+        paymentStatus:{ $ifNull: ['$planpayments', "Pending"]},
+      }
+    }
+  ])
   return data
 }
 
