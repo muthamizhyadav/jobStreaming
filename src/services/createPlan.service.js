@@ -80,12 +80,12 @@ const get_All_plans = async (id) => {
       $lookup: {
         from: 'planpayments',
         localField: '_id',
-         pipeline:[    { 
+        foreignField: 'planId',
+        pipeline:[    { 
           $match: { 
             $and: [ { userId: { $eq: id } }] 
         }
         },],
-        foreignField: 'planId',
         as: 'planpayments',
       },
     },
@@ -110,7 +110,7 @@ const get_All_plans = async (id) => {
         date:1,
         time:1,
         planPaymentDate:"$planpayments.date",
-        paymentStatus:{ $ifNull: ['$planpayments', "Pending"]},
+        paymentStatus:{ $ifNull: ['$planpayments.paymentStatus', "Pending"]},
       }
     },
     {
