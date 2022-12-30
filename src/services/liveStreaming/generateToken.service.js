@@ -35,13 +35,13 @@ const generateToken = async (req) => {
   const token = Agora.RtcTokenBuilder.buildTokenWithUid(
     appID,
     appCertificate,
-    new Date().getTime().toString() + 'host',
+    'host' + (new Date().getTime() / 1000).toString(),
     uid,
     role,
     expirationTimestamp
   );
   value.token = token;
-  value.chennel = (new Date().getTime() / 1000).toString() + 'host';
+  value.chennel = 'host' + (new Date().getTime() / 1000).toString();
   value.save();
   return { uid, token, value };
 };
