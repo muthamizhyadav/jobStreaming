@@ -19,6 +19,12 @@ const  paymentSchema = mongoose.Schema(
     userId: {
         type:String,
     },
+    cashType:{
+      type:String,
+    },
+    payAmount:{
+      type:Number,
+    },
     date:{
       type:String,
       // default:moment().format('YYYY-MM-DD')
