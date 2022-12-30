@@ -54,6 +54,11 @@ const getUserById = catchAsync(async (req, res) => {
   res.send({user});
 });
 
+
+const getMapLocation = catchAsync(async (req, res) => {
+  const data = await candidateRegistrationService.getMapLocation(req.query);
+  res.send(data);
+});
 // const logout = catchAsync(async (req, res) => {
 //   await authService.logout(req.body.refreshToken);
 //   res.status(httpStatus.NO_CONTENT).send();
@@ -94,6 +99,7 @@ module.exports = {
   change_password,
   forgot_verify_email,
   getUserById,
+  getMapLocation,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,

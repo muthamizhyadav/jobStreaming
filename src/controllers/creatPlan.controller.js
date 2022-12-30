@@ -27,9 +27,15 @@ const get_All_plans = catchAsync(async(req,res) => {
   res.send(data)
 })
 
+const AdminSide_after_Employee_Payment = catchAsync(async (req, res) => {
+  const data = await createPlanService.AdminSide_after_Employee_Payment()
+  res.send({data});
+})
+
 module.exports = {
     createPlan,
     plan_view,
     updateById,
     get_All_plans,
+    AdminSide_after_Employee_Payment,
 };

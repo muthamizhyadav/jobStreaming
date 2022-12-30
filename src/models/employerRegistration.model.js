@@ -66,6 +66,12 @@ const userEmpSchema = mongoose.Schema(
     mobileNumber: {
       type: Number,
     },
+    lat:{
+      type:String,
+    },
+    long:{
+      type:String,
+    },
      active: {
         type: Boolean,
         default:true,

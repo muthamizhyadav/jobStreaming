@@ -117,9 +117,48 @@ const get_All_plans = async (id) => {
   return data
 }
 
+const AdminSide_after_Employee_Payment = async () => {
+  const data = await PlanPayment.aggregate([
+    {
+      $lookup: {
+        from: 'employerregistrations',
+        localField: 'userId',
+        foreignField: '_id',
+        as: 'employerregistrations',
+      },
+    },  
+    {
+      $unwind:'$employerregistrations',
+    }, 
+    {
+      $lookup: {
+        from: 'createplans',
+        localField: 'planId',
+        foreignField: '_id',
+        as: 'createplans',
+      },
+    },  
+    {
+      $unwind:'$createplans',
+    }, 
+    {
+      $project:{
+         companyName:"$employerregistrations.companyName",
+         companyType:"$employerregistrations.companyType",
+         planName:"$createplans.planName",
+         payAmount:"$createplans.cost",
+         date:1,
+         active:1,
+      }
+    }
+  ])
+  return data ;
+}
+
 module.exports = {
     createPlan,
     plan_view,
     updateById,
     get_All_plans,
+    AdminSide_after_Employee_Payment,
 };

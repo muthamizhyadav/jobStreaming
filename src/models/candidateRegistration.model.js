@@ -63,8 +63,14 @@ const userSchema = mongoose.Schema(
       type:String,
       default:"Pending",
     },
+    lat:{
+      type:String,
+    },
+    long:{
+      type:String,
+    },
     active:{
-      type:Boolean,
+      type:Number,
       default:true,
     },
   },
