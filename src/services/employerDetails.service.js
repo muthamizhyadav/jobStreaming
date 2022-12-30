@@ -1,5 +1,6 @@
 const httpStatus = require('http-status');
 const { EmployerDetails } = require('../models/employerDetails.model');
+const { EmployerRegistration } = require('../models');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
@@ -8,6 +9,10 @@ const { format } = require('morgan');
 //keySkill
 
 const createEmpDetails = async (userId, userBody) => {
+  let app = await EmployerRegistration.findOne({_id:userId, adminStatus:"Approved"})
+  if(!app){
+    throw new ApiError(httpStatus.NOT_FOUND, 'Employer Not Approved');
+  }
   const { validity } = userBody;
   let date = moment().format('YYYY-MM-DD');
   let creat1 = moment().format('HHmmss');

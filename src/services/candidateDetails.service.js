@@ -113,7 +113,7 @@ const candidateSearch = async (body) => {
     },  
     { 
       $match: { 
-        $and: [experienceSearch,locationSearch] 
+        $and: [ { adminStatus: { $eq: "Approved" } },experienceSearch,locationSearch] 
     }   
    },    
          {
