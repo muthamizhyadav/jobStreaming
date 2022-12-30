@@ -22,6 +22,9 @@ const  paymentSchema = mongoose.Schema(
     cashType:{
       type:String,
     },
+    paymentStatus:{
+      type:String,
+    },
     payAmount:{
       type:Number,
     },
