@@ -112,7 +112,10 @@ const get_All_plans = async (id) => {
         planPaymentDate:"$planpayments.date",
         paymentStatus:{ $ifNull: ['$planpayments', "Pending"]},
       }
-    }
+    },
+    {
+      $sort:{date:-1, time:-1}
+    },
   ])
   return data
 }
