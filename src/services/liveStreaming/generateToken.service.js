@@ -20,6 +20,7 @@ const generateToken = async (req) => {
   const currentTimestamp = moment_curr.add(30, 'minutes');
   const expirationTimestamp =
     new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
+  let channel = new Date().getTime().toString();
   let value = await tempTokenModel.create({
     ...req.body,
     ...{
@@ -32,16 +33,9 @@ const generateToken = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token = Agora.RtcTokenBuilder.buildTokenWithUid(
-    appID,
-    appCertificate,
-    new Date().getTime().toString(),
-    uid,
-    role,
-    expirationTimestamp
-  );
+  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
   value.token = token;
-  value.chennel = new Date().getTime().toString();
+  value.chennel = channel;
   value.save();
   return { uid, token, value };
 };
