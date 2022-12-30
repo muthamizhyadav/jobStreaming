@@ -41,7 +41,7 @@ const generateToken = async (req) => {
     expirationTimestamp
   );
   value.token = token;
-  value.chennel = new Date().getTime().toString() + 'host';
+  value.chennel = (new Date().getTime() / 1000).toString() + 'host';
   value.save();
   return { uid, token, value };
 };
