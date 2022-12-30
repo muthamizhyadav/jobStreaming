@@ -132,7 +132,7 @@ const AdminSide_after_Employee_Payment = async () => {
     },  
     {
       $unwind:'$employerregistrations',
-    }, 
+    },  
     {
       $lookup: {
         from: 'createplans',
@@ -146,10 +146,13 @@ const AdminSide_after_Employee_Payment = async () => {
     }, 
     {
       $project:{
+         cashType:1,
+         paymentStatus:1,
+         payAmount:1,
          companyName:"$employerregistrations.companyName",
          companyType:"$employerregistrations.companyType",
          planName:"$createplans.planName",
-         payAmount:"$createplans.cost",
+         cost:"$createplans.cost",
          jobPost:'$createplans.jobPost',
          cvAccess:'$createplans.cvAccess',
          numberOfMassMailer:'$createplans.numberOfMassMailer',
@@ -158,6 +161,7 @@ const AdminSide_after_Employee_Payment = async () => {
          jobPostVAlidity:'$createplans.jobPostVAlidity',
          date:1,
          active:1,
+
       }
     }
   ])
