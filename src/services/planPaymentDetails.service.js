@@ -14,12 +14,12 @@ const createPlanPayment = async (userId, userBody) => {
   return data;
 };
 
-const Plan_Deactivate = async (id) => {
+const Plan_Deactivate = async (id, body) => {
   const user = await PlanPayment.findById(id)
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
   }
-  const data = await PlanPayment.findByIdAndUpdate({ _id: id }, {active:false}, { new: true });
+  const data = await PlanPayment.findByIdAndUpdate({ _id: id }, body, { new: true });
   await data.save();
   return data;
 };

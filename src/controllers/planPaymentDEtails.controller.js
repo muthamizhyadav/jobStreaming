@@ -11,7 +11,7 @@ const createPlanPayment = catchAsync(async (req, res) => {
 
 
 const Plan_Deactivate = catchAsync(async(req,res) => {
-  const user = await createPlanPaymentService.Plan_Deactivate(req.params.id)
+  const user = await createPlanPaymentService.Plan_Deactivate(req.params.id, req.body)
   res.send({user})
 })
 
