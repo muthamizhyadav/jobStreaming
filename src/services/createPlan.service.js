@@ -150,6 +150,12 @@ const AdminSide_after_Employee_Payment = async () => {
          companyType:"$employerregistrations.companyType",
          planName:"$createplans.planName",
          payAmount:"$createplans.cost",
+         jobPost:'$createplans.jobPost',
+         cvAccess:'$createplans.cvAccess',
+         numberOfMassMailer:'$createplans.numberOfMassMailer',
+         offer:'$createplans.offer',
+         validityOfPlan:'$createplans.validityOfPlan',
+         jobPostVAlidity:'$createplans.jobPostVAlidity',
          date:1,
          active:1,
       }

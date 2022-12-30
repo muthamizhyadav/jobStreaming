@@ -38,6 +38,8 @@ const getByIdUser = async (id) => {
           workStatus:1,
           mobileNumber:1,
           name:1,
+          lat:1,
+          long:1,
           resume:1,
           createdAt:1,
           updatedAt:1,
