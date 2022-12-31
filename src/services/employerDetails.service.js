@@ -117,6 +117,18 @@ const getById = async (id) => {
   return data;
 };
 
+const data_Id = async (id) => {
+  const data = await EmployerDetails.aggregate([
+    {
+      $match: {
+        $and: [{ userId: { $eq: id } }],
+      },
+    },
+  ]);
+  return data;
+};
+
+
 const getById_Get = async (id) => {
   let dates = moment().format('YYYY-MM-DD');
   const data = await EmployerDetails.aggregate([
@@ -208,4 +220,5 @@ module.exports = {
   updateById,
   createEmpDetailsRepost,
   getById_Get,
+  data_Id,
 };

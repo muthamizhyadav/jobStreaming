@@ -38,6 +38,11 @@ const getById_Get = catchAsync(async(req,res) => {
   res.send({user})
 })
 
+
+const data_Id = catchAsync(async(req,res) => {
+  const user = await employerDetailsService.data_Id(req.params.id)
+  res.send(user)
+})
 module.exports = {
   createEmpDetails,
   getByIdUser,
@@ -45,4 +50,5 @@ module.exports = {
   deleteById,
   createEmpDetailsRepost,
   getById_Get,
+  data_Id,
 };
