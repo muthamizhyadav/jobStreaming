@@ -63,7 +63,6 @@ const tempToken = mongoose.Schema({
   },
   store:{
     type: String,
-    
   }
 });
 
