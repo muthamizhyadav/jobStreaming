@@ -52,6 +52,9 @@ const tempToken = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  cloud_recording:{
+    type: String,
+  }
 });
 
 const tempTokenModel = mongoose.model('tempToken', tempToken);

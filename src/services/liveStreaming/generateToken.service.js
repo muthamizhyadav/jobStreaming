@@ -42,10 +42,13 @@ const generateToken = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token = await geenerate_rtc_token(value._id,uid,'',expirationTimestamp);
+  const token = await geenerate_rtc_token(value._id,uid,role,expirationTimestamp);
   value.token = token;
   value.chennel = value._id;
-  value.save();
+ let cloud_recording =await geenerate_rtc_token(channel,uid, Agora.RtcRole.SUBSCRIBER,expirationTimestamp);
+ value.cloud_recording = cloud_recording;
+ value.save();
+
   return { uid, token, value };
 };
 const geenerate_rtc_token =async (chennel, uid, role, expirationTimestamp)=>{
@@ -70,12 +73,12 @@ const generateToken_sub = async (req) => {
       created: moment(),
       Uid: uid,
       chennel: channel,
-      participents: 0,
+      participents: 3,
       created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token =await geenerate_rtc_token(channel,uid,'',expirationTimestamp);
+  const token =await geenerate_rtc_token(channel,uid,role,expirationTimestamp);
   value.token = token;
   value.save();
   return { uid, token, value };
