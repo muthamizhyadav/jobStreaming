@@ -21,6 +21,7 @@ router.route('/change_password/:id').put(candidateRegistration.change_password);
 router.route('/getMap/Location').get(candidateRegistration.getMapLocation);
 router.route('/mobile_verify').post(candidateRegistration.mobile_verify);
 router.route('/mobile_verify_Otp').post(candidateRegistration.mobile_verify_Otp);
+router.route('/forget_password').post(candidateRegistration.forget_password);
 // router.post('/logout', validate(authValidation.logout), authController.logout);
 // router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 // router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);

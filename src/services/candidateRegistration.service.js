@@ -61,6 +61,25 @@ const mobile_verify_Otp = async (mobilenumber,otp) => {
   return verify
 }
 
+
+const forget_password = async (mobilenumber) => {
+  const data = await CandidateRegistration.findOne({mobileNumber:mobilenumber, active:true})
+  if(!data){
+    throw new Error('mobileNumber not found');
+  }
+  await sendmail.forgetOtp(data)
+  return {message: "otp send successfully"}
+}
+
+// const forget_password = async (mobilenumber) => {
+//   const data = await CandidateRegistration.findOne({mobileNumber:mobilenumber, active:true})
+//   if(!data){
+//     throw new Error('mobileNumber not found');
+//   }
+//   await sendmail.forgetOtp(data)
+//   return {message: "otp send successfully"}
+// }
+
 const UsersLogin = async (userBody) => {
     const { email, password } = userBody;
     let userName = await CandidateRegistration.findOne({ email: email });
@@ -111,6 +130,8 @@ const change_password = async (id, body) => {
 }
 
 
+
+
 const getMapLocation = async (query) => {
   let response = await Axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${query.lat},${query.long}&key=AIzaSyDoYhbYhtl9HpilAZSy8F_JHmzvwVDoeHI`
@@ -151,6 +172,7 @@ module.exports = {
     getMapLocation,
     mobile_verify,
     mobile_verify_Otp,
+    forget_password,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
