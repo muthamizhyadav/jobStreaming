@@ -54,6 +54,10 @@ const userEmpSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isMobileVerified:{
+      type: Boolean,
+      default: false,
+    },
     companyType: {
       type: String,
     },
