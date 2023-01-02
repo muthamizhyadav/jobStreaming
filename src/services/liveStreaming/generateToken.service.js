@@ -51,7 +51,7 @@ const generateToken = async (req) => {
  value.cloud_recording = cloud_recording.value._id;
  value.save();
 
-  return { uid, token, value };
+  return { uid, token, value ,cloud_recording};
 };
 const geenerate_rtc_token =async (chennel, uid, role, expirationTimestamp)=>{
     return Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, chennel, uid, role, expirationTimestamp);
@@ -202,7 +202,7 @@ const gettokenById = async (req) => {
 const gettokenById_host= async (req) => {
   let value = await tempTokenModel.findById(req.id);
   const uid = await generateUid()
-  const role = Agora.RtcRole.PUBLISHER ;
+  const role = Agora.RtcRole.SUBSCRIBER ;
   const token = await geenerate_rtc_token(value.chennel,uid,role,value.expDate/1000);
   value.token=token;
   value.Uid=uid;
