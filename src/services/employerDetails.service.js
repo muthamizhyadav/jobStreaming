@@ -15,12 +15,12 @@ const createEmpDetails = async (userId, userBody) => {
   if(!app){
     throw new ApiError(httpStatus.NOT_FOUND, 'Employer Not Approved');
   }
-  const { validity } = userBody;
+  const {validity} = userBody;
   let date = moment().format('YYYY-MM-DD');
   let creat1 = moment().format('HHmmss');
   // console.log(validity);
   let expiredDate = moment().add(validity, 'days').format('YYYY-MM-DD');
-  let values = { ...userBody, ...{ userId: userId, expiredDate: expiredDate, date: date, time:creat1} };
+  let values = { ...userBody, ...{ userId: userId, expiredDate: expiredDate, date: date, time:creat1, interviewstartDate:interviewDate.startDate, interviewendDate:interviewDate.endDate} };
   const da = await PlanPayment.findOne({userId:userId, active:true})
   if(date > da.expDate){
     await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})

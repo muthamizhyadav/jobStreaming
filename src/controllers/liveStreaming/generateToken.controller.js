@@ -21,7 +21,7 @@ const gettokenById = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.gettokenById(req.query);
   res.status(httpStatus.CREATED).send(tokens);
 });
-const gettokenById_host= catchAsync(async (req, res) => {
+const gettokenById_host = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.gettokenById_host(req.query);
   res.status(httpStatus.CREATED).send(tokens);
 });
@@ -80,5 +80,6 @@ module.exports = {
   recording_start,
   recording_query,
   recording_stop,
-  recording_updateLayout,gettokenById_host
+  recording_updateLayout,
+  gettokenById_host,
 };

@@ -40,6 +40,23 @@ const mobile_verify_Otp = catchAsync(async(req,res) => {
   res.send(user)
 })
 
+const forget_password = catchAsync(async (req, res) => {
+  const {mobilenumber} = req.body
+  const user = await candidateRegistrationService.forget_password(mobilenumber);
+  res.send(user);
+});
+
+
+const forget_password_Otp = catchAsync(async (req, res) => {
+  const user = await candidateRegistrationService.forget_password_Otp(req.body);
+  res.send(user);
+});
+
+
+const forget_password_set = catchAsync(async (req, res) => {
+  const user = await candidateRegistrationService.forget_password_set(req.params.id, req.body);
+  res.send(user);
+});
 
 const login = catchAsync(async (req, res) => {
   const user = await candidateRegistrationService.UsersLogin(req.body);
@@ -115,6 +132,9 @@ module.exports = {
   getMapLocation,
   mobile_verify,
   mobile_verify_Otp,
+  forget_password,
+  forget_password_Otp,
+  forget_password_set,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,

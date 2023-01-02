@@ -6,11 +6,11 @@ const  {EmployeOtp}  = require('../models');
 const register = catchAsync(async (req, res) => {
   const user = await EmployerRegistration.createEmployer(req.body);
   const tokens = await tokenService.generateAuthTokens(user);
-   await EmployeOtp.create({token:tokens.access.token});
+  //  await EmployeOtp.create({token:tokens.access.token});
   res.status(httpStatus.CREATED).send({ user, tokens });
   await user.save();
 //   console.log(user._id)
-  await emailService.sendVerificationEmailEmp(user.email, tokens.access.token, user._id)
+  await emailService.sendVerificationEmailEmp(user.email, tokens.access.token, user.mobileNumber)
 });
 
 
@@ -19,6 +19,37 @@ const verify_email = catchAsync(async(req,res) => {
     const user = await EmployerRegistration.verify_email(token, otp)
     res.send({user})
 })
+
+
+const mobile_verify = catchAsync(async(req,res) => {
+  const {mobilenumber} = req.body
+  const user = await EmployerRegistration.mobile_verify(mobilenumber)
+  res.send(user)
+})
+
+const mobile_verify_Otp = catchAsync(async(req,res) => {
+  const {mobilenumber, otp} = req.body
+  const user = await EmployerRegistration.mobile_verify_Otp(mobilenumber, otp)
+  res.send(user)
+})
+
+const forget_password = catchAsync(async (req, res) => {
+  const {mobilenumber} = req.body
+  const user = await EmployerRegistration.forget_password(mobilenumber);
+  res.send(user);
+});
+
+
+const forget_password_Otp = catchAsync(async (req, res) => {
+  const user = await EmployerRegistration.forget_password_Otp(req.body);
+  res.send(user);
+});
+
+
+const forget_password_set = catchAsync(async (req, res) => {
+  const user = await EmployerRegistration.forget_password_set(req.params.id, req.body);
+  res.send(user);
+});
 
 
 const login = catchAsync(async (req, res) => {
@@ -107,6 +138,11 @@ module.exports = {
   employerRegistration,
   employerRegistration_Approved,
   updateByIdEmployerRegistration,
+  mobile_verify,
+  mobile_verify_Otp,
+  forget_password,
+  forget_password_Otp,
+  forget_password_set,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,

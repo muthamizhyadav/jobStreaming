@@ -2,6 +2,9 @@ const httpStatus = require('http-status');
 const {EmployerRegistration} = require('../models');
 const { EmployeOtp } = require('../models');
 const {emailService} = require('../services');
+const { OTPModel } = require('../models');
+const { Token } = require('../models');
+const  sendmail  = require('../config/textlocal');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 
@@ -40,6 +43,54 @@ const verify_email = async (token, otp) =>{
     return data1
 }
 
+
+const mobile_verify = async (mobilenumber) => {
+  const data = await EmployerRegistration.findOne({mobileNumber:mobilenumber})
+  if(!data) {
+    throw new Error('mobileNumber not found');
+  }
+  await sendmail.Otp(data)
+  return {message:"Send Otp Succesfully"}
+}
+
+const mobile_verify_Otp = async (mobilenumber,otp) => {
+  const data = await OTPModel.findOne({mobileNumber:mobilenumber, otp:otp})
+  if(!data) {
+    throw new Error('mobileNumber not found');
+  }
+  const verify = await EmployerRegistration.findByIdAndUpdate({_id:data.userId}, {isMobileVerified:true, isEmailVerified:true}, {new:true})
+  return verify
+}
+
+const forget_password = async (mobilenumber) => {
+  const data = await EmployerRegistration.findOne({mobileNumber:mobilenumber, active:true})
+  if(!data){
+    throw new Error('mobileNumber not found');
+  }
+  await sendmail.forgetOtp(data)
+  return {message:'otp send successfully'}
+}
+
+const forget_password_Otp = async (body) => { 
+   const {mobilenumber, otp} = body
+   const data = await OTPModel.findOne({otp:otp, mobileNumber:mobilenumber})
+  if(!data){
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'otp inValid');
+  }
+  const verify = await EmployerRegistration.findOne({_id:data.userId}).select("email")
+  return verify
+}
+
+const forget_password_set = async (id, body) => { 
+  const { password, confirmpassword } = body;
+  if (password != confirmpassword) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'confirmpassword wrong');
+  }
+  const salt = await bcrypt.genSalt(10);
+  let password1 = await bcrypt.hash(password, salt);
+  const data = await EmployerRegistration.findByIdAndUpdate({ _id: id }, { password: password1 }, { new: true });
+  return data;
+}
 
 const UsersLogin = async (userBody) => {
     const { email, password } = userBody;
@@ -208,6 +259,11 @@ module.exports = {
     employerRegistration,
     employerRegistration_Approved,
     updateByIdEmployerRegistration,
+    mobile_verify,
+    mobile_verify_Otp,
+    forget_password,
+    forget_password_Otp,
+    forget_password_set,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,

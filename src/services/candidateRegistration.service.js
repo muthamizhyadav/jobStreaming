@@ -57,10 +57,41 @@ const mobile_verify_Otp = async (mobilenumber,otp) => {
   if(!data) {
     throw new Error('mobileNumber not found');
   }
-  const verify = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isMobileVerified:true}, {new:true})
+  const verify = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isMobileVerified:true, isEmailVerified:true}, {new:true})
   return verify
 }
 
+
+const forget_password = async (mobilenumber) => {
+  const data = await CandidateRegistration.findOne({mobileNumber:mobilenumber, active:true})
+  if(!data){
+    throw new Error('mobileNumber not found');
+  }
+  await sendmail.forgetOtp(data)
+  return {message:'otp send successfully'}
+}
+
+const forget_password_Otp = async (body) => { 
+   const {mobilenumber, otp} = body
+   const data = await OTPModel.findOne({otp:otp, mobileNumber:mobilenumber})
+  if(!data){
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'otp inValid');
+  }
+  const verify = await CandidateRegistration.findOne({_id:data.userId}).select("email")
+  return verify
+}
+
+const forget_password_set = async (id, body) => { 
+  const { password, confirmpassword } = body;
+  if (password != confirmpassword) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'confirmpassword wrong');
+  }
+  const salt = await bcrypt.genSalt(10);
+  let password1 = await bcrypt.hash(password, salt);
+  const data = await CandidateRegistration.findByIdAndUpdate({ _id: id }, { password: password1 }, { new: true });
+  return data;
+}
+ 
 const UsersLogin = async (userBody) => {
     const { email, password } = userBody;
     let userName = await CandidateRegistration.findOne({ email: email });
@@ -111,6 +142,8 @@ const change_password = async (id, body) => {
 }
 
 
+
+
 const getMapLocation = async (query) => {
   let response = await Axios.get(
     `https://maps.googleapis.com/maps/api/geocode/json?latlng=${query.lat},${query.long}&key=AIzaSyDoYhbYhtl9HpilAZSy8F_JHmzvwVDoeHI`
@@ -151,6 +184,9 @@ module.exports = {
     getMapLocation,
     mobile_verify,
     mobile_verify_Otp,
+    forget_password,
+    forget_password_Otp,
+    forget_password_set,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
