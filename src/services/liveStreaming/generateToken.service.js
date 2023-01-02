@@ -49,9 +49,10 @@ const generateToken = async (req) => {
   value.chennel = value._id;
   value.store = value._id.replace(/[^a-zA-Z0-9]/g, '');
  let cloud_recording =await generateToken_sub_record(value._id,false,req);
- value.cloud_recording = cloud_recording.token;
- value.uid_cloud = cloud_recording.uid;
-//  value.cloud_id = cloud_recording.value._id;
+ value.cloud_recording = cloud_recording.value.token;
+ value.uid_cloud = cloud_recording.value.Uid;
+ value.cloud_id = cloud_recording.value._id;
+ 
  value.save();
 
   return { uid, token, value ,cloud_recording};
@@ -64,12 +65,30 @@ const generateToken_sub_record = async (channel,isPublisher,req) => {
   const expirationTimeInSeconds = 3600;
   const uid = await generateUid()
   const role = isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
+console.log(role)
   const moment_curr = moment();
   const currentTimestamp = moment_curr.add(30, 'minutes');
   const expirationTimestamp =
     new Date(new Date(currentTimestamp.format('YYYY-MM-DD') + ' ' + currentTimestamp.format('HH:mm:ss'))).getTime() / 1000;
+  let value = await tempTokenModel.create({
+    ...req.body,
+    ...{
+      date: moment().format('YYYY-MM-DD'),
+      time: moment().format('HHMMSS'),
+      created: moment(),
+      Uid: uid,
+      chennel: channel,
+      participents: 3,
+      created_num: new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime(),
+      expDate: expirationTimestamp * 1000,
+      type:"sub",
+    },
+  });
+  console.log(role)
   const token =await geenerate_rtc_token(channel,uid,role,expirationTimestamp);
-  return { uid, token };
+  value.token = token;
+  value.save();
+  return { uid, token, value };
 };
 
 const generateToken_sub = async (req) => {
@@ -187,7 +206,7 @@ const gettokenById = async (req) => {
 const gettokenById_host= async (req) => {
   let value = await tempTokenModel.findById(req.id);
   const uid = await generateUid()
-  const role = Agora.RtcRole.SUBSCRIBER ;
+  const role = Agora.RtcRole.PUBLISHER ;
   const token = await geenerate_rtc_token(value.chennel,uid,role,value.expDate/1000);
   value.token=token;
   value.Uid=uid;
