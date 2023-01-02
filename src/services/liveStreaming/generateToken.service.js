@@ -11,9 +11,18 @@ const Authorization = `Basic ${Buffer.from(`8f68dcbfe5494cf8acf83d5836a1effc:b22
   'base64'
 )}`;
 
+
+const generateUid= async (req) => {
+  const length = 5;
+  const randomNo = (Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1)));
+  return randomNo;
+}
+
+
+
 const generateToken = async (req) => {
   const expirationTimeInSeconds = 3600;
-  const uid = req.body.uid;
+  const uid =  await generateUid()
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
 
   const moment_curr = moment();
@@ -33,16 +42,19 @@ const generateToken = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
+  const token = await geenerate_rtc_token(value._id,uid,role,expirationTimestamp);
   value.token = token;
-  value.chennel = channel;
+  value.chennel = value._id;
   value.save();
   return { uid, token, value };
 };
+const geenerate_rtc_token =async (chennel, uid, role, expirationTimestamp)=>{
+    return Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, chennel, uid, role, expirationTimestamp);
+}
 
 const generateToken_sub = async (req) => {
   const expirationTimeInSeconds = 3600;
-  const uid = req.body.uid;
+  const uid = await generateUid()
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
   const channel = req.body.channel;
 
@@ -63,7 +75,7 @@ const generateToken_sub = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token = Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, channel, uid, role, expirationTimestamp);
+  const token =await geenerate_rtc_token(channel,uid,role,expirationTimestamp);
   value.token = token;
   value.save();
   return { uid, token, value };
@@ -151,8 +163,18 @@ const gettokenById = async (req) => {
   let value = await tempTokenModel.findById(req.id);
   return value;
 };
+const gettokenById_host= async (req) => {
+  let value = await tempTokenModel.findById(req.id);
+  const uid = await generateUid()
+  const role = Agora.RtcRole.PUBLISHER ;
+  const token = await geenerate_rtc_token(value.chennel,uid,role,value.expDate/1000);
+  value.token=token;
+  value.Uid=uid;
+  value.save();
+  return value;
+};
 const leave_participents = async (req) => {
-  let value = await tempTokenModel.findByIdAndUpdate({ _id: req.id }, { active: false }, { new: true });
+  let value = await tempTokenModel.findByIdAndUpdate({ _id: req.query.id }, { active: false }, { new: true });
   return value;
 };
 
@@ -305,4 +327,5 @@ module.exports = {
   recording_stop,
   recording_updateLayout,
   generateToken_sub,
+  gettokenById_host
 };
