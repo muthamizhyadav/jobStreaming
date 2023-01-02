@@ -9,5 +9,5 @@ const router = express.Router();
 router.route('/').post(authorization, planPaymentDEtailsController.createPlanPayment);
 router.route('/Plan_Deactivate/:id').put(planPaymentDEtailsController.Plan_Deactivate);
 router.route('/employerPlanHistory').get(authorization, planPaymentDEtailsController.employerPlanHistory);
-
+router.route('/cvCount/:candidateId').put(authorization, planPaymentDEtailsController.cvCount);
 module.exports = router;

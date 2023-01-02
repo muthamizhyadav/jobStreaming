@@ -15,7 +15,7 @@ const createEmpDetails = async (userId, userBody) => {
   if(!app){
     throw new ApiError(httpStatus.NOT_FOUND, 'Employer Not Approved');
   }
-  const {validity} = userBody;
+  const {validity, interviewDate} = userBody;
   let date = moment().format('YYYY-MM-DD');
   let creat1 = moment().format('HHmmss');
   // console.log(validity);

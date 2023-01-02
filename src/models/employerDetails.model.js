@@ -100,6 +100,12 @@ const employerDetailsSchema = mongoose.Schema(
     interviewerContactNumber:{
         type:Number,
     },
+    startTime:{
+        type:String,
+    },
+    endTime:{
+        type:String,
+    },
     location:{
         type:String,
     },

@@ -87,21 +87,23 @@ const employerPlanHistory = async (id) => {
   return data
 }
 
-// const  cvCount = async (candidateId,userId) => {
-//    const data = await PlanPayment.findOne({userId:userId, active:true})
-//    if(!data){
-//     throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
-//    }
-//    data.cvCountUser.forEach(async (e) => {
-//          if(e != candidateId){
-//           data.cvCountCandidate.push(candidateId)
-//           await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {})
-//          }
-//    });
-// } 
+const  cvCount = async (candidateId,userId) => {
+   const data = await PlanPayment.findOne({userId:userId, active:true})
+   if(!data){
+    throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
+   }
+   data.cvCountUser.forEach(async (e) => {
+         if(e != candidateId){
+          data.cvCountCandidate.push(candidateId)
+          let cvCount = data.cvCount+1
+          await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:cvCount}, {new:true})
+         }
+   });
+} 
 
 module.exports = {
     createPlanPayment,
     Plan_Deactivate,
     employerPlanHistory,
+    cvCount,
 };
