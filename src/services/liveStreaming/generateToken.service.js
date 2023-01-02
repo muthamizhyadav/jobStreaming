@@ -47,8 +47,12 @@ const generateToken = async (req) => {
   const token = await geenerate_rtc_token(value._id,uid,role,expirationTimestamp);
   value.token = token;
   value.chennel = value._id;
+  value.store = value._id.replace(/[^a-zA-Z0-9]/g, '');
  let cloud_recording =await generateToken_sub_record(value._id,false,req);
- value.cloud_recording = cloud_recording.value._id;
+ value.cloud_recording = cloud_recording.value.token;
+ value.uid_cloud = cloud_recording.value.Uid;
+ value.cloud_id = cloud_recording.value._id;
+ 
  value.save();
 
   return { uid, token, value ,cloud_recording};
@@ -61,7 +65,7 @@ const generateToken_sub_record = async (channel,isPublisher,req) => {
   const expirationTimeInSeconds = 3600;
   const uid = await generateUid()
   const role = isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
-
+console.log(role)
   const moment_curr = moment();
   const currentTimestamp = moment_curr.add(30, 'minutes');
   const expirationTimestamp =
@@ -207,6 +211,7 @@ const gettokenById_host= async (req) => {
   value.token=token;
   value.Uid=uid;
   value.save();
+  console.log(role)
   return value;
 };
 const leave_participents = async (req) => {

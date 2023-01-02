@@ -57,6 +57,13 @@ const tempToken = mongoose.Schema({
   },
   uid_cloud:{
     type: String,
+  },
+  cloud_id:{
+    type: String,
+  },
+  store:{
+    type: String,
+    
   }
 });
 
