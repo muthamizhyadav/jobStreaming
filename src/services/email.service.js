@@ -20,9 +20,9 @@ if (config.env !== 'test') {
  * @param {string} text
  * @returns {Promise}
  */
-const sendEmail = async (to, subject, text, token, otp, userId) => {
-  const msg = { from: "muthamizhyadav@gmail.com", to, subject, text};
-  await OTPModel.findOneAndUpdate({token:token},{otp:otp, userId:userId},{ new: true })
+const sendEmail = async (to, subject, text, token) => {
+  const msg = { from: "muthamizhyadav@gmail.com", to, subject, text, token};
+  // await OTPModel.findOneAndUpdate({token:token},{otp:otp, userId:userId},{ new: true })
   await transport.sendMail(msg);
 };
 
@@ -79,16 +79,14 @@ const sendVerificationEmailEmp = async (to, token, userId) => {
 };
 
 
-const sendVerificationEmail = async (to, token, userId) => {
+const sendVerificationEmail = async (to, token, mobilenumber) => {
   const subject = 'Email Verification';
-  // console.log(to, token)
-  // replace this url with the link to the email verification page of your front-end app
-  var otp = Math.random();
-   otp = otp * 1000000;
-   otp = parseInt(otp);
-   console.log(otp);
-   const text = `Dear user, To email verification, OTP:${otp}. Do not share your otp`
-  await sendEmail(to, subject, text, token, otp, userId);
+  // replace this url with the link to the reset password page of your front-end app
+  const resetPasswordUrl = `http://localhost:4200/#/MobileVerification?mobilenumber=${mobilenumber}`;
+  const text = `Dear user,
+To set your password, click on this link: ${resetPasswordUrl}
+If you did not request any password sets, then ignore this email.`;
+  await sendEmail(to, subject, text, token);
 };
 
 
@@ -115,6 +113,7 @@ const sendforgotEmailEmp = async (to,userId) => {
    const text = `Dear user, To Forget Password, OTP:${otp}. Do not share your otp`
   await forgetEmailEmp(to, subject, text, otp, userId);
 };
+
 module.exports = {
   transport,
   sendEmail,

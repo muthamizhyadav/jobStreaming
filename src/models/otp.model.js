@@ -13,8 +13,8 @@ const otpSchema = new mongoose.Schema({
   userId:{
     type:String,
   },
-  token:{
-    type:String,
+  mobileNumber:{
+    type:Number,
   },
   active: {
     type: Boolean,

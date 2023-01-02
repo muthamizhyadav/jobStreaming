@@ -87,6 +87,19 @@ const employerPlanHistory = async (id) => {
   return data
 }
 
+// const  cvCount = async (candidateId,userId) => {
+//    const data = await PlanPayment.findOne({userId:userId, active:true})
+//    if(!data){
+//     throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
+//    }
+//    data.cvCountUser.forEach(async (e) => {
+//          if(e != candidateId){
+//           data.cvCountCandidate.push(candidateId)
+//           await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {})
+//          }
+//    });
+// } 
+
 module.exports = {
     createPlanPayment,
     Plan_Deactivate,

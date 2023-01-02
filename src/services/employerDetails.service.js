@@ -1,5 +1,7 @@
 const httpStatus = require('http-status');
 const { EmployerDetails } = require('../models/employerDetails.model');
+const { PlanPayment } = require('../models/planPaymentDetails.model');
+const { CreatePlan } = require('../models/createPlan.model');
 const { EmployerRegistration } = require('../models');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
@@ -19,6 +21,16 @@ const createEmpDetails = async (userId, userBody) => {
   // console.log(validity);
   let expiredDate = moment().add(validity, 'days').format('YYYY-MM-DD');
   let values = { ...userBody, ...{ userId: userId, expiredDate: expiredDate, date: date, time:creat1} };
+  const da = await PlanPayment.findOne({userId:userId, active:true})
+  if(date > da.expDate){
+    await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})
+    throw new ApiError(httpStatus.NOT_FOUND, 'plan time expired');
+  }
+  //  const createPlan = await CreatePlan.findOne({_id:da._id})
+  //  const count = await EmployerDetails.find({userId:userId, active:true, date: { $gte: da.date },  })
+  //  if(createPlan.jobPost == ){
+    
+  //  }
   let data = await EmployerDetails.create(values);
   return data;
 };
