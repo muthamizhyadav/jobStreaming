@@ -35,6 +35,10 @@ const  paymentSchema = mongoose.Schema(
     expDate:{
       type:String,
     },
+    cvCount:{
+      type:Number,
+      default:0,
+    },
     time: {
       type: String,
       // default:moment().format('HHmmss')

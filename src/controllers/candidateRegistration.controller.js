@@ -13,18 +13,31 @@ const register = catchAsync(async (req, res) => {
     user.resume = path
   }
   const tokens = await tokenService.generateAuthTokens(user);
-   await OTPModel.create({token:tokens.access.token});
+  //  await OTPModel.create({token:tokens.access.token});
   res.status(httpStatus.CREATED).send({ user, tokens });
   await user.save();
 //   console.log(user._id)
-  await emailService.sendVerificationEmail(user.email, tokens.access.token, user._id)
+  await emailService.sendVerificationEmail(user.email, tokens.access.token, user.mobileNumber)
 });
 
 
 const verify_email = catchAsync(async(req,res) => {
-    const {token,otp} = req.body
-    const user = await candidateRegistrationService.verify_email(token, otp)
+    const {token} = req.body
+    const user = await candidateRegistrationService.verify_email(token)
     res.send({user})
+})
+
+
+const mobile_verify = catchAsync(async(req,res) => {
+  const {mobilenumber} = req.body
+  const user = await candidateRegistrationService.mobile_verify(mobilenumber)
+  res.send(user)
+})
+
+const mobile_verify_Otp = catchAsync(async(req,res) => {
+  const {mobilenumber, otp} = req.body
+  const user = await candidateRegistrationService.mobile_verify_Otp(mobilenumber, otp)
+  res.send(user)
 })
 
 
@@ -100,6 +113,8 @@ module.exports = {
   forgot_verify_email,
   getUserById,
   getMapLocation,
+  mobile_verify,
+  mobile_verify_Otp,
 //   logout,
 //   refreshTokens,
 //   forgotPassword,

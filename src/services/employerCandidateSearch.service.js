@@ -287,7 +287,7 @@ const candidate_applied_Details_view = async (id) => {
       image:1,
       userId:1,
       createdAt:1,
-      saveDataOrNot:{ $ifNull: ['$candidateregistrations.savetofolderemployersearches.status', false] },
+      saveDataOrNot:{ $ifNull: ['$candidateregistrations.savetofolderemployersearches.status', false ] },
       candidateregistrations:"$candidateregistrations",
     }
   }

@@ -1,6 +1,10 @@
 const httpStatus = require('http-status');
 const { CandidateRegistration, User } = require('../models');
 const { OTPModel } = require('../models');
+const { Token } = require('../models');
+const  sendmail  = require('../config/textlocal');
+const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 const {emailService} = require('../services');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
@@ -27,15 +31,35 @@ const getUserById = async (id) => {
      }    
 };
 
-const verify_email = async (token, otp) =>{
-    const data = await OTPModel.findOne({token:token, otp:otp})
-    if(data == null){
-        throw new ApiError(httpStatus.BAD_REQUEST, 'incorrect otp');
-    }
-    const data1 = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isEmailVerified:true}, {new:true})
-    return data1
+const verify_email = async (token) => {
+      const payload = jwt.verify(token, config.jwt.secret);
+      const tokenDoc = await Token.findOne({user: payload.sub, blacklisted: false });
+      console.log(tokenDoc,payload)
+      if (!tokenDoc) {
+        throw new Error('Token not found');
+      }
+     const data = await CandidateRegistration.findByIdAndUpdate({_id:tokenDoc.user}, {isEmailVerified:true}, {new:true})
+      return data;
+    };
+
+const mobile_verify = async (mobilenumber) => {
+  const data = await CandidateRegistration.findOne({mobileNumber:mobilenumber})
+  if(!data) {
+    throw new Error('mobileNumber not found');
+  }
+  await sendmail.Otp(data)
+  return {message:"Send Otp Succesfully"}
 }
 
+
+const mobile_verify_Otp = async (mobilenumber,otp) => {
+  const data = await OTPModel.findOne({mobileNumber:mobilenumber, otp:otp})
+  if(!data) {
+    throw new Error('mobileNumber not found');
+  }
+  const verify = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isMobileVerified:true}, {new:true})
+  return verify
+}
 
 const UsersLogin = async (userBody) => {
     const { email, password } = userBody;
@@ -125,6 +149,8 @@ module.exports = {
     change_password,
     getUserById,
     getMapLocation,
+    mobile_verify,
+    mobile_verify_Otp,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
