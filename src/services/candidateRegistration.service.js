@@ -57,7 +57,7 @@ const mobile_verify_Otp = async (mobilenumber,otp) => {
   if(!data) {
     throw new Error('mobileNumber not found');
   }
-  const verify = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isMobileVerified:true}, {new:true})
+  const verify = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isMobileVerified:true, isEmailVerified:true}, {new:true})
   return verify
 }
 
@@ -68,18 +68,19 @@ const forget_password = async (mobilenumber) => {
     throw new Error('mobileNumber not found');
   }
   await sendmail.forgetOtp(data)
-  return {message: "otp send successfully"}
+  return {userId:data._id}
 }
 
-// const forget_password = async (mobilenumber) => {
-//   const data = await CandidateRegistration.findOne({mobileNumber:mobilenumber, active:true})
-//   if(!data){
-//     throw new Error('mobileNumber not found');
-//   }
-//   await sendmail.forgetOtp(data)
-//   return {message: "otp send successfully"}
-// }
-
+const forget_password_Otp = async (body) => { 
+   const {otp,id} = body
+   const data = await OTPModel.findOne({userId:id, otp:otp})
+  if(!data){
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'otp inValid');
+  }
+  const verify = await CandidateRegistration.findOne({_id:id}).select("email")
+  return verify
+}
+ 
 const UsersLogin = async (userBody) => {
     const { email, password } = userBody;
     let userName = await CandidateRegistration.findOne({ email: email });
@@ -173,6 +174,7 @@ module.exports = {
     mobile_verify,
     mobile_verify_Otp,
     forget_password,
+    forget_password_Otp,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
