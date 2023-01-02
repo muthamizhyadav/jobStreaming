@@ -53,7 +53,6 @@ const geenerate_rtc_token =async (chennel, uid, role, expirationTimestamp)=>{
 }
 
 const generateToken_sub = async (req) => {
-  console.log(body)
   const expirationTimeInSeconds = 3600;
   const uid = await generateUid()
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
