@@ -68,17 +68,28 @@ const forget_password = async (mobilenumber) => {
     throw new Error('mobileNumber not found');
   }
   await sendmail.forgetOtp(data)
-  return {userId:data._id}
+  return {message:'otp send successfully'}
 }
 
 const forget_password_Otp = async (body) => { 
-   const {otp,id} = body
-   const data = await OTPModel.findOne({userId:id, otp:otp})
+   const {mobilenumber, otp} = body
+   const data = await OTPModel.findOne({otp:otp, mobileNumber:mobilenumber})
   if(!data){
     throw new ApiError(httpStatus.UNAUTHORIZED, 'otp inValid');
   }
-  const verify = await CandidateRegistration.findOne({_id:id}).select("email")
+  const verify = await CandidateRegistration.findOne({_id:data.userId}).select("email")
   return verify
+}
+
+const forget_password_set = async (id, body) => { 
+  const { password, confirmpassword } = body;
+  if (password != confirmpassword) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'confirmpassword wrong');
+  }
+  const salt = await bcrypt.genSalt(10);
+  let password1 = await bcrypt.hash(password, salt);
+  const data = await CandidateRegistration.findByIdAndUpdate({ _id: id }, { password: password1 }, { new: true });
+  return data;
 }
  
 const UsersLogin = async (userBody) => {
@@ -175,6 +186,7 @@ module.exports = {
     mobile_verify_Otp,
     forget_password,
     forget_password_Otp,
+    forget_password_set,
 //   getUserById,
 //   getUserByEmail,
 //   updateUserById,
