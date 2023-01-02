@@ -42,7 +42,7 @@ const generateToken = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token = await geenerate_rtc_token(value._id,uid,role,expirationTimestamp);
+  const token = await geenerate_rtc_token(value._id,uid,'',expirationTimestamp);
   value.token = token;
   value.chennel = value._id;
   value.save();
@@ -75,7 +75,7 @@ const generateToken_sub = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token =await geenerate_rtc_token(channel,uid,role,expirationTimestamp);
+  const token =await geenerate_rtc_token(channel,uid,'',expirationTimestamp);
   value.token = token;
   value.save();
   return { uid, token, value };
