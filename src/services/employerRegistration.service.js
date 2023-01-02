@@ -212,6 +212,7 @@ const employerRegistration_Approved = async (page) => {
       interviewType:"$employerdetails.interviewType",
       salaryRangeFrom:"$employerdetails.salaryRangeFrom",
       salaryRangeTo:"$employerdetails.salaryRangeTo",
+      postJob_id:"$employerdetails._id",
      }
   },
   { $skip: 10 * page },
