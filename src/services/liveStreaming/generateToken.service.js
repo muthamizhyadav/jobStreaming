@@ -11,18 +11,15 @@ const Authorization = `Basic ${Buffer.from(`8f68dcbfe5494cf8acf83d5836a1effc:b22
   'base64'
 )}`;
 
-
-const generateUid= async (req) => {
+const generateUid = async (req) => {
   const length = 5;
-  const randomNo = (Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1)));
+  const randomNo = Math.floor(Math.pow(10, length - 1) + Math.random() * 9 * Math.pow(10, length - 1));
   return randomNo;
-}
-
-
+};
 
 const generateToken = async (req) => {
   const expirationTimeInSeconds = 3600;
-  const uid =  await generateUid()
+  const uid = await generateUid();
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
 
   const moment_curr = moment();
@@ -42,19 +39,19 @@ const generateToken = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token = await geenerate_rtc_token(value._id,uid,role,expirationTimestamp);
+  const token = await geenerate_rtc_token(value._id, uid, role, expirationTimestamp);
   value.token = token;
   value.chennel = value._id;
   value.save();
   return { uid, token, value };
 };
-const geenerate_rtc_token =async (chennel, uid, role, expirationTimestamp)=>{
-    return Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, chennel, uid, role, expirationTimestamp);
-}
+const geenerate_rtc_token = async (chennel, uid, role, expirationTimestamp) => {
+  return Agora.RtcTokenBuilder.buildTokenWithUid(appID, appCertificate, chennel, uid, role, expirationTimestamp);
+};
 
 const generateToken_sub = async (req) => {
   const expirationTimeInSeconds = 3600;
-  const uid = await generateUid()
+  const uid = await generateUid();
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
   const channel = req.body.channel;
 
@@ -75,7 +72,7 @@ const generateToken_sub = async (req) => {
       expDate: expirationTimestamp * 1000,
     },
   });
-  const token =await geenerate_rtc_token(channel,uid,role,expirationTimestamp);
+  const token = await geenerate_rtc_token(channel, uid, role, expirationTimestamp);
   value.token = token;
   value.save();
   return { uid, token, value };
@@ -163,13 +160,13 @@ const gettokenById = async (req) => {
   let value = await tempTokenModel.findById(req.id);
   return value;
 };
-const gettokenById_host= async (req) => {
+const gettokenById_host = async (req) => {
   let value = await tempTokenModel.findById(req.id);
-  const uid = await generateUid()
-  const role = Agora.RtcRole.PUBLISHER ;
-  const token = await geenerate_rtc_token(value.chennel,uid,role,value.expDate/1000);
-  value.token=token;
-  value.Uid=uid;
+  const uid = await generateUid();
+  const role = Agora.RtcRole.PUBLISHER;
+  const token = await geenerate_rtc_token(value.chennel, uid, role, value.expDate / 1000);
+  value.token = token;
+  value.Uid = uid;
   value.save();
   return value;
 };
@@ -195,21 +192,23 @@ const participents_limit = async (req) => {
 
 const agora_acquire = async (req) => {
   let token = await tempTokenModel.findById(req.body.id);
-  console.log(token._id);
-  console.log(token.Uid);
-  const acquire = await axios.post(
-    `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
-    {
-      cname: token._id,
-      uid: token.Uid.toString(),
-      clientRequest: {
-        resourceExpiredHour: 24,
-      },
-    },
-    { headers: { Authorization } }
-  );
+  console.log( token.chennel);
+  console.log(token['cloud_recording']);
+  // const acquire = await axios.post(
+  //   `https://api.agora.io/v1/apps/${appID}/cloud_recording/acquire`,
+  //   {
+  //     cname: token.chennel,
+  //     uid: token.uid_cloud,
+  //     clientRequest: {
+  //       resourceExpiredHour: 24,
+  //       scene: 0,
+  //     },
+  //   },
+  //   { headers: { Authorization } }
+  // );
+  // console.log(acquire.data);
 
-  return await recording_start(acquire.data, token);
+  return { token };
 };
 
 const recording_start = async (res, token) => {
@@ -219,19 +218,15 @@ const recording_start = async (res, token) => {
   const mode = 'mix';
   let dir = new Date(new Date(moment().format('YYYY-MM-DD') + ' ' + moment().format('HH:mm:ss'))).getTime();
   console.log(dir);
-  // console.log(
-  //   // res.resourceId,
-  //   `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`
-  // );
   const start = await axios.post(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/mode/${mode}/start`,
     {
-      cname: token._id,
-      uid: token.Uid.toString(),
+      cname: token.chennel,
+      uid: token.uid_cloud.toString(),
       clientRequest: {
-        // token: token.token,
+        token: token.cloud_recording,
         recordingConfig: {
-          maxIdleTime: 1300,
+          maxIdleTime: 30,
           streamTypes: 2,
           channelType: 1,
           videoStreamType: 0,
@@ -253,18 +248,18 @@ const recording_start = async (res, token) => {
           bucket: 'streamingupload',
           accessKey: 'AKIA3323XNN7Y2RU77UG',
           secretKey: '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',
-          fileNamePrefix: [dir.toString(), token.Uid.toString()],
+          fileNamePrefix: [token.store, token.uid.toString()],
         },
       },
     },
     { headers: { Authorization } }
   );
-
+  // let query = await recording_query(start.data, token);
   return { start: start.data, acquire: res };
 };
-const recording_query = async (req) => {
-  const resource = req.body.resource;
-  const sid = req.body.sid;
+const recording_query = async (res, token) => {
+  const resource = res.resourceId;
+  const sid = req.sid;
   const mode = 'mix';
   const query = await axios.get(
     `https://api.agora.io/v1/apps/${appID}/cloud_recording/resourceid/${resource}/sid/${sid}/mode/${mode}/query`,
@@ -327,5 +322,5 @@ module.exports = {
   recording_stop,
   recording_updateLayout,
   generateToken_sub,
-  gettokenById_host
+  gettokenById_host,
 };
