@@ -53,6 +53,7 @@ const geenerate_rtc_token =async (chennel, uid, role, expirationTimestamp)=>{
 }
 
 const generateToken_sub = async (req) => {
+  console.log(body)
   const expirationTimeInSeconds = 3600;
   const uid = await generateUid()
   const role = req.body.isPublisher ? Agora.RtcRole.PUBLISHER : Agora.RtcRole.SUBSCRIBER;
@@ -174,7 +175,7 @@ const gettokenById_host= async (req) => {
   return value;
 };
 const leave_participents = async (req) => {
-  let value = await tempTokenModel.findByIdAndUpdate({ _id: req.id }, { active: false }, { new: true });
+  let value = await tempTokenModel.findByIdAndUpdate({ _id: req.query.id }, { active: false }, { new: true });
   return value;
 };
 
