@@ -21,8 +21,15 @@ const employerPlanHistory = catchAsync(async(req,res) => {
   res.send(user)
 })
 
+const cvCount = catchAsync(async(req,res) => {
+  const userId = req.userId
+  const user = await createPlanPaymentService.cvCount(req.params.candidateId, userId)
+  res.send(user)
+})
+
 module.exports = {
     createPlanPayment,
     Plan_Deactivate,
     employerPlanHistory,
+    cvCount,
 };
