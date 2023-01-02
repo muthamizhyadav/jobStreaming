@@ -47,7 +47,7 @@ const generateToken = async (req) => {
   const token = await geenerate_rtc_token(value._id,uid,role,expirationTimestamp);
   value.token = token;
   value.chennel = value._id;
- let cloud_recording =await geenerate_rtc_token(channel,uid_cloud, Agora.RtcRole.SUBSCRIBER,expirationTimestamp);
+ let cloud_recording =await geenerate_rtc_token(channel,uid_cloud, 2,expirationTimestamp);
  value.uid_cloud = uid_cloud;
  value.cloud_recording = cloud_recording;
  value.save();
