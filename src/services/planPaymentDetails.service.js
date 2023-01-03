@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const { PlanPayment } = require('../models/planPaymentDetails.model');
 const { CreatePlan } = require('../models/createPlan.model');
+const { CandidateRegistration } = require('../models');
+const { KeySkill } = require('../models/candidateDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
@@ -106,9 +108,36 @@ const  cvCount = async (candidateId,userId) => {
    }
 } 
 
+const  cvdata = async (userId) => {
+  let candidates = []
+  const data = await PlanPayment.findOne({userId:userId, active:true})
+  if(!data){
+   throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
+  }
+  for(let i = 0; i < data.cvCountUser.length; i++){
+      const value = await CandidateRegistration.findById(data.cvCountUser[i])
+      candidates.push(value)
+  }
+  return candidates
+}
+
+const  cvdata_view = async (id) => {
+  // console.log(id)
+  const data = await KeySkill.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: id } }] 
+    }
+    },
+  ])
+  return data
+}
+
 module.exports = {
     createPlanPayment,
     Plan_Deactivate,
     employerPlanHistory,
     cvCount,
+    cvdata,
+    cvdata_view,
 };
