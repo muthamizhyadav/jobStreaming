@@ -79,6 +79,7 @@ const employerPlanHistory = async (id) => {
         validityOfPlan:'$createplans.validityOfPlan',
         jobPostVAlidity:'$createplans.jobPostVAlidity',
         postJobUsed:{ $ifNull: ['$employerdetails.count', 0] },
+        countjobPost:1,
         cvAccess:'$createplans.cvAccess',
         cvCount:1,
         userId:1,

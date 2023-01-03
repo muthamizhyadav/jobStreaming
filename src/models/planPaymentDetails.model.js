@@ -43,7 +43,7 @@ const  paymentSchema = mongoose.Schema(
       type:Number,
       default:0,
     },
-    countjobPOst:{
+    countjobPost:{
       type:Number,
       default:0,
     },
