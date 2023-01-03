@@ -68,6 +68,10 @@ const recording_updateLayout = catchAsync(async (req, res) => {
   const tokens = await generateTokenService.recording_updateLayout(req.query);
   res.status(httpStatus.CREATED).send(tokens);
 });
+const chat_rooms= catchAsync(async (req, res) => {
+  const tokens = await generateTokenService.chat_rooms(req.query);
+  res.status(httpStatus.CREATED).send(tokens);
+});
 module.exports = {
   generateToken,
   getHostTokens,
@@ -82,4 +86,5 @@ module.exports = {
   recording_stop,
   recording_updateLayout,
   gettokenById_host,
+  chat_rooms
 };
