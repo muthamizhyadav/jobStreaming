@@ -34,11 +34,16 @@ const  paymentSchema = mongoose.Schema(
     },
     cvCountUser:{
       type:Array,
+      default:[],
     },
     expDate:{
       type:String,
     },
     cvCount:{
+      type:Number,
+      default:0,
+    },
+    countjobPOst:{
       type:Number,
       default:0,
     },

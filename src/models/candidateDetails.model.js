@@ -130,6 +130,10 @@ const candidatePostjobSchema = mongoose.Schema(
       jobId:{
         type:String,
       },
+      status:{
+        type:Boolean,
+        default:true,
+      },
       active:{
           type:Boolean,
           default:true,
@@ -151,6 +155,10 @@ const candidatePostjobSchema = mongoose.Schema(
       },
       savejobId:{
         type:String,
+      },
+      status:{
+        type:Boolean,
+        default:true,
       },
       active:{
           type:Boolean,
