@@ -342,6 +342,11 @@ const recording_updateLayout = async (req) => {
 
   return acquire.data;
 };
+
+const chat_rooms = async (req) => {
+  let value = await tempTokenModel.findById(req.id);
+  return value;
+};
 module.exports = {
   generateToken,
   getHostTokens,
@@ -357,4 +362,5 @@ module.exports = {
   recording_updateLayout,
   generateToken_sub,
   gettokenById_host,
+  chat_rooms
 };

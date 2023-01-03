@@ -20,5 +20,6 @@ router.post('/recording/start', generateToken.recording_start);
 router.post('/recording/query', generateToken.recording_query);
 router.post('/recording/stop', generateToken.recording_stop);
 router.post('/recording/updateLayout', generateToken.recording_updateLayout);
+router.post('/chat/room/details', generateToken.chat_rooms);
 
 module.exports = router;

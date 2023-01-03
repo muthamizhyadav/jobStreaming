@@ -28,7 +28,14 @@ server.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);
 });
 
-
+io.sockets.on('connection', function (socket) {
+  socket.on('groupchat', function (data) {
+    io.sockets.emit(data.channel, data);
+  });
+  socket.on('', (msg) => {
+    console.log('message: ' + msg);
+  });
+});
 app.use(function(req, res, next) {
   req.io = io;
   next();
