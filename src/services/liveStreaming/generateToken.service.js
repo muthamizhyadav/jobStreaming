@@ -271,8 +271,8 @@ const recording_start = async (req) => {
           videoStreamType: 0,
           transcodingConfig: {
             height: 640,
-            width: 360,
-            bitrate: 500,
+            width: 1080,
+            bitrate: 1000,
             fps: 15,
             mixedVideoLayout: 1,
             backgroundColor: '#FFFFFF',
