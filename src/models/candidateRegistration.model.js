@@ -74,7 +74,7 @@ const userSchema = mongoose.Schema(
       type:String,
     },
     active:{
-      type:Number,
+      type:Boolean,
       default:true,
     },
   },
