@@ -92,13 +92,19 @@ const  cvCount = async (candidateId,userId) => {
    if(!data){
     throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
    }
-   data.cvCountUser.forEach(async (e) => {
-         if(e != candidateId){
-          data.cvCountCandidate.push(candidateId)
-          let cvCount = data.cvCount+1
-          await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:cvCount}, {new:true})
-         }
-   });
+   const data1 = await PlanPayment.findOne({userId:userId, active:true, cvCountUser:{$elemMatch:{$in:[candidateId]}}})
+   console.log(data1, "efe")
+   if(!data1){
+    cvCountUser = data1.cvCountUser.push(candidateId)
+    await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:+1, }, {new:true})
+   }
+  //  data.cvCountUser.forEach(async (e) => {
+  //        if(e != candidateId){
+  //         data.cvCountCandidate.push(candidateId)
+  //         let cvCount = data.cvCount+1
+  //         await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:cvCount}, {new:true})
+  //        }
+  //  });
 } 
 
 module.exports = {

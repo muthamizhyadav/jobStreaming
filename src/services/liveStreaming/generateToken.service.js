@@ -202,13 +202,13 @@ const gettokenById = async (req) => {
 };
 const gettokenById_host = async (req) => {
   let value = await tempTokenModel.findById(req.id);
-  const uid = await generateUid();
-  const role = Agora.RtcRole.PUBLISHER;
-  const token = await geenerate_rtc_token(value.chennel, uid, role, value.expDate / 1000);
-  value.token = token;
-  value.Uid = uid;
-  value.save();
-  console.log(role);
+  // const uid = await generateUid();
+  // const role = Agora.RtcRole.PUBLISHER;
+  // const token = await geenerate_rtc_token(value.chennel, uid, role, value.expDate / 1000);
+  // value.token = token;
+  // value.Uid = uid;
+  // value.save();
+  // console.log(role);
   return value;
 };
 const leave_participents = async (req) => {

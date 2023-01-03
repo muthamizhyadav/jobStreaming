@@ -32,6 +32,9 @@ const  paymentSchema = mongoose.Schema(
       type:String,
       // default:moment().format('YYYY-MM-DD')
     },
+    cvCountUser:{
+      type:Array,
+    },
     expDate:{
       type:String,
     },
