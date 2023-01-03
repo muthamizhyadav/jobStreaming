@@ -79,6 +79,8 @@ const employerPlanHistory = async (id) => {
         validityOfPlan:'$createplans.validityOfPlan',
         jobPostVAlidity:'$createplans.jobPostVAlidity',
         postJobUsed:{ $ifNull: ['$employerdetails.count', 0] },
+        cvAccess:'$createplans.cvAccess',
+        cvCount:1,
         userId:1,
         // jobPostBalance:{ $subtract: ['$jobPost', '$postJobUsed'] },
       }
@@ -93,18 +95,14 @@ const  cvCount = async (candidateId,userId) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
    }
    const data1 = await PlanPayment.findOne({userId:userId, active:true, cvCountUser:{$elemMatch:{$in:[candidateId]}}})
-   console.log(data1, "efe")
+  //  console.log(data1, "efe")
    if(!data1){
-    cvCountUser = data1.cvCountUser.push(candidateId)
-    await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:+1, }, {new:true})
+    const dat = await PlanPayment.findOne({userId:userId, active:true})
+    let counnt = dat.cvCount +=1
+   return  await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:counnt, $push: { cvCountUser: candidateId }}, {new:true})
+   }else{
+    return {message:"cv already viewed..."}
    }
-  //  data.cvCountUser.forEach(async (e) => {
-  //        if(e != candidateId){
-  //         data.cvCountCandidate.push(candidateId)
-  //         let cvCount = data.cvCount+1
-  //         await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:cvCount}, {new:true})
-  //        }
-  //  });
 } 
 
 module.exports = {
