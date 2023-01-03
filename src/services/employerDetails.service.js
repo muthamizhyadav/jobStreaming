@@ -26,12 +26,13 @@ const createEmpDetails = async (userId, userBody) => {
     await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})
     throw new ApiError(httpStatus.NOT_FOUND, 'plan time expired');
   }
-  //  const createPlan = await CreatePlan.findOne({_id:da._id})
-  //  const count = await EmployerDetails.find({userId:userId, active:true, date: { $gte: da.date },  })
-  //  if(createPlan.jobPost == ){
-    
-  //  }
+     const createPlan = await CreatePlan.findOne({_id:da._id})
+     if(da.countjobPost == createPlan.jobPost){
+      throw new ApiError(httpStatus.NOT_FOUND, 'jobpost limit over...');
+     }
   let data = await EmployerDetails.create(values);
+  let count = da.countjobPost += 1
+  await PlanPayment.findByIdAndUpdate({_id:da._id}, {countjobPost:count}, {new:true})
   return data;
 };
 
@@ -127,6 +128,7 @@ const getById = async (id) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'employerDetails not found');
   }
   return data;
+  
 };
 
 const data_Id = async (id) => {

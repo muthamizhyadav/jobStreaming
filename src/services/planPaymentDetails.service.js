@@ -1,6 +1,8 @@
 const httpStatus = require('http-status');
 const { PlanPayment } = require('../models/planPaymentDetails.model');
 const { CreatePlan } = require('../models/createPlan.model');
+const { CandidateRegistration } = require('../models');
+const { KeySkill } = require('../models/candidateDetails.model');
 const ApiError = require('../utils/ApiError');
 const bcrypt = require('bcryptjs');
 const moment = require('moment');
@@ -79,6 +81,9 @@ const employerPlanHistory = async (id) => {
         validityOfPlan:'$createplans.validityOfPlan',
         jobPostVAlidity:'$createplans.jobPostVAlidity',
         postJobUsed:{ $ifNull: ['$employerdetails.count', 0] },
+        countjobPost:1,
+        cvAccess:'$createplans.cvAccess',
+        cvCount:1,
         userId:1,
         // jobPostBalance:{ $subtract: ['$jobPost', '$postJobUsed'] },
       }
@@ -92,18 +97,47 @@ const  cvCount = async (candidateId,userId) => {
    if(!data){
     throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
    }
-   data.cvCountUser.forEach(async (e) => {
-         if(e != candidateId){
-          data.cvCountCandidate.push(candidateId)
-          let cvCount = data.cvCount+1
-          await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:cvCount}, {new:true})
-         }
-   });
+   const data1 = await PlanPayment.findOne({userId:userId, active:true, cvCountUser:{$elemMatch:{$in:[candidateId]}}})
+  //  console.log(data1, "efe")
+   if(!data1){
+    const dat = await PlanPayment.findOne({userId:userId, active:true})
+    let counnt = dat.cvCount +=1
+   return  await PlanPayment.findOneAndUpdate({userId:userId, active:true}, {cvCount:counnt, $push: { cvCountUser: candidateId }}, {new:true})
+   }else{
+    return {message:"cv already viewed..."}
+   }
 } 
+
+const  cvdata = async (userId) => {
+  let candidates = []
+  const data = await PlanPayment.findOne({userId:userId, active:true})
+  if(!data){
+   throw new ApiError(httpStatus.NOT_FOUND, 'planPayment not found');
+  }
+  for(let i = 0; i < data.cvCountUser.length; i++){
+      const value = await CandidateRegistration.findById(data.cvCountUser[i])
+      candidates.push(value)
+  }
+  return candidates
+}
+
+const  cvdata_view = async (id) => {
+  // console.log(id)
+  const data = await KeySkill.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: id } }] 
+    }
+    },
+  ])
+  return data
+}
 
 module.exports = {
     createPlanPayment,
     Plan_Deactivate,
     employerPlanHistory,
     cvCount,
+    cvdata,
+    cvdata_view,
 };
