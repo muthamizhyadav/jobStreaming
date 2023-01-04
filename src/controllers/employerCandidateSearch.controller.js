@@ -65,9 +65,9 @@ const employerRemovePostJobs = catchAsync(async(req,res) => {
 
 
 const allFolderData = catchAsync(async(req,res) => {
-    const userId = req.userId
-    const user = await employerCandidateSearch.allFolderData(userId)
-    res.send({user})
+    // const userId = req.userId
+    const user = await employerCandidateSearch.allFolderData(req.params.id, req.body)
+    res.send(user)
 })
 
 
@@ -76,6 +76,13 @@ const candidatdeSaveJobRemove = catchAsync(async (req, res) => {
     const user = await employerCandidateSearch.candidatdeSaveJobRemove(req.params.id);
      res.send()
   });
+
+
+  const saveFolderData_view = catchAsync(async(req,res) => {
+    const userId = req.userId
+    const user = await employerCandidateSearch.saveFolderData_view(userId)
+    res.send({user})
+})
 module.exports = {
     createCandidateSearch,
     searchQuery,
@@ -89,4 +96,5 @@ module.exports = {
     employerRemovePostJobs,
     allFolderData,
     candidatdeSaveJobRemove,
+    saveFolderData_view,
 };

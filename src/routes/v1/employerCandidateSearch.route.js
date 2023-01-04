@@ -15,6 +15,7 @@ router.route('/candidate_applied_Details/:id').get(employerCandidateSearch.candi
 router.route('/candidate_applied_Details_view/:id').get(employerCandidateSearch.candidate_applied_Details_view);
 router.route('/saveSearchData_EmployerSide').get(authorization, employerCandidateSearch.saveSearchData_EmployerSide);
 router.route('/employerRemovePostJobs/:id').delete(employerCandidateSearch.employerRemovePostJobs);
-router.route('/allFolderData').get(authorization, employerCandidateSearch.allFolderData);
+router.route('/allFolderData/:id').get(employerCandidateSearch.allFolderData);
 router.route('/candidatdeSaveJobRemove/:id').delete(employerCandidateSearch.candidatdeSaveJobRemove);
+router.route('/saveFolderData_view').get(authorization, employerCandidateSearch.saveFolderData_view);
 module.exports = router;

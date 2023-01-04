@@ -318,12 +318,12 @@ const employerRemovePostJobs = async (id) => {
   return data;
 };
 
-const allFolderData = async (userId) => {
+const allFolderData = async (userId, folderName) => {
   console.log(userId)
   const data = await CreateSavetoFolder.aggregate([
     { 
       $match: { 
-        $and: [ { userId: { $eq: userId } }] 
+        $and: [ { userId: { $eq: userId } },{ folderName: { $eq: folderName.folderName } }] 
     }
   },
   {
@@ -385,6 +385,30 @@ const allFolderData = async (userId) => {
   return data;
 }
 
+
+const saveFolderData_view = async (userId) => {
+  const data = await CreateSavetoFolder.aggregate([
+    { 
+      $match: { 
+        $and: [ { userId: { $eq: userId } }] 
+    }
+  },
+   {
+    $group: {
+      _id: { folderName: '$folderName' , userId:'$userId'},
+    },
+  },
+  {
+    $project:{
+      folderName:'$_id.folderName',
+      userId:userId
+    }
+  }
+
+  ])
+  return data
+}
+
 module.exports = {
     createCandidateSearch,
     searchCandidate,
@@ -398,5 +422,5 @@ module.exports = {
     employerRemovePostJobs,
     allFolderData,
     candidatdeSaveJobRemove,
-    
+    saveFolderData_view,   
 };
