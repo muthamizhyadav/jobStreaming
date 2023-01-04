@@ -78,7 +78,14 @@ const corsconfig = {
 app.use(cors());
 app.options('*', cors());
 app.use(cookieparser());
-
+var allowCrossDomain = function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+  if (req.method === "OPTIONS") res.send(200);
+  else next();
+}
+app.use(allowCrossDomain);
 
 // jwt authentication
 app.use(passport.initialize());
@@ -97,14 +104,7 @@ app.use('/v2', routes_v2);
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
-var allowCrossDomain = function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
-  if (req.method === "OPTIONS") res.send(200);
-  else next();
-}
-app.use(allowCrossDomain);
+
 app.get('/v1', (req, res) => {
   res.sendStatus(200);
 });
