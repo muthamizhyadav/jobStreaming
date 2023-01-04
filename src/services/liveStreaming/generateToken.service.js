@@ -348,6 +348,46 @@ const chat_rooms = async (req) => {
   return value;
 };
 
+const get_sub_token = async (req) => {
+  let value = await tempTokenModel.aggregate([
+    { $match: { $and: [{ _id: { $eq: req.id } }] } },
+    {
+      $lookup: {
+        from: 'temptokens',
+        localField: 'hostId',
+        foreignField: '_id',
+        as: 'active_users',
+      },
+    },
+    {$unwind:"$active_users"},
+    {
+      $project: {
+        _id: 1,
+        active: 1,
+        archived: 1,
+        hostId: 1,
+        type: 1,
+        date: 1,
+        time: 1,
+        created: 1,
+        Uid: 1,
+        chennel: 1,
+        participents: 1,
+        created_num: 1,
+        expDate: 1,
+        token: 1,
+        hostUid:"$active_users.Uid",
+        expDate_host:"$active_users.expDate",
+
+      }
+    }
+  ])
+  if(value.length ==0){
+    throw new ApiError(httpStatus.NOT_FOUND, 'plan_not_found');
+  }
+  return value[0];
+};
+
 module.exports = {
   generateToken,
   getHostTokens,
@@ -363,5 +403,6 @@ module.exports = {
   recording_updateLayout,
   generateToken_sub,
   gettokenById_host,
-  chat_rooms
+  chat_rooms,
+  get_sub_token
 };
