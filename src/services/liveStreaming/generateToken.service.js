@@ -376,11 +376,16 @@ const get_sub_token = async (req) => {
         created_num: 1,
         expDate: 1,
         token: 1,
-        hostUid:"$active_users.Uid"
+        hostUid:"$active_users.Uid",
+        expDate_host:"$active_users.expDate",
+
       }
     }
   ])
-  return value;
+  if(value.length ==0){
+    throw new ApiError(httpStatus.NOT_FOUND, 'plan_not_found');
+  }
+  return value[0];
 };
 
 module.exports = {
