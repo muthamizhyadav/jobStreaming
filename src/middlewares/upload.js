@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: function (req, file, callback) {
-    if (file.mimetype === 'application/pdf') {
+    if (file.mimetype === 'application/pdf' || file.mimetype ==='application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       callback(null, true);
     } else {
       console.log('Only pdf file supported!');

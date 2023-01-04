@@ -22,11 +22,14 @@ const createEmpDetails = async (userId, userBody) => {
   let expiredDate = moment().add(validity, 'days').format('YYYY-MM-DD');
   let values = { ...userBody, ...{ userId: userId, expiredDate: expiredDate, date: date, time:creat1, interviewstartDate:interviewDate.startDate, interviewendDate:interviewDate.endDate} };
   const da = await PlanPayment.findOne({userId:userId, active:true})
+  if(!da){
+    throw new ApiError(httpStatus.NOT_FOUND, 'your not pay the plan');
+  }
   if(date > da.expDate){
     await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})
     throw new ApiError(httpStatus.NOT_FOUND, 'plan time expired');
   }
-     const createPlan = await CreatePlan.findOne({_id:da._id})
+     const createPlan = await CreatePlan.findOne({_id:da.planId})
      if(da.countjobPost == createPlan.jobPost){
       throw new ApiError(httpStatus.NOT_FOUND, 'jobpost limit over...');
      }
