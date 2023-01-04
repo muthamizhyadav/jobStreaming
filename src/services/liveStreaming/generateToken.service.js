@@ -347,6 +347,7 @@ const chat_rooms = async (req) => {
   let value = await tempTokenModel.findById(req.id);
   return value;
 };
+
 module.exports = {
   generateToken,
   getHostTokens,

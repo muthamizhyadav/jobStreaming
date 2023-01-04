@@ -14,6 +14,8 @@ const routes = require('./routes/v1');
 const routes_v2 = require('./routes/v1/liveStreaming');
 const logger = require('./config/logger');
 
+const chetModule = require("./services/liveStreaming/chat.service")
+
 const { errorConverter, errorHandler } = require('./middlewares/error');
 const ApiError = require('./utils/ApiError');
 
@@ -25,18 +27,18 @@ let socketIO = require('socket.io');
 let io = socketIO(server);
 
 server.listen(config.port, () => {
-    logger.info(`Listening to port ${config.port}`);
+  logger.info(`Listening to port ${config.port}`);
 });
 
-io.sockets.on('connection', function (socket) {
-  socket.on('groupchat', function (data) {
-    io.sockets.emit(data.channel, data);
+io.sockets.on('connection', async (socket) => {
+  socket.on('groupchat', async (data) => {
+    await chetModule.chat_room_create(data,io)
   });
   socket.on('', (msg) => {
     console.log('message: ' + msg);
   });
 });
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   req.io = io;
   next();
 });
