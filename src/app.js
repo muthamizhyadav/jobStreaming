@@ -13,6 +13,7 @@ const { authLimiter } = require('./middlewares/rateLimiter');
 const routes = require('./routes/v1');
 const routes_v2 = require('./routes/v1/liveStreaming');
 const logger = require('./config/logger');
+const cookieparser = require('cookie-parser');
 
 const chetModule = require("./services/liveStreaming/chat.service")
 
@@ -69,6 +70,23 @@ app.use(compression());
 app.use(cors());
 app.options('*', cors());
 
+const corsconfig = {
+  credentials: true,
+  origin: '*',
+};
+// git develper
+app.use(cors());
+app.options('*', cors());
+app.use(cookieparser());
+var allowCrossDomain = function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With, Authorization');
+  if (req.method === "OPTIONS") res.send(200);
+  else next();
+}
+app.use(allowCrossDomain);
+
 // jwt authentication
 app.use(passport.initialize());
 passport.use('jwt', jwtStrategy);
@@ -86,6 +104,7 @@ app.use('/v2', routes_v2);
 app.use((req, res, next) => {
   next(new ApiError(httpStatus.NOT_FOUND, 'Not found'));
 });
+
 app.get('/v1', (req, res) => {
   res.sendStatus(200);
 });
@@ -96,7 +115,6 @@ app.get('/', (req, res) => {
 app.get('/health', (req, res) => {
   res.sendStatus(200);
 });
-
 // convert error to ApiError, if needed
 app.use(errorConverter);
 
