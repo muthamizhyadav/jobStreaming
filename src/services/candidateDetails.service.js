@@ -524,6 +524,7 @@ const getByIdSavedJobs = async (userId) => {
     createdAt:"$employerdetails.createdAt",
     updatedAt:"$employerdetails.updatedAt",
     jobTittle:"$employerdetails.jobTittle",
+    candidatepostjobsStatus:{ $ifNull: ['$employerdetails.candidatepostjobs.status', false] },
     candidatepostjobs:{ $ifNull: ['$employerdetails.candidatepostjobs', false] },
   }
  }
