@@ -260,7 +260,7 @@ const createCandidatePostjob = async (userId, userBody) => {
 return data
 };
 
-const createCandidateSavejob = async (userBody) => {
+const createCandidateSavejob = async (userId, userBody) => {
  const data = await CandidateSaveJob.create({...userBody, ...{userId:userId}});
 return data
 };
