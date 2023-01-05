@@ -233,6 +233,10 @@ const deleteById = async (id) => {
 
 const countPostjobError = async (userId) =>{
   let date = moment().format('YYYY-MM-DD');
+  let app = await EmployerRegistration.findOne({_id:userId, adminStatus:"Approved"})
+  if(!app){
+    throw new ApiError(httpStatus.NOT_FOUND, 'Employer Not Approved');
+  }
    const da = await PlanPayment.findOne({userId:userId, active:true})
    if(!da){
     throw new ApiError(httpStatus.NOT_FOUND, 'your not pay the plan');
