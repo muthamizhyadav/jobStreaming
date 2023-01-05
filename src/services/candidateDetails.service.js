@@ -804,6 +804,14 @@ const SearchByIdcandidataSearchEmployerSet = async (userId) => {
 
 };
 
+const getByIdEmployerDetails = async (id) =>{
+  const data = await EmployerDetails.findById(id)
+  if(!data) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'employerDetails not found');
+  }
+  return data
+}
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -825,5 +833,6 @@ module.exports = {
     createSetSearchEmployerData,
     updateByIdcandidataSearchEmployerSet,
     SearchByIdcandidataSearchEmployerSet,
+    getByIdEmployerDetails,
     // createSearchCandidate,
 };

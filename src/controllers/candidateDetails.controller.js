@@ -146,6 +146,11 @@ const SearchByIdcandidataSearchEmployerSet = catchAsync(async (req, res) => {
   const user = await candidateDetailsService.SearchByIdcandidataSearchEmployerSet(userId);
   res.send(user)
 });
+
+const getByIdEmployerDetails = catchAsync(async (req, res) => {
+  const user = await candidateDetailsService.getByIdEmployerDetails(req.params.id);
+  res.send(user)
+});
 module.exports = {
   createkeySkill,
   getByIdUser,
@@ -167,5 +172,6 @@ module.exports = {
   createSetSearchEmployerData,
   updateByIdcandidataSearchEmployerSet,
   SearchByIdcandidataSearchEmployerSet,
+  getByIdEmployerDetails,
   // createSearchCandidate,
 };
