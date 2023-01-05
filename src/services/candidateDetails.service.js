@@ -741,7 +741,7 @@ const SearchByIdcandidataSearchEmployerSet = async (userId) => {
  const data = await EmployerDetails.aggregate([
   { 
     $match: { 
-      $and: [ { location: { $eq: locetion } },{ keySkill: {$elemMatch:{$in:search}}}, { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }] 
+      $or: [ { location: { $eq: locetion } },{ keySkill: {$elemMatch:{$in:search}}}, { experienceFrom: { $lte: parseInt(expYear) },experienceTo: { $gte: parseInt(expYear) } }] 
   }
 },
 {
