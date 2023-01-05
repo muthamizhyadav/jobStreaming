@@ -59,12 +59,14 @@ const getByIdEmployerDetailsShownCandidate = catchAsync(async(req,res) => {
 })
 
 const createCandidatePostjob = catchAsync(async (req, res) => {
-const user = await candidateDetailsService.createCandidatePostjob(req.body);
+  let userId = req.userId
+const user = await candidateDetailsService.createCandidatePostjob(userId, req.body);
 res.status(httpStatus.CREATED).send({ user });
 });
 
 const createCandidateSavejob = catchAsync(async (req, res) => {
-  const user = await candidateDetailsService.createCandidateSavejob(req.body);
+  let userId = req.userId
+  const user = await candidateDetailsService.createCandidateSavejob(userId, req.body);
   res.status(httpStatus.CREATED).send({ user });
   });
 

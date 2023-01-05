@@ -253,20 +253,21 @@ const getByIdEmployerDetailsShownCandidate = async (id,userId) =>{
   return data
 }
 
-const createCandidatePostjob = async (userBody) => {
-  const {userId, jobId} = userBody
- const data = await CandidatePostjob.create(userBody);
+const createCandidatePostjob = async (userId, userBody) => {
+  const {jobId} = userBody
+ const data = await CandidatePostjob.create({...userBody, ...{userId:userId}});
   await EmployerPostjob.create({candidateId:userId,postajobId:jobId})
 return data
 };
 
 const createCandidateSavejob = async (userBody) => {
- const data = await CandidateSaveJob.create(userBody);
+ const data = await CandidateSaveJob.create({...userBody, ...{userId:userId}});
 return data
 };
 
 
 const getByIdAppliedJobs = async (userId) => {
+  console.log(userId)
    const data = await CandidatePostjob.aggregate([
     { 
       $match: { 
