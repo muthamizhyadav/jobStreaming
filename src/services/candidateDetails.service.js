@@ -59,12 +59,12 @@ const getById = async (id) =>{
     return data
 }
 
-const updateById = async (id, updateBody) => {
-  const user = await getById(id);
+const updateById = async (userId, updateBody) => {
+  const user = await KeySkill.findOne({userId:userId})
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Keyskill not found');
   }
-  const data = await KeySkill.findByIdAndUpdate({ _id: id }, updateBody, { new: true });
+  const data = await KeySkill.findOneAndUpdate({ userId: userId }, updateBody, { new: true });
   await data.save();
   return data;
 };
