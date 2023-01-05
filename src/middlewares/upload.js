@@ -18,7 +18,7 @@ const upload = multer({
     if (file.mimetype === 'application/pdf' || file.mimetype ==='application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       callback(null, true);
     } else {
-      console.log('Only pdf file supported!');
+      console.log('Only pdf, docx file supported!');
       callback(null, false);
     }
   },

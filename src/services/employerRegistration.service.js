@@ -213,8 +213,11 @@ const employerRegistration_Approved = async (page) => {
       salaryRangeFrom:"$employerdetails.salaryRangeFrom",
       salaryRangeTo:"$employerdetails.salaryRangeTo",
       postJob_id:"$employerdetails._id",
+      date:"$employerdetails.date",
+      time:"$employerdetails.time",
      }
   },
+  {$sort:{date:-1, time:-1}},
   { $skip: 10 * page },
   { $limit: 10 },
   ])

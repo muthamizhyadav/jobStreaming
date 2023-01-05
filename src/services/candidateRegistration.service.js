@@ -55,7 +55,7 @@ const mobile_verify = async (mobilenumber) => {
 const mobile_verify_Otp = async (mobilenumber,otp) => {
   const data = await OTPModel.findOne({mobileNumber:mobilenumber, otp:otp})
   if(!data) {
-    throw new Error('mobileNumber not found');
+    throw new Error('wrong otp');
   }
   const verify = await CandidateRegistration.findByIdAndUpdate({_id:data.userId}, {isMobileVerified:true, isEmailVerified:true}, {new:true})
   return verify
