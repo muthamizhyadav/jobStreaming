@@ -109,6 +109,7 @@ const searchCandidate = async (key) => {
     // locationCurrent = "chennai"
     if(keyskill != null && keyskill != ""){
          keyskill = keyskill.split(',');
+         console.log(keyskill)
         _keyskill = { keyskill: {$elemMatch:{$in:keyskill}}}
     }
     if(keywords != null && keywords != ""){
@@ -124,6 +125,8 @@ const searchCandidate = async (key) => {
     if((passingYearFrom != null && passingYearTo != null) && (passingYearFrom != "" && passingYearTo != "")){
         _passingYearFrom = { passingYear: { $gte: parseInt(passingYearFrom) } },{ passingYear: { $lte: parseInt(passingYearTo) } }
     }
+
+    console.log(_keyskill)
     const data = await KeySkill.aggregate([
           {
             $match: {

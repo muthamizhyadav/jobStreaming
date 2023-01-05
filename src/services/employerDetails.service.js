@@ -230,6 +230,24 @@ const deleteById = async (id) => {
   return user;
 };
 
+
+const countPostjobError = async (userId) =>{
+  let date = moment().format('YYYY-MM-DD');
+   const da = await PlanPayment.findOne({userId:userId, active:true})
+   if(!da){
+    throw new ApiError(httpStatus.NOT_FOUND, 'your not pay the plan');
+   }
+   const createPlan = await CreatePlan.findOne({_id:da.planId})
+   if(da.countjobPost == createPlan.jobPost){
+    throw new ApiError(httpStatus.NOT_FOUND, 'jobpost limit over...');
+   }
+   if(date > da.expDate){
+    await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})
+    throw new ApiError(httpStatus.NOT_FOUND, 'plan time expired');
+  }
+  return {message:"button enable"}
+}
+
 module.exports = {
   createEmpDetails,
   getByIdUser,
@@ -238,4 +256,5 @@ module.exports = {
   createEmpDetailsRepost,
   getById_Get,
   data_Id,
+  countPostjobError,
 };

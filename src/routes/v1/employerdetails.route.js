@@ -14,4 +14,5 @@ router.route('/deleteEmpDetails/:id').delete(employerDetailsController.deleteByI
 router.route('/createEmpDetailsRepost/:id').put(employerDetailsController.createEmpDetailsRepost);
 router.route('/getByIdEmpDetails/:id').get(employerDetailsController.getById_Get);
 router.route('/data_Id/:id').get(employerDetailsController.data_Id);
+router.route('/countPostjobError').get(authorization, employerDetailsController.countPostjobError);
 module.exports = router;
