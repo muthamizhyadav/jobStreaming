@@ -54,7 +54,8 @@ const candidateSearch = catchAsync(async(req,res) => {
 
 
 const getByIdEmployerDetailsShownCandidate = catchAsync(async(req,res) => {
-  const user = await candidateDetailsService.getByIdEmployerDetailsShownCandidate(req.params.id, req.params.userId)
+  let userId = req.userId
+  const user = await candidateDetailsService.getByIdEmployerDetailsShownCandidate(req.params.id, userId)
   res.send(user)
 })
 
