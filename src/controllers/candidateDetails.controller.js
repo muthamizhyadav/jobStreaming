@@ -29,7 +29,7 @@ const getByIdUser = catchAsync(async(req,res) => {
 const updateById = catchAsync(async(req,res) => {
   let userId = req.userId 
     const user = await candidateDetailsService.updateById(userId, req.body)
-    console.log(req.files)
+    // console.log(req.files)
     if (req.files.length != 0 ) {
     let path = '';
     req.files.forEach(function (files, index, arr) {
