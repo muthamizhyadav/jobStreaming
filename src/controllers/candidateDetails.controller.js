@@ -29,16 +29,13 @@ const getByIdUser = catchAsync(async(req,res) => {
 const updateById = catchAsync(async(req,res) => {
   let userId = req.userId 
     const user = await candidateDetailsService.updateById(userId, req.body)
-    if (req.files.image!= null) {
-      // let path = '';
-      // req.files.forEach(function (files, index, arr) {
-      //    path  = "resumes/images/"+files.filename
-      // });
-      user.image =  "resumes/images/"+req.files.image[0].filename
+    if (req.files != null) {
+      user.image =  "resumes/images/"+req.files[0].filename
     }
     await user.save();
     res.send({user})
 })
+
 
 
 const deleteById = catchAsync(async(req,res) => {
