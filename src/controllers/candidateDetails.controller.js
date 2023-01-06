@@ -34,10 +34,10 @@ const updateById = catchAsync(async(req,res) => {
       // req.files.forEach(function (files, index, arr) {
       //    path  = "resumes/images/"+files.filename
       // });
-      user.image =  "resumes/images/"+req.files[0].filename
+      user.image =  "resumes/images/"+req.files.image[0].filename
     }
-    res.send({user})
     await user.save();
+    res.send({user})
 })
 
 
