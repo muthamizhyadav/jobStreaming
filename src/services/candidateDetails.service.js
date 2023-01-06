@@ -9,11 +9,16 @@ const moment = require('moment');
 
 const createkeySkill = async (userId, userBody) => {
     console.log(userId)
+    let keySkill = userBody.keyskill.split(',');
+    let currentSkill = userBody.currentSkill.split(',');
+    let preferredSkill = userBody.preferredSkill.split(',');
+    let secondarySkill = userBody.secondarySkill.split(',');
+    let pasrSkill= userBody.pasrSkill.split(',');
     let date = moment().format('YYYY-MM-DD');
     let creat1 = moment().format('HHmmss');
-    let values = {...userBody, ...{userId:userId, date: date, time:creat1}}
+    let values = {...userBody, ...{userId:userId, date: date, time:creat1, keyskill:keySkill, currentSkill:currentSkill, preferredSkill:preferredSkill, secondarySkill:secondarySkill, pasrSkill:pasrSkill}}
     let data = await KeySkill.create(values);
- return data
+    return data
 };
 
 const getByIdUser = async (id) => {
