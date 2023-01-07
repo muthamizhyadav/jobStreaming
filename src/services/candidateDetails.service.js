@@ -824,8 +824,12 @@ const getByIdEmployerDetails = async (id) =>{
 }
 
 
-const candidateSearch_front_page = async (body) => {
+const candidateSearch_front_page = async (id, body) => {
   // console.log(userId)
+  const check = await  CandidateRegistration.findById(id)
+  if(!check){
+    throw new ApiError(httpStatus.NOT_FOUND, 'user not found');
+  }
   // let values = {...body, ...{userId:userId}}
      let {search, experience, location} = body
   //  await CandidateSearchjobCandidate.create(values);

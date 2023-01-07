@@ -155,7 +155,8 @@ const getByIdEmployerDetails = catchAsync(async (req, res) => {
 });
 
 const candidateSearch_front_page = catchAsync(async (req, res) => {
-  const user = await candidateDetailsService.candidateSearch_front_page(req.body);
+  const userId = req.userId
+  const user = await candidateDetailsService.candidateSearch_front_page(userId, req.body);
   res.send(user)
 });
 module.exports = {
