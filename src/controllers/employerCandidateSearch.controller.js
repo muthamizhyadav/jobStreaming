@@ -10,6 +10,24 @@ const createCandidateSearch = catchAsync(async (req, res) => {
     );
 });
 
+const createSaveSeprate = catchAsync(async (req, res) => {
+    let userId = req.userId
+  const user = await employerCandidateSearch.createSaveSeprate(userId, req.body);
+  res.status(httpStatus.CREATED).send(user);
+});
+
+
+const getSaveSeprate = catchAsync(async (req, res) => {
+    let userId = req.userId
+  const user = await employerCandidateSearch.getSaveSeprate(userId);
+  res.status(httpStatus.CREATED).send(user);
+});
+
+const delete_Seprate_saveCandidate = catchAsync(async (req, res) => {
+  const user = await employerCandidateSearch.delete_Seprate_saveCandidate(req.params.id);
+  res.send(user)
+});
+
 const searchQuery = catchAsync(async(req,res) => {
     // console.log(req.query)
     const user = await employerCandidateSearch.searchCandidate(req.body)
@@ -97,4 +115,7 @@ module.exports = {
     allFolderData,
     candidatdeSaveJobRemove,
     saveFolderData_view,
+    createSaveSeprate,
+    getSaveSeprate,
+    delete_Seprate_saveCandidate,
 };

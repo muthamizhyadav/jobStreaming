@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const { CandiadteSearch, CreateSavetoFolder} = require('../models/employerCandidateSearch.model');
+const { CandiadteSearch, CreateSavetoFolder, CreateSavetoFolderseprate} = require('../models/employerCandidateSearch.model');
 const {EmployerDetails, EmployerPostjob} = require('../models/employerDetails.model');
 const {KeySkill, CandidateSaveJob} = require('../models/candidateDetails.model');
 const {EmployerRegistration} = require('../models')
@@ -13,6 +13,104 @@ const createCandidateSearch = async (userId, userBody) => {
  return data
 };
 
+const createSaveSeprate = async (userId, userBody) => {
+  userBody.candidateId.forEach(async (e) => {
+     await CreateSavetoFolderseprate.create({...userBody, ...{userId:userId, candidateId:e}});
+     console.log(e)
+  });
+return {message:"Save Sucessfully..."}
+};
+
+const getSaveSeprate = async (userId) => {
+const data = await CreateSavetoFolderseprate.aggregate([
+  { 
+    $match: { 
+      $and: [ { userId: { $eq: userId } }] 
+  }
+ },
+ {
+  $lookup: {
+    from: 'candidateregistrations',
+    localField: 'candidateId',
+    foreignField: '_id',
+    pipeline:[
+      {
+        $lookup: {
+          from: 'candidatedetails',
+          localField: '_id',
+          foreignField: 'userId',
+          as: 'candidatedetails',
+        },
+      },
+      {
+        $unwind: {
+          path: '$candidatedetails',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project:{
+          name:1,
+          email:1,
+          workStatus:1,
+          mobileNumber:1,
+          resume:1,
+          lat:1,
+          long:1,
+          keyskill:'$candidatedetails.keyskill',
+          currentSkill:'$candidatedetails.currentSkill',
+          preferredSkill:'$candidatedetails.preferredSkill',
+          secondarySkill:'$candidatedetails.secondarySkill',
+          pasrSkill:'$candidatedetails.pasrSkill',
+          experienceMonth:'$candidatedetails.experienceMonth',
+          experienceYear:'$candidatedetails.experienceYear',
+          salaryRangeFrom:'$candidatedetails.salaryRangeFrom',
+          salaryRangeTo:'$candidatedetails.salaryRangeTo',
+          locationNative:'$candidatedetails.locationNative',
+          locationCurrent:'$candidatedetails.locationCurrent',
+          education:'$candidatedetails.education',
+          specification:'$candidatedetails.specification',
+          university:'$candidatedetails.university',
+          courseType:'$candidatedetails.courseType',
+          passingYear:'$candidatedetails.passingYear',
+          gradingSystem:'$candidatedetails.gradingSystem',
+          availability:'$candidatedetails.availability',
+          gender:'$candidatedetails.gender',
+          maritalStatus:'$candidatedetails.maritalStatus',
+          image:'$candidatedetails.image',
+          mark:'$candidatedetails.mark',
+          date:'$candidatedetails.date',
+          time:'$candidatedetails.time',
+        }
+      }
+    ],
+    as: 'candidateregistrations',
+  },
+},
+{
+  $unwind: {
+    path: '$candidateregistrations',
+    preserveNullAndEmptyArrays: true,
+  },
+},
+{
+  $project:{
+    candidateData:'$candidateregistrations'
+  }
+}
+])
+return data
+};
+
+
+const delete_Seprate_saveCandidate = async (id) =>{
+  const data = await CreateSavetoFolderseprate.findById(id)
+  if(!data){
+    throw new ApiError(httpStatus.NOT_FOUND, 'candidate not found');
+  }
+  await data.remove();
+  return data;
+}
 
 const employerSearchCandidate = async (id) =>{
   let data = await KeySkill.aggregate([
@@ -425,5 +523,8 @@ module.exports = {
     employerRemovePostJobs,
     allFolderData,
     candidatdeSaveJobRemove,
-    saveFolderData_view,   
+    saveFolderData_view,
+    createSaveSeprate,
+    getSaveSeprate,
+    delete_Seprate_saveCandidate,
 };

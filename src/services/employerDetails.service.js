@@ -31,6 +31,7 @@ const createEmpDetails = async (userId, userBody) => {
   }
      const createPlan = await CreatePlan.findOne({_id:da.planId})
      if(da.countjobPost == createPlan.jobPost){
+      await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})
       throw new ApiError(httpStatus.NOT_FOUND, 'jobpost limit over...');
      }
   let data = await EmployerDetails.create(values);

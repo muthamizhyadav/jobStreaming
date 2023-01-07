@@ -6,6 +6,7 @@ const authorization = require('../../controllers/empVEridy.controller');
 const router = express.Router();
 
 router.route('/').post(authorization,employerCandidateSearch.createCandidateSearch);
+router.route('/createSaveSeprate').post(authorization,employerCandidateSearch.createSaveSeprate);
 router.route('/searchQuery').post(employerCandidateSearch.searchQuery);
 router.route('/employerSearchCandidate/:id').get(employerCandidateSearch.employerSearchCandidate);
 router.route('/createSavetoFolder').post(authorization, employerCandidateSearch.createSavetoFolder);
@@ -18,4 +19,6 @@ router.route('/employerRemovePostJobs/:id').delete(employerCandidateSearch.emplo
 router.route('/allFolderData/:id').get(employerCandidateSearch.allFolderData);
 router.route('/candidatdeSaveJobRemove/:id').delete(employerCandidateSearch.candidatdeSaveJobRemove);
 router.route('/saveFolderData_view').get(authorization, employerCandidateSearch.saveFolderData_view);
+router.route('/getSaveSeprate').get(authorization, employerCandidateSearch.getSaveSeprate);
+router.route('/delete_Seprate_saveCandidate/:id').delete(employerCandidateSearch.delete_Seprate_saveCandidate);
 module.exports = router;
