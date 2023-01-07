@@ -823,6 +823,55 @@ const getByIdEmployerDetails = async (id) =>{
   return data
 }
 
+
+const candidateSearch_front_page = async (body) => {
+  // console.log(userId)
+  // let values = {...body, ...{userId:userId}}
+     let {search, experience, location} = body
+  //  await CandidateSearchjobCandidate.create(values);
+
+    //  search = ["fbhfghfh","software engineer"]
+     let experienceSearch = {active:true}
+     let locationSearch = {active:true}
+     let allSearch = [{active:true}]
+     if(search != null){
+      search = search.split(',');
+      allSearch = [ { designation: { $in: search } },{ keySkill: {$elemMatch:{$in:search}}}]
+     }
+
+     if(experience != null){
+      experienceSearch = { experienceFrom: { $lte: parseInt(experience) },experienceTo: { $gte: parseInt(experience) } }
+     }
+     if(location != null){
+       locationSearch = { jobLocation: { $eq: location } }
+     }
+    //  console.log(allSearch)
+    const data = await EmployerDetails.aggregate([
+      { 
+        $match: { 
+          $or:allSearch 
+      }
+    },  
+    { 
+      $match: { 
+        $and: [ { adminStatus: { $eq: "Approved" } }, experienceSearch, locationSearch] 
+    }   
+   },    
+         {
+            $lookup: {
+              from: 'employerregistrations',
+              localField: 'userId',
+              foreignField: '_id',
+              as: 'employerregistrations',
+            },
+          },
+          {
+            $unwind:'$employerregistrations',
+          },
+    ]) 
+    return data 
+}
+
 module.exports = {
     createkeySkill,
     getByIdUser,
@@ -845,5 +894,6 @@ module.exports = {
     updateByIdcandidataSearchEmployerSet,
     SearchByIdcandidataSearchEmployerSet,
     getByIdEmployerDetails,
+    candidateSearch_front_page,
     // createSearchCandidate,
 };
