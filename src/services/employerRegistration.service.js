@@ -49,7 +49,7 @@ const mobile_verify = async (mobilenumber) => {
   if(!data) {
     throw new Error('mobileNumber not found');
   }
-  if(data.isMobileVerified == true && data.isEmailVerified == true){
+  if(data.isEmailVerified == true && data.isMobileVerified == true){
     throw new Error('mobileNumber already verified..');
   }
   await sendmail.Otp(data)
