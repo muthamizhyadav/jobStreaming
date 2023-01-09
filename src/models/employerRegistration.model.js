@@ -78,7 +78,7 @@ const userEmpSchema = mongoose.Schema(
     },
     freePlanCount:{
       type:Number,
-      default:3
+      default:1
     },
      active: {
         type: Boolean,
