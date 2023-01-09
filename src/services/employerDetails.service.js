@@ -249,7 +249,8 @@ const countPostjobError = async (userId) =>{
   }
   const freeCount = await EmployerDetails.find({userId:userId})
   const usser = await EmployerRegistration.findById(userId)
-  if(freeCount.length == usser.freePlanCount){
+  const daaa = await PlanPayment.findOne({userId:userId, active:true})
+  if(freeCount.length == usser.freePlanCount && !daaa){ 
     throw new ApiError(httpStatus.NOT_FOUND, 'your free post over..');
   }
    if(freeCount.length >= usser.freePlanCount){
