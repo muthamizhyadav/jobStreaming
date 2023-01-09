@@ -21,6 +21,9 @@ const createEmpDetails = async (userId, userBody) => {
   // console.log(validity);
   let expiredDate = moment().add(validity, 'days').format('YYYY-MM-DD');
   let values = { ...userBody, ...{ userId: userId, expiredDate: expiredDate, date: date, time:creat1, interviewstartDate:interviewDate.startDate, interviewendDate:interviewDate.endDate} };
+  const freeCount = await EmployerDetails.find({userId:userId}).count
+  const usser = await EmployerRegistration.findById(userId)
+  if(freeCount == usser.freePlanCount){
   const da = await PlanPayment.findOne({userId:userId, active:true})
   if(!da){
     throw new ApiError(httpStatus.NOT_FOUND, 'your not pay the plan');
@@ -34,9 +37,12 @@ const createEmpDetails = async (userId, userBody) => {
       await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})
       throw new ApiError(httpStatus.NOT_FOUND, 'jobpost limit over...');
      }
+    }
   let data = await EmployerDetails.create(values);
+  if(freeCount == usser.freePlanCount){
   let count = da.countjobPost += 1
   await PlanPayment.findByIdAndUpdate({_id:da._id}, {countjobPost:count}, {new:true})
+  }
   return data;
 };
 
