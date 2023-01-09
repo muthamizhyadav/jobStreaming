@@ -244,6 +244,9 @@ const countPostjobError = async (userId) =>{
   if(!app){
     throw new ApiError(httpStatus.NOT_FOUND, 'Employer Not Approved');
   }
+  const freeCount = await EmployerDetails.find({userId:userId}).count
+  const usser = await EmployerRegistration.findById(userId)
+  if(freeCount == usser.freePlanCount){
    const da = await PlanPayment.findOne({userId:userId, active:true})
    if(!da){
     throw new ApiError(httpStatus.NOT_FOUND, 'your not pay the plan');
@@ -256,6 +259,7 @@ const countPostjobError = async (userId) =>{
     await PlanPayment.findByIdAndUpdate({_id:da._id}, {active:false}, {new:true})
     throw new ApiError(httpStatus.NOT_FOUND, 'plan time expired');
   }
+}
   return {message:"button enable"}
 }
 
