@@ -14,123 +14,123 @@ const employerDetailsSchema = mongoose.Schema(
       default: v4,
     },
     jobTittle: {
-        type:String,
+      type: String,
     },
-    userId:{
-        type:String,
+    userId: {
+      type: String,
     },
-    designation:{
-        type:String,
+    designation: {
+      type: String,
     },
-    recruiterName:{
-        type:String,
+    recruiterName: {
+      type: String,
     },
-    contactNumber:{
-        type:Number,
+    contactNumber: {
+      type: Number,
     },
-    jobDescription:{
-        type:String,
+    jobDescription: {
+      type: String,
     },
-    keySkill:{
-        type:Array,
+    keySkill: {
+      type: Array,
     },
-    salaryRangeFrom:{
-        type:Number,
+    salaryRangeFrom: {
+      type: Number,
     },
-    salaryRangeTo:{
-        type:Number,
+    salaryRangeTo: {
+      type: Number,
     },
-    preferredindustry:{
-        type:String,
+    preferredindustry: {
+      type: String,
     },
-    educationalQualification:{
-        type:String,
+    educationalQualification: {
+      type: String,
     },
-    experienceFrom:{
-        type:Number,
+    experienceFrom: {
+      type: Number,
     },
-    experienceTo:{
-        type:Number,
+    experienceTo: {
+      type: Number,
     },
-    interviewType:{
-        type:String,
+    interviewType: {
+      type: String,
     },
-    candidateDescription:{
-        type:String,
+    candidateDescription: {
+      type: String,
     },
-    workplaceType:{
-        type:String,
+    workplaceType: {
+      type: String,
     },
-    industry:{
-        type:String,
+    industry: {
+      type: String,
     },
-    preferedIndustry:{
-        type:String,
+    preferedIndustry: {
+      type: String,
     },
-    functionalArea:{
-        type:String,
+    functionalArea: {
+      type: String,
     },
-    role:{
-        type:String,
+    role: {
+      type: String,
     },
-    jobLocation:{
-        type:String,
+    jobLocation: {
+      type: String,
     },
-    employmentType:{
-        type:String,
+    employmentType: {
+      type: String,
     },
-    openings:{
-        type:Number,
+    openings: {
+      type: Number,
     },
-    interviewstartDate:{
-        type:String,
+    interviewstartDate: {
+      type: String,
     },
-    interviewstartDate:{
-        type:String,
+    interviewstartDate: {
+      type: String,
     },
-    interviewendDate:{
-        type:String,
+    interviewendDate: {
+      type: String,
     },
-    interviewTime:{
-        type:String,
+    interviewTime: {
+      type: String,
     },
-    interviewerName:{
-        type:String,
+    interviewerName: {
+      type: String,
     },
-    interviewerContactNumber:{
-        type:Number,
+    interviewerContactNumber: {
+      type: Number,
     },
-    startTime:{
-        type:String,
+    startTime: {
+      type: String,
     },
-    endTime:{
-        type:String,
+    endTime: {
+      type: String,
     },
-    location:{
-        type:String,
+    location: {
+      type: String,
     },
-    validity:{
-        type:Number,
+    validity: {
+      type: Number,
     },
-    date:{
-        type:String,
-        // default:moment().format('YYYY-MM-DD')
+    date: {
+      type: String,
+      // default:moment().format('YYYY-MM-DD')
     },
     time: {
-        type: String,
-        // default:moment().format('HHmmss')
-      },
-    expiredDate:{
-        type:String,
+      type: String,
+      // default:moment().format('HHmmss')
     },
-    adminStatus:{
-        type:String,
-        default:"Pending",
-      },
-    active:{
-        type:Boolean,
-        default:true,
-    }
+    expiredDate: {
+      type: String,
+    },
+    adminStatus: {
+      type: String,
+      default: 'Pending',
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
@@ -138,25 +138,25 @@ const employerDetailsSchema = mongoose.Schema(
 );
 const EmployerDetails = mongoose.model('employerDetail', employerDetailsSchema);
 const employerPostjobSchema = mongoose.Schema(
-    {
-      _id: {
-        type: String,
-        default: v4,
-      },
-      postajobId: {
-          type:String,
-      },
-      candidateId:{
-          type:String,
-      },
-      active:{
-          type:Boolean,
-          default:true,
-      }
+  {
+    _id: {
+      type: String,
+      default: v4,
     },
-    {
-      timestamps: true,
-    }
-  );
-  const EmployerPostjob = mongoose.model('employerPostjob', employerPostjobSchema);
-module.exports = {EmployerDetails, EmployerPostjob} ;
+    postajobId: {
+      type: String,
+    },
+    candidateId: {
+      type: String,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+const EmployerPostjob = mongoose.model('employerPostjob', employerPostjobSchema);
+module.exports = { EmployerDetails, EmployerPostjob };
